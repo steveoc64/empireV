@@ -76,8 +76,8 @@ Player Control :
 - Manage access to information on the system .. each player is locked down to
   operating within only those units under their command, in the context of a given
   game that is running.
-- Each game has at least 1 user setup as the umpire for that game. The umpire controls
-  the flow of the game from one phase to the next, one turn to the next.
+- Each game has at least 1 user setup as the umpire for that game. The umpire
+  controls the flow of the game from one phase to the next, one turn to the next.
 
 Running the Game (Player)
 - Each player gets a limited view of the battle, and the degrading effects on their
@@ -96,7 +96,8 @@ Running the Game (Player)
   units are in which engagement. Umpire can override this prior to tactical movement
   round.
 - All fiddly morale tests / ME determination / elan test / etc etc .. is handled
-  automatically by the computer, with results sent to the player as dispatch messages.
+  automatically by the computer, with results sent to the player as dispatch
+  messages.
 - Information presented to the players on the actual state of each unit are
   deliberately vague. They are informed of situations where a whole base of troops
   needs to be removed, but detailed figure level or troop casualties are always
@@ -136,9 +137,9 @@ Variable Scaling Support :
 - Each game can be run at any scaling factor. By default it uses 1:60 figure scale
   and 1"=40y ground scale.  However the game scale can be set to any arbitary values
   in order to accomodate whatever fits the size of each battle. You can go play at
-  1:47 scale, with 1" = 13 yards if you so choose. The game mechanics remain the same.
-  This only works because of the brilliant way that Empire calculates combat outcomes
-  with deterministic maths.
+  1:47 scale, with 1" = 13 yards if you so choose. The game mechanics remain the
+  same.  This only works because of the brilliant way that Empire calculates combat
+  outcomes with deterministic maths.
 - Information inside the system is calculated and stored in terms of actual troops.
   However, information presented back to the umpire in terms of figures, and
   information presented to the players is in terms of bases of troops.  Details on
@@ -234,10 +235,10 @@ The idea is to have a game in progress at a table somewhere in the world, with a
 webcam or 2 setup on the table, and then delegate some commander positions to users
 who happen to be on the other side of the world.
 
-The interaction with their units is all through the web interface anyway, so that will
-work fine without any modification. Maybe having the webcams on the table with live
-views of the tabletop will be good enough to allow those remote players to experience
-'being there' at the battle with their online mates.
+The interaction with their units is all through the web interface anyway, so that
+will work fine without any modification. Maybe having the webcams on the table with
+live views of the tabletop will be good enough to allow those remote players to
+experience 'being there' at the battle with their online mates.
 
 I havent designed that aspect into the system yet, but its something I really want to
 add at some point down the track. I dont see any technical obstacle to being able to
@@ -245,12 +246,12 @@ do this.
 
 Its more a question of whether the remote player will really 'feel' part of the game,
 and that comes downs to having really good fast communication, and possibly live
-streamed audio as well.  Its not just the pretty pictures, bad die rolls, and detailed
-AARs that make a game ... its the chit chat, jokes and laughter that all need to happen
-in real time to make it work.
+streamed audio as well.  Its not just the pretty pictures, bad die rolls, and
+detailed AARs that make a game ... its the chit chat, jokes and laughter that all
+need to happen in real time to make it work.
 
-If I could stream the audio from both ends of the connection as well as the webcam feed,
-then it would work brilliantly I think.
+If I could stream the audio from both ends of the connection as well as the webcam
+feed, then it would work brilliantly I think.
 
 
 ----oOo----
