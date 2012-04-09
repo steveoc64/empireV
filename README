@@ -27,7 +27,7 @@ fighting battles in this period, and produces highly plausible results.
 So much so, that the community of wargamers who enjoy this period remain quite 
 loyal to this venerable masterpeice of a ruleset.
 
-Sso here we have a modernization of this excellent system, in the form of an 
+So here we have a modernization of this excellent system, in the form of an 
 extremely easy to use computer moderated control system.
 
 Hopefully this will serve the hard core gamers well, and also provide an 
@@ -114,7 +114,10 @@ Combat Options
 - An option can be configured in a given game to allow the players to interact with the computer to 
   run the combats ie - player enters the details on who is attacking what. This should speed up a big 
   game with lots of players and too few umpires.
-
+- An option can be configured in a given game to allow for full computer calculation, or go into OldSkool mode.
+  In OldSkool mode, the computer will display the various percentages needed for various things on the 
+  screen, and the players then have to do the die rolls, and enter the die results into the computer 
+  instead.
 
 
 Variable Scaling Support :
