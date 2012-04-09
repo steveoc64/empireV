@@ -39,20 +39,21 @@ Art meets Science.
 
 ----oOo----
 
-To run this, you need to set the system up on a web server, and then setup the data, and
-then create user accounts for accessing the game for various players. 
+To run this, you need to set the system up on a web server, and then setup the data,
+and then create user accounts for accessing the game for various players. 
 
-The best way to do this is setup a linux machine with Apache/PHP/MySQL support (all standard
-utilities that are part of a general linux install), and then simply install this application.
+The best way to do this is setup a linux machine with Apache/PHP/MySQL support
+(all standard utilities that are part of a general linux install), and then simply
+install this application.
 
-That machine then runs the whole virtual world that the battle is fought in. Each player then
-communicates with their troops in that battle via a web server.
+That machine then runs the whole virtual world that the battle is fought in. Each
+player then communicates with their troops in that battle via a web server.
 
-Remember that ANYTHING with a web browser can access the system, so you could use a bunch of
-laptops on a wireless LAN, ipads, smartphones, etc.
+Remember that ANYTHING with a web browser can access the system, so you could use a
+bunch of laptops on a wireless LAN, ipads, smartphones, etc.
 
-Its all standard HTML and javascript - NO Flash, NO activeX .. so that allows for the use of ipads !!
-
+Its all standard HTML and javascript - NO Flash, NO activeX .. so that allows for
+the use of ipads !!  
 
 
 ----oOo----
@@ -61,105 +62,126 @@ What this system does (or will do) :
 
 General Game Setup and Management :
 - Provides a web based application for running a set of games.
-- The system will load and store a large database of detailed orders of battle for various armies.
+- The system will load and store a large database of detailed orders of battle
+  for various armies.
 - Create a large database of scenarios, that use subsets of the orders of battle.
-- Spawn any number of games based on these scenarios. The system manages which games are in progress, 
-  and stores all state information related to each game move permanently.
+- Spawn any number of games based on these scenarios. The system manages which games
+  are in progress, and stores all state information related to each game move permanently.
 
 
 Player Control :
 - Manage multiple user accounts for access to the system with various different roles.
-- Administrator can assign players to games in progress, allowing complicated setups of sub-commands.
-- Manage access to information on the system .. each player is locked down to operating within only
-  those units under their command, in the context of a given game that is running.
-- Each game has at least 1 user setup as the umpire for that game. The umpire controls the flow
-  of the game from one phase to the next, one turn to the next.
+- Administrator can assign players to games in progress, allowing complicated
+  setups of sub-commands.
+- Manage access to information on the system .. each player is locked down to
+  operating within only those units under their command, in the context of a given
+  game that is running.
+- Each game has at least 1 user setup as the umpire for that game. The umpire controls
+  the flow of the game from one phase to the next, one turn to the next.
 
 Running the Game (Player)
-- Each player gets a limited view of the battle, and the degrading effects on their troops.
-- The player uses the system to issue orders, review troop status, and receive computer generated
-  dispatches with news from the battlefield.
-- As each turn progresses under umpire control, the player is shown information on the screen about
-  which actions each unit should perform on the tabletop this phase.  The player then does what they
-  need to do on the tabletop, using the instructions as a guide.
-  (or law, depending on how you want to run the game)
+- Each player gets a limited view of the battle, and the degrading effects on their
+  troops.
+- The player uses the system to issue orders, review troop status, and receive
+  computer generated dispatches with news from the battlefield.
+- As each turn progresses under umpire control, the player is shown information
+  on the screen about which actions each unit should perform on the tabletop this
+  phase.  The player then does what they need to do on the tabletop, using the
+  instructions as a guide.  (or law, depending on how you want to run the game)
+
   Remember - its still first and foremost a tabletop game !
-- With each engagement, the players interact with the computer in a couple of ways to perform combat
-  results calculations. Players can tell the computer which units are in which engagement. Umpire can 
-  override this prior to tactical movement round.
-- All fiddly morale tests / ME determination / elan test / etc etc .. is handled automatically by the
-  computer, with results sent to the player as dispatch messages.
-- Information presented to the players on the actual state of each unit are deliberately vague. They
-  are informed of situations where a whole base of troops needs to be removed, but detailed figure 
-  level or troop casualties are always unknown to them.
+
+- With each engagement, the players interact with the computer in a couple of
+  ways to perform combat results calculations. Players can tell the computer which
+  units are in which engagement. Umpire can override this prior to tactical movement
+  round.
+- All fiddly morale tests / ME determination / elan test / etc etc .. is handled
+  automatically by the computer, with results sent to the player as dispatch messages.
+- Information presented to the players on the actual state of each unit are
+  deliberately vague. They are informed of situations where a whole base of troops
+  needs to be removed, but detailed figure level or troop casualties are always
+  unknown to them.
 
 Running the Game (Umpire)
-- The umpire can see all details for all units in the current game. This includes actual troop losses,
-  actual fatigue levels, etc, etc.
-- The umpire steps the game through the phases in the turn, opening up orders, locking down orders, etc.
-- The umpire can intercept orders from players to units, deliberately delay them, modify them, or delete
-  them if need be.
-- The umpire defines which engagements are in progress, and which MEs are involved in each case. The 
-  players submit this data (to make the game quicker for the umpire)  but the umpire can override 
-  the fine details.
+- The umpire can see all details for all units in the current game. This includes
+  actual troop losses, actual fatigue levels, etc, etc.
+- The umpire steps the game through the phases in the turn, opening up orders,
+  locking down orders, etc.
+- The umpire can intercept orders from players to units, deliberately delay them,
+  modify them, or delete them if need be.
+- The umpire defines which engagements are in progress, and which MEs are involved
+  in each case.
+  The players submit this data (to make the game quicker for the umpire)  but the
+  umpire can override the fine details.
 
 
 Combat Options 
-- Combat calculations in the system are fully automated. The computer will require some basic information
-  (type of combat, ranges, tactical factors), and will then do all the die rolling and other fun things
-  to determine the full outcome. Results are then sent to each player as a dispatch message via courier, 
-  which may arrive immediately, or in a turn or 2 depending on conditions.
-- The default is that only the umpire interacts with the computer for each combat, with the players calling out
-  the details across the tabble.
-- An option can be configured in a given game to allow the players to interact with the computer to 
-  run the combats ie - player enters the details on who is attacking what. This should speed up a big 
-  game with lots of players and too few umpires.
-- An option can be configured in a given game to allow for full computer calculation, or go into OldSkool mode.
-  In OldSkool mode, the computer will display the various percentages needed for various things on the 
-  screen, and the players then have to do the die rolls, and enter the die results into the computer 
-  instead.
+- Combat calculations in the system are fully automated. The computer will require
+  some basic information (type of combat, ranges, tactical factors), and will then
+  do all the die rolling and other fun things to determine the full outcome. Results
+  are then sent to each player as a dispatch message via courier, which may arrive
+  immediately, or in a turn or 2 depending on conditions.
+- The default is that only the umpire interacts with the computer for each combat,
+  with the players calling out the details across the tabble.
+- An option can be configured in a given game to allow the players to interact with
+  the computer to run the combats ie - player enters the details on who is attacking
+  what. This should speed up a big game with lots of players and too few umpires.
+- An option can be configured in a given game to allow for full computer calculation,
+  or go into OldSkool mode.  In OldSkool mode, the computer will display the various
+  percentages needed for various things on the screen, and the players then have to
+  do the die rolls, and enter the die results into the computer instead.
 
 
 Variable Scaling Support :
-- Each game can be run at any scaling factor. By default it uses 1:60 figure scale and 1"=40y ground scale.
-  However the game scale can be set to any arbitary values in order to accomodate whatever fits the
-  size of each battle. You can go play at 1:47 scale, with 1" = 13 yards if you so choose. The game
-  mechanics remain the same. This only works because of the brilliant way that Empire calculates
-  combat outcomes with deterministic maths.
-- Information inside the system is calculated and stored in terms of actual troops. However, information presented
-  back to the umpire in terms of figures, and information presented to the players is in terms of bases of troops.
-  Details on distances are presented in terms of inches. These calculations are all done on the fly based
-  on the current scaling policies for each game.
-- Scaling can be changed in mid-game if needed. ie - If a battle starts as a skirmish action at 1:15 scale
-  between a couple of battalions ... and then escalates into a larger general battle ... the admin can decide to
-  rescale the game in mid point to accomodate larger forces getting involved. Shuffle the scenery,  and rescale
-  the formations ... so you have battalion groups on the field now instead of company groups. Even up to 1:120 scale
-  you still have 2 base battalions (of 3 figs per base), so that works too.
+- Each game can be run at any scaling factor. By default it uses 1:60 figure scale
+  and 1"=40y ground scale.  However the game scale can be set to any arbitary values
+  in order to accomodate whatever fits the size of each battle. You can go play at
+  1:47 scale, with 1" = 13 yards if you so choose. The game mechanics remain the same.
+  This only works because of the brilliant way that Empire calculates combat outcomes
+  with deterministic maths.
+- Information inside the system is calculated and stored in terms of actual troops.
+  However, information presented back to the umpire in terms of figures, and
+  information presented to the players is in terms of bases of troops.  Details on
+  distances are presented in terms of inches. These calculations are all done on the
+  fly based on the current scaling policies for each game.
+- Scaling can be changed in mid-game if needed. ie - If a battle starts as a skirmish
+  action at 1:15 scale between a couple of battalions ... and then escalates into a
+  larger general battle ... the admin can decide to rescale the game in mid point to
+  accomodate larger forces getting involved. Shuffle the scenery,  and rescale the
+  formations ... so you have battalion groups on the field now instead of company
+  groups. Even up to 1:120 scale you still have 2 base battalions
+  (of 3 figs per base), so that works too.
 
 Requirements :
 - A standard web server with PHP support and mySQL support.
 - Too easy ... just grab any old linux box and get it running. 
-- A couple of GIG of RAM and a few 100MB of disk space will be way more than enough to run the system.
-- An old P-III from the hard rubbish collection will have sufficient grunt to run a game with multiple players, no worries.
+- A couple of GIG of RAM and a few 100MB of disk space will be way more than enough
+  to run the system.
+- An old P-III from the hard rubbish collection will have sufficient grunt to run a
+  game with multiple players, no worries.
 
 
-This allows games to be run in a number of different ways, really depending on how many 
-computers you can dig up. 
+This allows games to be run in a number of different ways, really depending on how
+many computers you can dig up. 
 
 Some examples :
 
 - 2 players - 1 controlling each side, plus an umpire to control the game. 
-- 2 players at a table. One is running as the umpire/player for one side, the other is running as a player only for the other side.
-- 2 players at a table. Both are up to scratch with the system, so they are both running as umpire / player.
-- 1 player running a solo game, so he is logged in as administrator with access to both sides.
+- 2 players at a table. One is running as the umpire/player for one side, the other
+  is running as a player only for the other side.
+- 2 players at a table. Both are up to scratch with the system, so they are both
+  running as umpire / player.
+- 1 player running a solo game, so he is logged in as administrator with access to
+  both sides.
 
-- A really big game with over 10 players a side. Commands allocated to various Corps, Divisions, or even Brigades to
-individual players. The system will ensure that each player can only access and control those units under their
-command structure.
+- A really big game with over 10 players a side. Commands allocated to various Corps,
+  Divisions, or even Brigades to individual players. The system will ensure that each
+  player can only access and control those units under their command structure.
 
-- Monstrous convention, with a dozen games in progress on a number of tables, each table having a dozen players on
-each side. Huge !  The system will happily manage running multiple games at the same time. A pig to admin maybe, 
-but technically the system can handle it from a single machine running a single web server.
+- Monstrous convention, with a dozen games in progress on a number of tables, each
+  table having a dozen players on each side. Huge !  The system will happily manage
+  running multiple games at the same time. A pig to admin maybe, but technically the
+  system can handle it from a single machine running a single web server.
 
 
 ----oOo----
@@ -208,22 +230,24 @@ Remote Wargaming
 
 This will be cool to do, but I have not quite worked out the best way to handle it yet.
 
-The idea is to have a game in progress at a table somewhere in the world, with a webcam or
-2 setup on the table, and then delegate some commander positions to users who happen to
-be on the other side of the world.
+The idea is to have a game in progress at a table somewhere in the world, with a
+webcam or 2 setup on the table, and then delegate some commander positions to users
+who happen to be on the other side of the world.
 
-The interaction with their units is all through the web interface anyway, so that will work
-fine without any modification. Maybe having the webcams on the table with live views of the
-tabletop will be good enough to allow those remote players to experience 'being there' at
-the battle with their online mates.
+The interaction with their units is all through the web interface anyway, so that will
+work fine without any modification. Maybe having the webcams on the table with live
+views of the tabletop will be good enough to allow those remote players to experience
+'being there' at the battle with their online mates.
 
-I havent designed that aspect into the system yet, but its something I really want to 
-add at some point down the track. I dont see any technical obstacle to being able to do this.
+I havent designed that aspect into the system yet, but its something I really want to
+add at some point down the track. I dont see any technical obstacle to being able to
+do this.
 
-Its more a question of whether the remote player will really 'feel' part of the game, and that
-comes downs to having really good fast communication, and possibly live streamed audio as well.
-Its not just the pretty pictures, bad die rolls, and detailed AARs that make a game ... its the
-chit chat, jokes and laughter that all need to happen in real time to make it work.
+Its more a question of whether the remote player will really 'feel' part of the game,
+and that comes downs to having really good fast communication, and possibly live
+streamed audio as well.  Its not just the pretty pictures, bad die rolls, and detailed
+AARs that make a game ... its the chit chat, jokes and laughter that all need to happen
+in real time to make it work.
 
 If I could stream the audio from both ends of the connection as well as the webcam feed,
 then it would work brilliantly I think.
