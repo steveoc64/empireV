@@ -1,0 +1,237 @@
+This is a web application for managing games of Empire V.
+
+Empire V is a really old school set of wargaming rules for running Napoleonic era
+wargames with miniatures.
+
+Its a product of the 70s / 80s ... so there are stacks of charts, lots of maths, 
+and huge number of very strict ifs, buts and  procedures in playing the game.
+
+There is even a 2 page flowchart in the rules for working out what happens after 2 
+groups of infantry come close to each other, after the defender has fired at the 
+attacking troops, after casualties and morale checks, but before the attacking
+troops close for the final contact.  2 pages of flowcharts just for that !
+
+Thats just to give an idea of the depth and complexity of the rules.
+
+
+Now, in the modern tabletop gaming era, there are some excellent new rules out
+that are a lot easier to play, and provide fun games at levels from battalion to
+Corps. The market is quite healthy.
+
+So why bother with a 30+ year old rule set ?
+
+Well, because at the end of the day, Empire remains very popular with the so called
+hard core gamers, because it actually provides a highly realistic experience of
+fighting battles in this period, and produces highly plausible results.
+
+So much so, that the community of wargamers who enjoy this period remain quite 
+loyal to this venerable masterpeice of a ruleset.
+
+Sso here we have a modernization of this excellent system, in the form of an 
+extremely easy to use computer moderated control system.
+
+Hopefully this will serve the hard core gamers well, and also provide an 
+exciting and innovative path to allow the new generation of gamers to enjoy 
+the benefits of gaming Napoleonics in the beautiful old school way.
+
+Art meets Science.
+
+
+----oOo----
+
+To run this, you need to set the system up on a web server, and then setup the data, and
+then create user accounts for accessing the game for various players. 
+
+The best way to do this is setup a linux machine with Apache/PHP/MySQL support (all standard
+utilities that are part of a general linux install), and then simply install this application.
+
+That machine then runs the whole virtual world that the battle is fought in. Each player then
+communicates with their troops in that battle via a web server.
+
+Remember that ANYTHING with a web browser can access the system, so you could use a bunch of
+laptops on a wireless LAN, ipads, smartphones, etc.
+
+Its all standard HTML and javascript - NO Flash, NO activeX .. so that allows for the use of ipads !!
+
+
+----oOo----
+
+
+
+----oOo----
+
+What this system does (or will do) :
+
+General Game Setup and Management :
+- Provides a web based application for running a set of games.
+- The system will load and store a large database of detailed orders of battle for various armies.
+- Create a large database of scenarios, that use subsets of the orders of battle.
+- Spawn any number of games based on these scenarios. The system manages which games are in progress, 
+  and stores all state information related to each game move permanently.
+
+
+Player Control :
+- Manage multiple user accounts for access to the system with various different roles.
+- Administrator can assign players to games in progress, allowing complicated setups of sub-commands.
+- Manage access to information on the system .. each player is locked down to operating within only
+  those units under their command, in the context of a given game that is running.
+- Each game has at least 1 user setup as the umpire for that game. The umpire controls the flow
+  of the game from one phase to the next, one turn to the next.
+
+This allows games to be run in a number of different ways, really depending on how many 
+computers you can dig up. 
+
+Some examples :
+
+- 2 players - 1 controlling each side, plus an umpire to control the game. 
+- 2 players at a table. One is running as the umpire/player for one side, the other is running as a player only for the other side.
+- 2 players at a table. Both are up to scratch with the system, so they are both running as umpire / player.
+- 1 player running a solo game, so he is logged in as administrator with access to both sides.
+
+- A really big game with over 10 players a side. Commands allocated to various Corps, Divisions, or even Brigades to
+individual players. The system will ensure that each player can only access and control those units under their
+command structure.
+
+- Monstrous convention, with a dozen games in progress on a number of tables, each table having a dozen players on
+each side. Huge !  The system will happily manage running multiple games at the same time. A pig to admin maybe, 
+but technically the system can handle it from a single machine running a single web server.
+
+
+Running the Game (Player)
+- 
+
+
+
+Variable Scaling Support :
+- Each game can be run at any scaling factor. By default it uses 1:60 figure scale and 1"=40y ground scale.
+  However the game scale can be set to any arbitary values in order to accomodate whatever fits the
+  size of each battle. 
+- Information inside the system is calculated and stored in terms of actual troops. However, information presented
+  back to the umpire in terms of figures, and information presented to the players is in terms of bases of troops.
+  Details on distances are presented in terms of inches. These calculations are all done on the fly based
+  on the current scaling.
+- Scaling can be changed in mid-game if needed. ie - If a battle starts as a skirmish action at 1:15 scale
+  between a couple of battalions ... and then escalates into a larger general battle ... 
+
+Requirements :
+
+- A standard web server with PHP support and mySQL support.
+- Too easy ... just grab any old linux box and get it running. 
+- A couple of GIG of RAM and a few 100MB of disk space will be way more than enough to run the system.
+- An old P-III from the hard rubbish collection will have sufficient grunt to run a game with multiple players, no worries.
+
+
+----oOo----
+
+Future Path :
+
+I know there are a number of decent computer moderated wargaming tools out 
+there, but this one is aimed at being 100% faithful to the EmpireV rules -
+warts and all.
+
+There are many areas of the game that might be able to be improved and 
+extended, but the intention with this project is to simply capture the
+essennce of playing Empire, and nothing more or less than that.
+
+No shortcuts, no optimisations on the gaming - just a faithful capture of
+the rules in the all of their glorius details, with a computer interface on it.
+
+Get as close to the original as is possible .. and thats it. 
+
+
+However, it doesnt end there !!
+
+Will be adding a campaign framework around this as a separate project
+later on. More on that later.
+
+Once this one is fully complete and polished up to perfection, it also
+happens to provide an excellent framework for hacking together other 
+systems around other rulesets.
+
+I will probably look at forking this as a number of completely separate
+projects that are customised to a number of other gaming rulesets.
+
+Some ideal candidates are :
+
+- Piquet ... having a computerised interface on the whole initiative and card system.
+- IABSM, and all the other lardies products which use card activation.
+- Big scale operational wargaming in 3mm/6mm scale for huge WW2 or modern battles.
+
+
+Should be a fun ride.
+
+
+----oOo----
+
+Remote Wargaming
+
+This will be cool to do, but I have not quite worked out the best way to handle it yet.
+
+The idea is to have a game in progress at a table somewhere in the world, with a webcam or
+2 setup on the table, and then delegate some commander positions to users who happen to
+be on the other side of the world.
+
+The interaction with their units is all through the web interface anyway, so that will work
+fine without any modification. Maybe having the webcams on the table with live views of the
+tabletop will be good enough to allow those remote players to experience 'being there' at
+the battle with their online mates.
+
+I havent designed that aspect into the system yet, but its something I really want to 
+add at some point down the track. I dont see any technical obstacle to being able to do this.
+
+Its more a question of whether the remote player will really 'feel' part of the game, and that
+comes downs to having really good fast communication, and possibly live streamed audio as well.
+Its not just the pretty pictures, bad die rolls, and detailed AARs that make a game ... its the
+chit chat, jokes and laughter that all need to happen in real time to make it work.
+
+If I could stream the audio from both ends of the connection as well as the webcam feed,
+then it would work brilliantly I think.
+
+
+----oOo----
+
+Legal Aspects and Licence terms in plain English :
+
+
+The development of this application is strictly intended as a bold statement
+for how to write a good multi-user computer moderated wargaming system.
+
+It is provided as free (as in free speech) software, allowing anyone to 
+download and use with full access to all of the source code. It is therefore 
+published under a variety of free software licences. 
+
+There is NO CHARGE for providing this software, so its also free software as in
+free beer. 
+
+This might strike some people as odd, but the concept is not new, and it has
+proven to be the best approach to developing seriously good software. If the
+software has merit, then a community of developers will naturally grow around
+the available source code, share updates, and generally start to do really 
+cool things with it. 
+
+This software only exists because it is based on a number of freely available
+components. All I have done is to take various libraries of code written by
+other people, and add my own layer of code on top to create this application.
+
+The application as a whole then contains the work of innumerable authors, all
+of whom have granted free (as in free speech) access to their work.
+
+These freedoms are inherited by any derived product from this source code.
+
+Commercial opportunity ?
+
+This creates a commercial opportunity for providing this software as a service,
+if so desired.
+
+Anyone that wants to run this software as a commerical operation, say .. providing
+a web service for a fee to run wargames .. is free to do so under the terms
+of the licence. Consent to do so is implied in the licence terms.
+
+You may also modify the software in any way you see fit in order to satisfy your
+customers. You have permission to do that under the terms of the licence as well.
+
+If there is demand for it, and it is economically viable to do so ... then I may
+setup such a service online to run wargames and campaigns from one of my servers 
+for other players to run games from.
+
+
