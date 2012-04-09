@@ -1,0 +1,49 @@
+Tue Apr 10 07:18:01 CST 2012
+<steveoc64@gmail.com>
+
+Initial Release of Prototype
+============================
+
+What works :
+- Admin / Umpire / Player logins
+- Admin control framework pretty much complete now. Edit OOBs, Scenarios, Start games, assign players, join games.
+- Umpire and Player access to units all works sweet.
+- Umpire console - run orders phase, close off orders and move to ME determination phase
+- Player console - reviewing formations and issuing orders, works like a charm now
+- Game Phase 1 complete.   (Issue operational orders to Corps and MEs)
+
+Thats actually all the hard stuff out the way now !
+(Famous last words)
+
+==================================================================================================
+TODO:
+- Game Phase 2 - Infantry ME determination phase
+- Game Phase 3 - Test ME Morale
+- Game Phase 4 - Attach / Detach Commanders
+- Game Phase 5 - Declare Operational Orders
+- Game Phase 6 - Activate Orders
+- Game Phase 7 - ME under BreakOff order does grand tactical movement
+- Game Phase 8 - All other MEs do grand tactical movement
+- Game Phase 9 - Determine number of Bombardment rounds
+- Game Phase 10 - Engaged MEs do tactical movment, and eligible artillery does bombardment
+                   (this is the big one actually)
+- Game Phase 11 - Leader Casualties
+- Game Phase 12 - Rally eligible units
+- Game Phase 13 - Eligible units rest and recover fatigue
+- Game Phase 14 - End of hourly round
+
+Extensions TODO:
+- Remote wargaming support - webcam
+- Remote wargaming support - audio streaming
+- OldSkool mode
+- Mini Campaign mode - carry troops over from previous game to a new game
+- Message despatch and display integration to all user consoles
+- Detail mode - divide casualties into kills vs wounds, recover wounded to the ranks during rest
+- Computer controlled commander support
+- House rules plugin support via PHP modules and callbacks
+- Card activated command restrictions, initiative generation, and battlefield surprises
+- Random weather generation, and effects on movement, artillery, cavalry and musketry
+- Flank marches, ambushes, and other hidden element support
+- Engineering and field works support
+
+
