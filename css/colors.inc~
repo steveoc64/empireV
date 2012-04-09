@@ -1,0 +1,172 @@
+body {
+	background: #000011;
+	margin: 0;
+	padding: 0;
+	font-family: arial;
+	background-image: url(../images/scenario-master.jpg);
+	background-repeat:repeat-y;
+	background-position: top;
+	background-size: 100%;
+}
+#form {
+	top: 200px;
+	left: 200px;
+	width: 600px;
+	background: #f0f0f0 url(../images/login_bg.jpg) repeat-x 0 0;
+	opacity:0.95;
+	filter:alpha(opacity=95);
+	border: 1px solid white;
+	padding: 1em;
+	-moz-border-radius: 3px;
+}
+#report {
+	top: 220px;
+	left: 200px;
+	width: 800px;
+	position: absolute;
+	background: url(../images/reports-bg.png);
+	background-repeat:repeat-y;
+	opacity:1;
+	filter:alpha(opacity=95);
+	border: 0px solid white;
+	padding: 2em;
+	-moz-border-radius: 0px;
+}
+#formimg {
+	top: 20px;
+	left: 600px;
+	position: absolute;
+	background: #f0f0f0 url(../images/login_bg.jpg) repeat-x 0 0;
+	opacity:0.95;
+	filter:alpha(opacity=95);
+	border: 1px solid white;
+	padding: 1em;
+	-moz-border-radius: 3px;
+}
+#reportimg {
+	top: 240px;
+	left: 800px;
+	position: absolute;
+	background: #f0f0f0 url(../images/login_bg.jpg) repeat-x 0 0;
+	opacity:0.95;
+	filter:alpha(opacity=95);
+	border: 1px solid white;
+	padding: 1em;
+	-moz-border-radius: 3px;
+}
+
+
+#lister {
+	background: #f0f0f0 url(../images/login_bg.jpg) repeat-x 0 0;
+	opacity:0.9;
+	filter:alpha(opacity=90);
+	border: 1px solid white;
+	padding: 1em;
+	-moz-border-radius: 3px;
+}
+
+#menu {
+	position:absolute;
+	top: 70px;
+	left: 0px;
+	width: 150px;
+	background: #000011 repeat-x 0 0;
+	border: 0px solid black;
+	margin: 0px auto 0;
+	padding: 0em;
+	-moz-border-radius: 3px;
+}
+#main {
+	position:absolute;
+	top: 70px;
+	left: 180px;
+	right: 20px;
+	background: #888 repeat-x 0 0;
+	opacity:0.9;
+	filter:alpha(opacity=90);
+	border: 2px solid #001;
+	margin: 0px auto 0;
+	padding: 20px;
+	-moz-border-radius: 3px;
+}
+
+
+h1,h2,h3,h4,h5 {
+	margin-top: 0;
+	font-family: times , serif;
+	text-align: center;
+}
+
+input[type=prototext], input[type=password] {
+	display: block;
+	margin: 0 0 1em 0;
+	width: 280px;
+	border: 5px;
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	padding: 1em;
+}
+
+input[type=submit], form a {
+	border: none;
+	margin-right: 1em;
+	padding: 6px;
+	text-decoration: none;
+	font-size: 12px;
+	-moz-border-radius: 4px;
+	background: #348075;
+	color: white;
+	box-shadow: 0 1px 0 white;
+	-moz-box-shadow: 0 1px 0 white;
+	-webkit-box-shadow: 0 1px 0 white;
+}
+
+input[type=submit]:hover, form a:hover {
+	background: #287368;
+	cursor: pointer;
+}
+
+
+
+
+/* Validation error messages */
+
+.error {
+	color: #393939;
+	font-size: 15px;
+}
+
+fieldset {
+	width: 300px;
+	margin: auto;
+	margin-bottom: 2em;
+	display: block;
+}
+
+/* FOR FUN */
+
+h1,h2,h3,h4 {
+	color: #444499;
+	text-shadow: 1px 1px 0 black;
+}
+
+/* Not necessary. Just the "tutorial created by" stuff at the bottom */
+
+#tutInfo {
+	background: #e3e3e3;
+	border-top: 1px solid white;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: .7em .7em .7em 2em;
+}
+
+/* Generated via www.cssmenubuilder.com */
+
+.vmenu{margin:0; padding:0; width:150px; list-style:none;background:rgb(255,255,255);}
+.vmenu li{padding:0; margin:0 0 1px 0; height:40px; display:block; }
+.vmenu li a{text-align:left;height:40px; padding:0px 25px; font:16px Verdana, Arial, Helvetica, sans-serif; color:rgb(255,255,255); display:block; background:url('verMenuImages-arrow.png') 0px 0px no-repeat; text-decoration:none;}
+.vmenu li a:hover{background:url('verMenuImages-arrow.png') 0px -80px no-repeat; color:rgb(255,255,255);}
+.vmenu li a.active, .vmenu li a.active:hover{background:url('verMenuImages-arrow.png') 0px -40px no-repeat; color:rgb(255,255,255);}
+.vmenu li a span{line-height:40px;}
+

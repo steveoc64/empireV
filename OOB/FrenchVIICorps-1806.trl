@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Corps item="y" tlversion="1.2.4"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Division"
+icon="person">
+<Name type="Text" ref="y">French VII Corps 1806 - Augereau</Name>
+<Commander type="Text">Marshal Pierre Augereau</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised">Inspirational</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable">Excellent</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps">Corps</Doctrine>
+<Division item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Brigade"
+icon="person">
+<Name type="Text" ref="y">1st Division: Desjardin</Name>
+<Commander type="Text">General of Division Jacques Desjardin</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised" init="Impersonal">Impersonal</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good">Good</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps">Corps</Doctrine>
+<Brigade item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Battalion"
+icon="person">
+<Name type="Text" ref="y">Brigade d' Legere Lapisse</Name>
+<Commander type="Text">General of Brigade Pierre Belon Lapisse</Commander>
+<Inspiration type="Choice" format="Inspirational/Impersonal/Despised" init="Impersonal">Inspirational</Inspiration>
+<Drill type="Choice" format="None/Prussian/French" init="Prussian">French</Drill>
+<Image type="Picture" html="y"></Image>
+<Battalion item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_3">
+<Name type="Text" ref="y">16eme Legere, 1e Bn</Name>
+<FacingColours type="Text"></FacingColours>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Strength type="Number" format="####" init="720">720</Strength>
+<NumBases type="Text">4</NumBases>
+<Ranks type="Choice" format="3/2/OpenOrder" init="3">3</Ranks>
+<Officers type="Number" format="##" init="10">10</Officers>
+<ACE type="Number" format="###" init="10">14</ACE>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Elite</MoraleGrade>
+<SmallArms type="Choice" format="OG/Guard/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Elite</SmallArms>
+<Skirmishers type="Number" format="##">2</Skirmishers>
+<OpenOrder type="Boolean" format="yes/no" init="false">true</OpenOrder>
+<Rifles type="Boolean" format="yes/no" init="false">false</Rifles>
+<ClosedColumn type="Boolean" format="yes/no" init="false">true</ClosedColumn>
+<ShockTroops type="Boolean" format="yes/no" init="false">false</ShockTroops>
+<BattalionGuns type="Boolean" format="yes/no" init="false">false</BattalionGuns>
+<Breakpoint type="Number" format="###" init="80">80</Breakpoint>
+<Fatigue type="Number" format="##" init="0">0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>16eme Legere, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>14</ACE>
+<MoraleGrade>Elite</MoraleGrade>
+<SmallArms>Elite</SmallArms>
+<Skirmishers>2</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>16eme Legere, 3e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>14</ACE>
+<MoraleGrade>Elite</MoraleGrade>
+<SmallArms>Elite</SmallArms>
+<Skirmishers>2</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>16eme Legere, 4e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>14</ACE>
+<MoraleGrade>Elite</MoraleGrade>
+<SmallArms>Elite</SmallArms>
+<Skirmishers>2</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+</Brigade>
+<Brigade item="y">
+<Name>Brigade d' Ligne Lefranc</Name>
+<Commander>General of Brigade Jacques Lefranc</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>French</Drill>
+<Battalion item="y">
+<Name>14eme Legere, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>14</ACE>
+<MoraleGrade>Elite</MoraleGrade>
+<SmallArms>Elite</SmallArms>
+<Skirmishers>2</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>44eme Ligne, 1e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>44eme Ligne, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>44eme Ligne, 3e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>105eme Ligne, 1e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>105eme Ligne, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>105eme Ligne, 3e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+</Brigade>
+<Battery item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_1">
+<Name type="Text" ref="y">3rd Foot Artillery Regiment, 4th company</Name>
+<Type type="Choice" format="Foot/Horse" init="Foot">Foot</Type>
+<Calibre type="Choice" format="4lb/6lb/8lb/12lb" init="6">12lb</Calibre>
+<Strength type="Number" format="##" init="6">4</Strength>
+<NumGuns type="Text">1</NumGuns>
+<CrewFigures type="Text">4</CrewFigures>
+<Howitzers type="Text" init="0">2 x 6&quot; Howitzer</Howitzers>
+<Class type="Choice" format="OG/Class I/Class II/Class III" init="Class II">Class I</Class>
+<MoraleClass type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained">Elite</MoraleClass>
+</Battery>
+<Battery item="y">
+<Name>6th Horse Artillery Regiment, 2nd company</Name>
+<Type>Horse</Type>
+<Calibre>6lb</Calibre>
+<Strength>4</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>2</CrewFigures>
+<Class>Class I</Class>
+<MoraleClass>Elite</MoraleClass>
+</Battery>
+</Division>
+<Division item="y">
+<Name>2nd Division: Gardanne</Name>
+<Commander>General of Division Gaspard Amédée Gardanne</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Good</ProfessionalSkill>
+<Doctrine>Corps</Doctrine>
+<Brigade item="y">
+<Name>Brigade d' Legere Marcognet</Name>
+<Commander>General of Brigade Pierre-Louis Binet de Marcognet</Commander>
+<Inspiration>Inspirational</Inspiration>
+<Drill>French</Drill>
+<Battalion item="y">
+<Name>25eme Legere, 1e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>14</ACE>
+<MoraleGrade>Elite</MoraleGrade>
+<SmallArms>Elite</SmallArms>
+<Skirmishers>2</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>25eme Legere, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>14</ACE>
+<MoraleGrade>Elite</MoraleGrade>
+<SmallArms>Elite</SmallArms>
+<Skirmishers>2</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+</Brigade>
+<Brigade item="y">
+<Name>Brigade d' Ligne Delabassé</Name>
+<Commander>General of Brigade Mathieu Delabassé</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>French</Drill>
+<Battalion item="y">
+<Name>27eme Ligne, 1e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>27eme Ligne, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>50eme Ligne, 1e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>50eme Ligne, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>59eme Ligne, 1e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>59eme Ligne, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+</Brigade>
+</Division>
+<CavBrigade item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Squadron"
+icon="person">
+<Name type="Text" ref="y">Brigade d' Cheval  Colbert-Chabanais</Name>
+<BattleGroup type="Boolean" format="yes/no" init="true">true</BattleGroup>
+<Commander type="Text">General of Brigade Auguste François-Marie de Colbert-Chabanais</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised" init="Inspiring">Impersonal</Inspiration>
+<Doctrine type="Choice" format="Scouting/Packed/Linear" init="Packed">Packed</Doctrine>
+</CavBrigade>
+<Army item="n"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Corps"
+icon="book_1">
+<Name type="Text" ref="y"></Name>
+</Army>
+<Squadron item="n"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_2">
+<Name type="Text" ref="y"></Name>
+<FacingColours type="Text"></FacingColours>
+<Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon"></Type>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good"></MoraleState>
+<Strength type="Number" format="###" init="120"></Strength>
+<NumBases type="Text"></NumBases>
+<Officers type="Number" format="##" init="10"></Officers>
+<ACE type="Number" format="##" init="20"></ACE>
+<MoraleClass type="Choice" format="OG/GRD/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran"></MoraleClass>
+<SmallArms type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran"></SmallArms>
+<BattleCavalry type="Boolean" format="yes/no" init="false"></BattleCavalry>
+<Undistinguished type="Boolean" format="yes/no" init="false"></Undistinguished>
+<Skirmisher type="Number" format="##" init="0"></Skirmisher>
+<MoveRate type="Choice" format="Light/Heavy" init="Light"></MoveRate>
+<Breakpoint type="Number" format="###" init="80"></Breakpoint>
+<Fatigue type="Number" format="###" init="0"></Fatigue>
+</Squadron>
+<Wing item="n"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="person">
+<Name type="Text" ref="y"></Name>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good"></MoraleState>
+<Commander type="Text"></Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised"></Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good"></ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps" init="Corps"></Doctrine>
+</Wing>
+</Corps>

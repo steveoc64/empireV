@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Army item="y" tlversion="1.2.4"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Corps"
+icon="book_1">
+<Name type="Text" ref="y">Prussian/Saxon forces at Jena Auerstaedt</Name>
+<Commander type="Text">King of Prussia</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised">Impersonal</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable">Despicable</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps">Regimental</Doctrine>
+<Wing item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="person">
+<Name type="Text" ref="y">Brunswick's Main Army - Northern Wing (Auerstaedt)</Name>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Commander type="Text">Duke of Brunswick</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised">Impersonal</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good">Despicable</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps" init="Corps">Regimental</Doctrine>
+<Division item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Brigade"
+icon="person">
+<Name type="Text" ref="y">Advanced Guard Division von Blucher</Name>
+<Commander type="Text">General-Leutnant Gebhard Leberecht von Blucher</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised" init="Impersonal">Inspirational</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good">Despicable</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps">Regimental</Doctrine>
+<Brigade item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Battalion"
+icon="person">
+<Name type="Text" ref="y">Fusilier Brigade von Oswald</Name>
+<Commander type="Text">General-Major Friedrich Gottlieb von Oswald</Commander>
+<Inspiration type="Choice" format="Inspirational/Impersonal/Despised" init="Impersonal">Impersonal</Inspiration>
+<Drill type="Choice" format="None/Prussian/French" init="Prussian">Prussian</Drill>
+<Image type="Picture" html="y"></Image>
+<Battalion item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_3">
+<Name type="Text" ref="y">Weimar Fusilier</Name>
+<FacingColours type="Text"></FacingColours>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Strength type="Number" format="####" init="720">780</Strength>
+<NumBases type="Text">4</NumBases>
+<Ranks type="Choice" format="3/2/OpenOrder" init="3">3</Ranks>
+<Officers type="Number" format="##" init="10">10</Officers>
+<ACE type="Number" format="###" init="10">12</ACE>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</MoraleGrade>
+<SmallArms type="Choice" format="OG/Guard/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Crack</SmallArms>
+<Skirmishers type="Number" format="##">1</Skirmishers>
+<OpenOrder type="Boolean" format="yes/no" init="false">true</OpenOrder>
+<Rifles type="Boolean" format="yes/no" init="false">false</Rifles>
+<ClosedColumn type="Boolean" format="yes/no" init="false">false</ClosedColumn>
+<ShockTroops type="Boolean" format="yes/no" init="false">false</ShockTroops>
+<BattalionGuns type="Boolean" format="yes/no" init="false">false</BattalionGuns>
+<Breakpoint type="Number" format="###" init="80">80</Breakpoint>
+<Fatigue type="Number" format="##" init="0"></Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Grieffenberg Fusilier #4</Name>
+<MoraleState>Good</MoraleState>
+<Strength>780</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+</Battalion>
+<Battalion item="y">
+<Name>Oswald Fuslier #14</Name>
+<MoraleState>Good</MoraleState>
+<Strength>780</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+</Battalion>
+<Battalion item="y">
+<Name>Kloch Fusilier #18</Name>
+<MoraleState>Good</MoraleState>
+<Strength>780</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<Skirmishers>1</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>true</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+</Battalion>
+</Brigade>
+<CavBrigade item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Squadron"
+icon="person">
+<Name type="Text" ref="y">Cavalry Brigade von Blucher</Name>
+<BattleGroup type="Boolean" format="yes/no" init="true">true</BattleGroup>
+<Commander type="Text">Blucher</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised" init="Inspiring">Inspiring</Inspiration>
+<Doctrine type="Choice" format="Scouting/Packed/Linear" init="Packed">Packed</Doctrine>
+<Squadron item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_2">
+<Name type="Text" ref="y">Hussar Regt #4  von Wurttemburg. 10 sqns</Name>
+<FacingColours type="Text"></FacingColours>
+<Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon">Hussar</Type>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Strength type="Number" format="###" init="120">1200</Strength>
+<NumBases type="Text">10</NumBases>
+<Officers type="Number" format="##" init="10">10</Officers>
+<ACE type="Number" format="##" init="20">20</ACE>
+<MoraleClass type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Crack</MoraleClass>
+<SmallArms type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</SmallArms>
+<BattleCavalry type="Boolean" format="yes/no" init="false">false</BattleCavalry>
+<Undistinguished type="Boolean" format="yes/no" init="false">false</Undistinguished>
+<Skirmisher type="Number" format="##" init="0">0</Skirmisher>
+<MoveRate type="Choice" format="Light/Heavy" init="Light">Light</MoveRate>
+<Breakpoint type="Number" format="###" init="80">80</Breakpoint>
+<Fatigue type="Number" format="###" init="0"></Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Hussar Regt #8  von Blucher 10 sqns</Name>
+<Type>Hussar</Type>
+<MoraleState>Good</MoraleState>
+<Strength>1200</Strength>
+<NumBases>10</NumBases>
+<Officers>100</Officers>
+<ACE>20</ACE>
+<MoraleClass>Crack</MoraleClass>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>false</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>80</Breakpoint>
+</Squadron>
+<Squadron item="y">
+<Name>Dragoon Regt #3  von Irwing 5 sqns</Name>
+<Type>Dragoon</Type>
+<MoraleState>Good</MoraleState>
+<Strength>600</Strength>
+<NumBases>5</NumBases>
+<Officers>60</Officers>
+<ACE>24</ACE>
+<MoraleClass>Gren</MoraleClass>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>70</Breakpoint>
+</Squadron>
+<Battery item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_1">
+<Name type="Text" ref="y">Schorlemmer Horse Artillery Battery</Name>
+<Type type="Choice" format="Foot/Horse" init="Foot">Horse</Type>
+<Calibre type="Choice" format="4lb/6lb/8lb/12lb" init="6">6lb</Calibre>
+<Strength type="Number" format="##" init="6">6</Strength>
+<NumGuns type="Text">3</NumGuns>
+<CrewFigures type="Text">2</CrewFigures>
+<Howitzers type="Number" format="##" init="0"></Howitzers>
+<Class type="Choice" format="OG/Class I/Class II/Class III" init="Class II">Class II</Class>
+<MoraleClass type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained">Veteran</MoraleClass>
+</Battery>
+</CavBrigade>
+</Division>
+<Division item="y">
+<Name>1 Division Prinz Wiliam of Orange</Name>
+<Commander>General-Leutnant Prince William of Orange</Commander>
+<Inspiration>Despised</Inspiration>
+<ProfessionalSkill>Despicable</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<Brigade item="y">
+<Name>Infantrie Brigade Prinz Heinrich</Name>
+<Commander>Oberst Prince Henry</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Rheinbaben Grenadier Battalion</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>16</ACE>
+<MoraleGrade>Gren</MoraleGrade>
+<SmallArms>Gren</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>90</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Prince Ferdinand Infantry Regiment # 25, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Puttkammer Infantry Regiment # 36, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Riemer Foot Artillery Battery, six 6-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>6lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Class>Class III</Class>
+<MoraleClass>Veteran</MoraleClass>
+</Battery>
+</Brigade>
+<Brigade item="y">
+<Name>Infantrie Brigade von Lutzow</Name>
+<Commander>Oberst Johann Adolf von Lutzow</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Knebel Grenadier Battalion</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>16</ACE>
+<MoraleGrade>Gren</MoraleGrade>
+<SmallArms>Gren</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>true</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Möllendorf Infantry Regiment # 34, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Wartensleben Infantry Regiment # 36, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Lehmann Foot Artillery Battery, six 6-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>6lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class III</Class>
+</Battery>
+</Brigade>
+<CavBrigade item="y">
+<Name>Cavalry Brigade Prince Wilhelm</Name>
+<BattleGroup>true</BattleGroup>
+<Commander>Oberstleutnant Prince Wilhelm</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Doctrine>Packed</Doctrine>
+<Squadron item="y">
+<Name>Leib Carabinier Regiment # 12, five squadrons</Name>
+<Type>Carabinier</Type>
+<MoraleState>Good</MoraleState>
+<Strength>500</Strength>
+<Officers>50</Officers>
+<ACE>27</ACE>
+<MoraleClass>Guard</MoraleClass>
+<SmallArms>Crack</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Garde du Corps Cuirassier Regiment # 14, five squadrons</Name>
+<Type>Cuirassier</Type>
+<MoraleState>Good</MoraleState>
+<Strength>500</Strength>
+<Officers>50</Officers>
+<ACE>27</ACE>
+<MoraleClass>Guard</MoraleClass>
+<SmallArms>Crack</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Battery item="y">
+<Name>Willmann Horse Artillery Battery, six 4-pound guns</Name>
+<Type>Horse</Type>
+<Calibre>4lb</Calibre>
+<Strength>6</Strength>
+<Class>Class II</Class>
+<MoraleClass>Crack</MoraleClass>
+</Battery>
+</CavBrigade>
+</Division>
+<Division item="y">
+<Name>2 Division von Wartensleben</Name>
+<Commander>General-Leutnant Leopold Alexander von Wartensleben</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Despicable</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<Brigade item="y">
+<Name>Infantrie Brigade von Wedel</Name>
+<Commander>General-Major Karl Alexander von Wedel</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Hanstein Grenadier Battalion</Name>
+<MoraleState>Good</MoraleState>
+<Strength>830</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>16</ACE>
+<MoraleGrade>Gren</MoraleGrade>
+<SmallArms>Gren</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>true</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Renouard Infantry Regiment # 3, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Kleist Infantry Regiment # 5, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Wilkins Foot Artillery battery, six 8-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>8lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Class>Class III</Class>
+<MoraleClass>Veteran</MoraleClass>
+</Battery>
+</Brigade>
+<Brigade item="y">
+<Name>Infantrie Brigade von Renouard</Name>
+<Commander>General-Major Johann Jeremias von Renouard</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Alt-Braun Grenadier Battalion</Name>
+<MoraleState>Good</MoraleState>
+<Strength>830</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>16</ACE>
+<MoraleGrade>Gren</MoraleGrade>
+<SmallArms>Gren</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>true</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Prince Louis Infantry Regiment # 20, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Brunswick Infantry Regiment # 21, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Lange Foot Artillery Battery, six 8-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>8lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Class>Class III</Class>
+<MoraleClass>Veteran</MoraleClass>
+</Battery>
+</Brigade>
+<CavBrigade item="y">
+<Name>Kavallrie Brigade von Quitzow</Name>
+<BattleGroup>true</BattleGroup>
+<Commander>General-Major Christan Heinrich von Quitzow</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Doctrine>Packed</Doctrine>
+<Squadron item="y">
+<Name>Quitzow Cuirassier Regiment # 6, five squadrons</Name>
+<Type>Cuirassier</Type>
+<MoraleState>Good</MoraleState>
+<Strength>600</Strength>
+<Officers>10</Officers>
+<ACE>27</ACE>
+<MoraleClass>Gren</MoraleClass>
+<SmallArms>Gren</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Reitzenstein Cuirassier Regiment # 7, five squadrons</Name>
+<Type>Cuirassier</Type>
+<MoraleState>Good</MoraleState>
+<Strength>600</Strength>
+<Officers>10</Officers>
+<ACE>27</ACE>
+<MoraleClass>Gren</MoraleClass>
+<SmallArms>Gren</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Battery item="y">
+<Name>Merkatz Horse Artillery Battery, six 4-pound guns</Name>
+<Type>Horse</Type>
+<Calibre>4lb</Calibre>
+<Strength>6</Strength>
+<Class>Class I</Class>
+<MoraleClass>Crack</MoraleClass>
+</Battery>
+</CavBrigade>
+</Division>
+<Division item="y">
+<Name>3 Division von Schmettau</Name>
+<Commander>General-Leutnant Friedrich Wilhelm Karl von Schmettau</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Despicable</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<Brigade item="y">
+<Name>Infantrie Brigade von Alvensleben</Name>
+<Commander>General-Major Ludolph August Friedrich von Alvensleben</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Schack Grenadier Battalion</Name>
+<MoraleState>Good</MoraleState>
+<Strength>830</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>16</ACE>
+<MoraleGrade>Gren</MoraleGrade>
+<SmallArms>Gren</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>true</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Alvensleben Infantry Regiment # 33, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1660</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Prince Heinrich Infantry Regiment # 35, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1660</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Röhl Foot Artillery Battery, six 8-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>8lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Class>Class III</Class>
+<MoraleClass>Veteran</MoraleClass>
+</Battery>
+</Brigade>
+<Brigade item="y">
+<Name>Infantrie Brigade von Schimonsky</Name>
+<Commander>General-Major Dietrich Lebrecht von Schimonsky</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Krafft Grenadier Battalion</Name>
+<MoraleState>Good</MoraleState>
+<Strength>830</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>16</ACE>
+<MoraleGrade>Gren</MoraleGrade>
+<SmallArms>Gren</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>true</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Malschitsky Infantry Regiment # 28, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Schimonsky Infantry Regiment # 40, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1600</Strength>
+<NumBases>8 + Mounted Officer</NumBases>
+<Ranks>3</Ranks>
+<Officers>20</Officers>
+<ACE>12</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Crack</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Stankar Foot Artillery Battery, six 8-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>8lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Class>Class III</Class>
+<MoraleClass>Veteran</MoraleClass>
+</Battery>
+</Brigade>
+<CavBrigade item="y">
+<Name>Cavalry Brigade: von Irwing</Name>
+<BattleGroup>true</BattleGroup>
+<Commander>General-Major Friedrich Daniel Wilhelm von Irwing</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Doctrine>Packed</Doctrine>
+<Squadron item="y">
+<Name>Königin Dragoon Regiment # 5, ten squadrons</Name>
+<Type>Dragoon</Type>
+<MoraleState>Good</MoraleState>
+<Strength>1200</Strength>
+<NumBases>10</NumBases>
+<Officers>10</Officers>
+<ACE>24</ACE>
+<MoraleClass>Guard</MoraleClass>
+<SmallArms>Crack</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Battery item="y">
+<Name>Graumann Horse Artillery Battery, six guns</Name>
+<Type>Horse</Type>
+<Calibre>4lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>3</NumGuns>
+<CrewFigures>2</CrewFigures>
+<Class>Class II</Class>
+<MoraleClass>Elite</MoraleClass>
+</Battery>
+</CavBrigade>
+<CavBrigade item="y">
+<Name>Cavalry Brigade: von Bünting</Name>
+<BattleGroup>true</BattleGroup>
+<Commander>General-Major Karl Wilhelm von Bünting</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Doctrine>Packed</Doctrine>
+<Squadron item="y">
+<Name>Heising Cuirassier Regiment # 8, five squadrons</Name>
+<Type>Cuirassier</Type>
+<MoraleState>Good</MoraleState>
+<Strength>600</Strength>
+<NumBases>5</NumBases>
+<Officers>10</Officers>
+<ACE>27</ACE>
+<MoraleClass>Gren</MoraleClass>
+<SmallArms>Crack</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Bünting Cuirassier Regiment # 12, five squadrons</Name>
+<Type>Cuirassier</Type>
+<MoraleState>Good</MoraleState>
+<Strength>600</Strength>
+<NumBases>5</NumBases>
+<Officers>10</Officers>
+<ACE>27</ACE>
+<MoraleClass>Gren</MoraleClass>
+<SmallArms>Crack</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+</CavBrigade>
+</Division>
+</Wing>
+<Corps item="n"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Division"
+icon="person">
+<Name type="Text" ref="y"></Name>
+</Corps>
+</Army>

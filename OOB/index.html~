@@ -1,0 +1,35 @@
+<html>
+	<h1>Some OOB files for Napoleonic Battles</h1>
+
+Tue Apr  3 12:33:38 CST 2012
+<p>
+	This is a sampler page for previewing the ORBAT editing part of this new Computer Moderated Gaming project.
+	<p>
+Download any of these files (right click -&gt; save as), and use the excellent <a target=treeline href=http://treeline.bellz.org/download.html>TreeLine</a> program to change them, or create new ORBATs.
+
+<ul>
+	<li><a href=BlucherAG-1806.trl>BlucherAG-1806.trl</a> Advanced Guard Division for the Prussian army, 1806.
+	<li><a href=FrenchVIICorps-1806.trl>FrenchVIICorps-1806.trl</a> Augereau's VII Corps - 1806
+	<li><a href=JenaPrussian.trl>JenaPrussian.trl</a> Prussian Northern Wing, 1806
+</ul>
+<hr>
+
+	Specs for the project as a whole are detailed here : <a href=http://15mm-madness.blogspot.com.au/2012/04/computer-moderated-gaming-for.html>http://15mm-madness.blogspot.com.au/2012/04/computer-moderated-gaming-for.html</a>
+	<p>
+	The whole project is coming along quite nicely, but I figured that I dont want to get too bogged down in the force-editor part of the project if I can easily use something off the shelf. Turns out there is an excellent utility program available that does a perfect job of editting ORBATs as portable XML files, and its free, and it runs on Windows and Linux as well. That part of the project is all done then.
+	<p>
+	I have written an import program to take these TreeLine XML files, and load them into the combat system as ORBATs that can be selected for any given scenario. The combat simulator is also coming along nicely, so I should be able to open that up to users soon.
+	<p>
+	I have put these ORBAT files up here for review ... feel free to download any of them and have a play, to get a feel for the level of detail. If anyone comes up with some more, feel free to email them to me at <a href=mailto:steveoc64@gmail.com>steveoc64@gmail.com</a>, and I will add them to the system.
+	<p>
+	Lets see if we can generate a massive number of ORBATs in this format, free for anyone to download and use !!!
+	<p>
+<p>
+
+If you want to create a brand new file from scratch, use the 'Copy Data Types From File' utility in TreeLine to setup the structure for the new file.
+<p>
+Here is an example of how treeline works for editting ORBATs and unit statistics for Empire :
+
+<center><img src=treeline-example.png></center>
+
+</html>
