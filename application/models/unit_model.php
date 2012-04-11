@@ -16,7 +16,6 @@ define ('COLOR_4','#d95717');
 define ('COLOR_5','#ff3000');
 define ('COLOR_6','#ff0000');
 
-
 Class Unit_model extends CI_Model {
 
 	function get($id, $game_id=0) {

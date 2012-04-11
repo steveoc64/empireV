@@ -1,5 +1,6 @@
 <?
 if (isset($refresh_orders)) {
+	echo "<img src=images/fancy-pants3.jpg><br><u>Orders outstanding :</u>\n";
 	echo "<table border=0 cellpadding=3>\n";
 	$query = $this->db->query("select player_name,unit_id,order_type,objective from game_order where game_id=".$game->id." and activate_turn=0 order by timestamp desc");
 	foreach ($query->result() as $row) {
@@ -27,16 +28,22 @@ if (isset($game)) {
 		echo "<h2>Orders Phase ~ ".$game->hrs."</h2>";
 		echo "<center><div id=clock></div></center>";
 		echo "<b>Commanders may currently submit new orders.</b><p><i>The orders appear on this screen in real time as they are entered. Once commanders have had a fair opportunity to dispatch orders, click the Close Off Orders button to move along to the next phase.<p>Note that in standard Empire V, the players get strictly 2 minutes to perform these orders.</i><br>\n";
-		echo "<button id='view_orders'>Edit Orders</button><button id='close_orders'>Close Off Orders</button>\n";
+
 		echo "<div id=results></div>";
+		echo "<button id='view_orders'>Edit Orders</button><button id='close_orders'>Close Off Orders</button><button id=me_morale>ME Morale Tests</button>\n";
 
 		// A quick report in table format of the current orders
-		echo "<img src=images/fancy-pants3.jpg><br><u>Orders outstanding :</u>\n";
-		echo "<div id=orders>";
-		echo "</div>";
+		echo "<div id=orders></div>";
 		break;
 	case PHASE_MORALE:
 		echo "<h2>Morale Determination Phase ~ ".$game->hrs."</h2>\n";
+		// For each player
+		//   for each ME under their command
+		//    - except cavalry brigades
+		//    - except infantry units with garrison orders
+		//    - has at least 20% losses in total
+		//    - was in close combat last round
+		//
 		break;
 	case PHASE_LEADERS:
 		break;
@@ -62,6 +69,7 @@ if (isset($game)) {
 	<div id="form">
 	<center><img src=/empire/images/firing-squad.jpg></center>
 	You are not currently logged in to a game<p>Ask the administrator to setup your<br>account to access a game in progress.
+	</div>
 <?  } ?>
 
 
@@ -78,6 +86,7 @@ $("#refresh").on("click", function(){
 });
 $(function() { 
 	$("#menu").hide();
+	$("#me_morale").hide();
 	$('#main').animate({ left: "20px", top: "0px"}, 500 );
 	$("#console").fadeIn(500);
 	$("#orders").load('umpire_console/index/refresh_orders');
@@ -106,12 +115,20 @@ $("#hq").click(function () {
 var ajax_loader_img = "<img src='images/ajax-loader.gif' alt='loading...' />";  
 $('#view_orders').click(function(){ document.location.href='/empire/orders'; })
 $("#close_orders").click(function(){  
+	// Hide widgets we dont need no more
+	$("#view_orders").hide(1000); 
+	$("#close_orders").hide(1000); 
+	$("#me_morale").show(1000); 
+
 	if (confirm('This will close off all orders and advance the game to ME determination. Do you want to proceed ?')) {
-		$("#results").load('umpire_console/close_orders', function() {location.reload();});
+		$("#orders").hide();
+		$("#results").load('umpire_console/close_orders', function() {
+			//alert($('#results').text().replace('<br>',"\n"));
+			//location.reload();
+		});
+
 	}
 
-	//$("#view_orders").hide(1000); 
-	//$("#close_orders").hide(1000); 
 	//$("#console").load('umpire_console/index/refresh');
 	//$("#refresh").fadeIn(1000);
 });  

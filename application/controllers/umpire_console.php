@@ -13,9 +13,9 @@ class Umpire_Console extends MY_Controller
 			$game = $this->game_model->get_current_game();
 			if ($this->uri->segment(3) != '') { 
 				// Ajax refresh of the console - dont sent all the header stuff, just the console content
-				$this->load->view('umpire_hq',array('game'=>$game,$this->uri->segment(3)=>true),false);
+				$this->load->view('umpire_hq',array('game'=>$game,$this->uri->segment(3)=>true,'game_model'=>$this->game_model),false);
 			} else {
-				$this->render($this->load->view('umpire_hq',array('game'=>$game),true));
+				$this->render($this->load->view('umpire_hq',array('game'=>$game,'game_model'=>$this->game_model),true));
 			}
 		}
 	}
