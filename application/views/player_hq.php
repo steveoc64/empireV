@@ -13,7 +13,7 @@ if (isset($game)) {
 		echo "<h2>Orders Phase ~ ".$game->hrs."</h2>";
 		//echo "You may submit new orders for the following Maneuvre Elements<p>";
 
-		echo "<input id=objective size=90>Enter a short objective the orders here.</input>";
+		echo "<input id=objective size=90 value='Enter a short objective for the orders here.'></input>";
 		echo "<div id=orders>";
 		echo "<div id=order order=1 class=ui-widget-content>Defend</div>";
 		echo "<div id=order order=2 class=ui-widget-content>Attack</div>";
@@ -21,9 +21,9 @@ if (isset($game)) {
 		echo "<div id=order order=4 class=ui-widget-content>Withdraw</div>";
 		echo "<div id=order order=5 class=ui-widget-content>ReDeploy</div>";
 		echo "<div id=order order=6 class=ui-widget-content>Rally</div>";
-		echo "<div id=order order=7 class=ui-widget-content>Support</div>";
+		echo "<div id=order_cav order=7 class=ui-widget-content>Support</div>";
 		echo "<div id=order order=8 class=ui-widget-content>BreakOff</div>";
-		echo "<div id=order order=9 class=ui-widget-content>Garrison</div>";
+		echo "<div id=order_inf order=9 class=ui-widget-content>Garrison</div>";
 		echo "<div id=order order=10 class=ui-widget-content>SauveQuiPeut</div>";
 		echo "</div>";
 		// Display all top level units owned by this player in a large box,
@@ -66,9 +66,9 @@ if (isset($game)) {
 		echo "<div id=order order=4 class=ui-widget-content>Withdraw</div>";
 		echo "<div id=order order=5 class=ui-widget-content>ReDeploy</div>";
 		echo "<div id=order order=6 class=ui-widget-content>Rally</div>";
-		echo "<div id=order order=7 class=ui-widget-content>Support</div>";
+		echo "<div id=order_cav order=7 class=ui-widget-content>Support</div>";
 		echo "<div id=order order=8 class=ui-widget-content>BreakOff</div>";
-		echo "<div id=order order=9 class=ui-widget-content>Garrison</div>";
+		echo "<div id=order_inf order=9 class=ui-widget-content>Garrison</div>";
 		echo "<div id=order order=10 class=ui-widget-content>SauveQuiPeut</div>";
 		echo "</div>";
 
@@ -121,6 +121,8 @@ if (isset($game)) {
 
 #orders { clear:both; float:top; width: 900px; height: 42px; border: 0px solid blue; }
 #order {  font-size: 11px; float: left; width: 70px; height: 20px; border: 1px solid #002255; padding: 0.5em; background: #e7cea5; }
+#order_inf {  font-size: 11px; float: left; width: 70px; height: 20px; border: 1px solid #002255; padding: 0.5em; background: #e7cea5; }
+#order_cav {  font-size: 11px; float: left; width: 70px; height: 20px; border: 1px solid #002255; padding: 0.5em; background: #e7cea5; }
 </style>
 
 <script>
@@ -145,7 +147,7 @@ $(function() {
 		var top = coord.top;
 		$.post('update_unit_posn/index/'+unitid+'/'+left+'/'+top)
 	}).droppable({
-		accept: "#order",
+		accept: "#order, #order_inf",
 		drop: function( event, ui ) {
 			var orderid = $(ui.draggable).attr("order");
 			var ordertxt = $(ui.draggable).text();

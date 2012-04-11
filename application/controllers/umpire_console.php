@@ -11,12 +11,11 @@ class Umpire_Console extends MY_Controller
 			$this->load->model('game_model');
 			$this->load->model('unit_model');
 			$game = $this->game_model->get_current_game();
-			$content = $this->load->view('umpire_hq',array('game'=>$game),true);
-			if ($this->uri->segment(3) == 'refresh') { 
+			if ($this->uri->segment(3) != '') { 
 				// Ajax refresh of the console - dont sent all the header stuff, just the console content
-				echo $content;
+				$this->load->view('umpire_hq',array('game'=>$game,$this->uri->segment(3)=>true),false);
 			} else {
-				$this->render($content);
+				$this->render($this->load->view('umpire_hq',array('game'=>$game),true));
 			}
 		}
 	}
