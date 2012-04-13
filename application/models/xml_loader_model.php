@@ -484,7 +484,7 @@ class Xml_loader_model extends CI_Model {
 		echo "          NumBases = $xml->NumBases\n";
 		echo "          Officers = $xml->Officers\n";
 		echo "          ACE = $xml->ACE\n";
-		echo "          MoraleGrade = $xml->MoraleClass\n";
+		echo "          MoraleGrade = $xml->MoraleGrade\n";
 		echo "          SmallArms = $xml->SmallArms\n";
 		echo "          BattleCavalry = $xml->BattleCavalry\n";
 		echo "          Undistinguished = $xml->Undistinguished\n";
@@ -494,7 +494,7 @@ class Xml_loader_model extends CI_Model {
 		echo "          Fatigue = $xml->Fatigue\n";
 	
 		// Get the IDs for the various bits
-		$row = $this->db->query("select id from morale_grade where name like '$xml->MoraleClass%'")->row();
+		$row = $this->db->query("select id from morale_grade where name like '$xml->MoraleGrade%'")->row();
 		$mgid = (int)$row->id;
 		$row = $this->db->query("select id from morale_grade where name like '$xml->SmallArms%'")->row();
 		$said = (int)$row->id;
@@ -543,7 +543,7 @@ class Xml_loader_model extends CI_Model {
 		echo "          Class = $xml->Class\n";
 	
 		// Get the IDs for the various bits
-		$row = $this->db->query("select id from morale_grade where name like '$xml->MoraleClass%'")->row();
+		$row = $this->db->query("select id from morale_grade where name like '$xml->MoraleGrade%'")->row();
 		$said = $mgid = (int)$row->id;
 
 		// Create a Battery record
