@@ -17,7 +17,7 @@ class Units extends MY_Controller
 		// Apply restrictions
 		$title = '';
 		$this->load->model('game_model');
-		$game = $this->game_model->get_current_game();
+		$this->game = $this->game_model->get_current_game();
 		
 		switch($this->session->userdata('role')) {
 		case 'A':
@@ -35,11 +35,14 @@ class Units extends MY_Controller
 				$form->callback_column('unit.name',array($this,'indent_name2'));
 				$form->callback_after_update(array($this,'cascade_me'));
 			} else {
-				if ($game) {
-					$form->where('unit.orbat_id',$game->orbat_attacker);
-					$form->or_where('unit.orbat_id',$game->orbat_defender);
-					$title .= "Only showing attacker and defender forces for current game (#".$game->id." - ".$game->name.")";
+				if ($this->game) {
+					$form->where('unit.orbat_id',$this->game->orbat_attacker);
+					$form->or_where('unit.orbat_id',$this->game->orbat_defender);
+					$title .= "Only showing attacker and defender forces for current game (#".$this->game->id." - ".$this->game->name.")";
 					// Add some buttons - dont show them if there is no game selected for admin
+					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','orbat_id');
+					$form->callback_column('casualties',array($this,'get_casualties'));
+					$form->callback_column('last_hour',array($this,'last_hour'));
 					$form->add_action('Status', '', '','ui-icon-clipboard',array($this,'status_report'));
 					$form->unset_edit();
 				} else {
@@ -61,8 +64,8 @@ class Units extends MY_Controller
 				$title .= "showing unit $id, and subordinate units only";
 			} else {
 				// Umpire can only see units that are part of a game that he is playing
-				$form->where('unit.orbat_id',$game->orbat_attacker);
-				$form->or_where('unit.orbat_id',$game->orbat_defender);
+				$form->where('unit.orbat_id',$this->game->orbat_attacker);
+				$form->or_where('unit.orbat_id',$this->game->orbat_defender);
 				$title .= "Only showing attacker and defender forces for current game";
 			}
 			$form->unset_edit();
@@ -73,13 +76,13 @@ class Units extends MY_Controller
 		case 'P':
 			// Player can only see their own units, which are subordinate to their command
 			$form->set_theme('datatables');
-			if (! $game->user->commander_id) {
+			if (! $this->game->user->commander_id) {
 				$this->load->view('oops',array('message','Your player account is not associated with any on-table commander.<br>Ask the admin staff to fix this please ...'));
 				exit;
 
 
 			}
-			$form->where($this->game_model->get_unit_where_range($game->user->commander_id));
+			$form->where($this->game_model->get_unit_where_range($this->game->user->commander_id));
 			$title .= "<h1>Inspect the Troops</h1><img src=images/inspect-troops.jpg>";
 			$form->unset_edit();
 			// Add some buttons
@@ -258,6 +261,50 @@ class Units extends MY_Controller
 		}
 		// Last but not least, make sure our parent ME is clear !
 		$query = $this->db->query("update unit set parent_me=0 where id=$primary_key");
+	}
+
+	function get_casualties($primary_key,$row) {
+		if ($this->game) {
+			$query = $this->db->get_where('game_unit_stats',array('game_id'=>$this->game->id,'unit_id'=>$row->id));
+			if ($row = $query->row()) {
+				$initial_strength = (int)$row->initial_strength;
+				$casualties = (int)$row->casualties;
+				if ($initial_strength && $casualties) {
+					$percent_loss = (int)(100 * $casualties / $initial_strength);
+					return sprintf("%d <font color=red>%d%%</font>",$casualties,$percent_loss);
+				} else {
+					return 'None';
+				}
+			}
+		}
+		return '?';
+	}
+
+	function last_hour($primary_key,$row) {
+		if ($this->game) {
+			$query = $this->db->get_where('game_unit_stats',array('game_id'=>$this->game->id,'unit_id'=>$row->id));
+			if ($row = $query->row()) {
+				$cas = $row->casualties_this_hour;
+				$did_close_combat = $row->did_close_combat;
+				$won_close_combat = $row->won_close_combat;
+				$initial_strength = (int)$row->initial_strength;
+				$_ = '';
+				if ($initial_strength && $cas) {
+					$percent_loss = (int)(100 * $cas / $initial_strength);
+					$_ = sprintf("%d <font color=red>%d%%</font> losses",$cas,$percent_loss);
+				}
+				if ($did_close_combat) {
+					if ($_ != '') { $_ .= '<br>'; }
+					$_ .= "<font color=red>Close Combat</font>";
+				}
+				if ($won_close_combat) {
+					if ($_ != '') { $_ .= '<br>'; }
+					$_ .= "<font color=green>Won Close Combat</font>";
+				}
+				return $_;
+			}
+		}
+		return '?';
 	}
 
 }

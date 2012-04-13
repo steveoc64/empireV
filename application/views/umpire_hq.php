@@ -1,17 +1,3 @@
-<?
-if (isset($refresh_orders)) {
-	echo "<img src=images/fancy-pants3.jpg><br><u>Orders outstanding :</u>\n";
-	echo "<table border=0 cellpadding=3>\n";
-	$query = $this->db->query("select player_name,unit_id,order_type,objective from game_order where game_id=".$game->id." and activate_turn=0 order by timestamp desc");
-	foreach ($query->result() as $row) {
-		$unit_name = $this->db->get_where('unit',array('id'=>$row->unit_id))->row()->name;
-		$order_name = $this->db->get_where('order_types',array('id'=>$row->order_type))->row()->name;
-		echo "<tr><td>".$row->player_name."</td><td>[".$row->unit_id."] - ",$unit_name." has been ordered to ".$order_name." ".$row->objective."</td></tr>\n";
-	}
-	echo "</table>";
-
-} else {
-?>
 <button id="hq">Return to HQ</button>
 <div id="console">
 <?
@@ -29,21 +15,17 @@ if (isset($game)) {
 		echo "<center><div id=clock></div></center>";
 		echo "<b>Commanders may currently submit new orders.</b><p><i>The orders appear on this screen in real time as they are entered. Once commanders have had a fair opportunity to dispatch orders, click the Close Off Orders button to move along to the next phase.<p>Note that in standard Empire V, the players get strictly 2 minutes to perform these orders.</i><br>\n";
 
-		echo "<div id=results></div>";
-		echo "<button id='view_orders'>Edit Orders</button><button id='close_orders'>Close Off Orders</button><button id=me_morale>ME Morale Tests</button>\n";
+		echo "<button id='view_orders'>Edit Orders</button><button id='close_orders'>Close Off Orders</button>";
 
 		// A quick report in table format of the current orders
 		echo "<div id=orders></div>";
+		echo "<div id=results></div>";
 		break;
 	case PHASE_MORALE:
 		echo "<h2>Morale Determination Phase ~ ".$game->hrs."</h2>\n";
-		// For each player
-		//   for each ME under their command
-		//    - except cavalry brigades
-		//    - except infantry units with garrison orders
-		//    - has at least 20% losses in total
-		//    - was in close combat last round
-		//
+		echo "<button id=me_determination>Re-Roll Determination Test</button>";
+		echo "<div id=me_determination_results></div>";
+		echo "<button id=me_morale>Accept ME Determination Test</button>\n";
 		break;
 	case PHASE_LEADERS:
 		break;
@@ -62,7 +44,6 @@ if (isset($game)) {
 	default:
 		break;
 	}
-	//echo '<button id=refresh>refresh</button><div id=spinner></div>';
 } else {
 
 ?>
@@ -78,21 +59,25 @@ if (isset($game)) {
 <img src=images/fancy-2.png>
 </center>
 
-<!-- </div> -->
-</div>
+</div> <!-- console -->
 <script>
-$("#refresh").on("click", function(){
-	$("#orders").load('umpire_console/index/refresh_orders');
-});
+// On load - setup all the buttons
 $(function() { 
 	$("#menu").hide();
-	$("#me_morale").hide();
 	$('#main').animate({ left: "20px", top: "0px"}, 500 );
 	$("#console").fadeIn(500);
-	$("#orders").load('umpire_console/index/refresh_orders');
+	$("#orders").load('umpire_console/refresh_orders');
+
+	// Kick off the order refresh - every 10 seconds, it fades out, reloads and fades back in
 	setInterval(function() {
-		$("#orders").load('umpire_console/index/refresh_orders');
-	}, 2000);
+		$("#orders").hide().load('umpire_console/refresh_orders').fadeIn(3000);
+	}, 10000);
+
+	$("#me_determination_results").load("umpire_console/me_determination");
+
+	// Kick off the ME determination test
+
+	// Kick off the clock
 	var seconds = 0;
 	setInterval(function() {
 		if (seconds < 60) {
@@ -106,31 +91,40 @@ $(function() {
 		seconds ++;
 	}, 1000);
 });
+
+// Return to HQ
 $("#hq").click(function () { 
 	$("#console").hide(1000); 
 	$("#hq").hide(800); 
 	$("#main").hide(800);
 	$("#menu").fadeIn(1000); 
 });
-var ajax_loader_img = "<img src='images/ajax-loader.gif' alt='loading...' />";  
+
+// Jump to order maintenance
 $('#view_orders').click(function(){ document.location.href='/empire/orders'; })
+
+// PHASE 1 : Close off orders and proceed to ME determination
 $("#close_orders").click(function(){  
 	// Hide widgets we dont need no more
 	$("#view_orders").hide(1000); 
 	$("#close_orders").hide(1000); 
-	$("#me_morale").show(1000); 
 
 	if (confirm('This will close off all orders and advance the game to ME determination. Do you want to proceed ?')) {
 		$("#orders").hide();
 		$("#results").load('umpire_console/close_orders', function() {
 			//alert($('#results').text().replace('<br>',"\n"));
-			//location.reload();
+			location.reload();
 		});
 
 	}
-
-	//$("#console").load('umpire_console/index/refresh');
-	//$("#refresh").fadeIn(1000);
 });  
+
+// PHASE 2 - re-roll the determination test in case not happy with the results !
+$("#me_determination").click(function(){
+	$("#me_determination_results").hide().load('umpire_console/me_determination').fadeIn(3000);
+});
+
+// PHASE 2 - accept the determination test and proceed to ME morale test
+$("#me_moral").click(function(){
+});
 </script>
-<?}?>

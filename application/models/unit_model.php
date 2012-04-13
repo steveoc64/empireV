@@ -136,10 +136,12 @@ Class Unit_model extends CI_Model {
 
 		// Pre calculate some derived values for convenience
 		$unit_data->percent_lost = 0;
+		$unit_data->percent_lost_this_hour = 0;
 		$unit_data->current_strength = $unit_data->strength;
 		if ($unit_data->stats) {
 		     if  ($unit_data->stats->initial_strength > 0) {
 			$unit_data->percent_lost = (100.0 * $unit_data->stats->casualties) / $unit_data->stats->initial_strength;
+			$unit_data->percent_lost_this_hour = (100.0 * $unit_data->stats->casualties_this_hour) / $unit_data->stats->initial_strength;
 		     }
 		     $unit_data->current_strength = $unit_data->stats->initial_strength - $unit_data->stats->casualties;
 		}

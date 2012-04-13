@@ -6,6 +6,21 @@ class MY_Controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->is_logged_in();
+		$sections = array(
+			'benchmarks' => false,
+			'config' => false,
+			'controller_info' => false,
+			'http_headers' => false,
+			'memory_usage' => false,
+			'post' => false,
+			'get' => false,
+			'queries' => false,
+			'session_data' => false,
+			'uri_string' => false
+		);
+
+		$this->output->set_profiler_sections($sections);
+		$this->output->enable_profiler(false);
 	}		
 
 	function check_role($allowed_roles) {
@@ -47,6 +62,7 @@ class MY_Controller extends CI_Controller {
 	}	
 
 	function render ($contents,$title='',$extras='') {
+		$this->benchmark->mark('start_render');
 		if (!is_object($contents)) {
 			$new_contents->output = $contents;
 			$new_contents->css_files = array();
@@ -58,6 +74,7 @@ class MY_Controller extends CI_Controller {
 		$this->load->view ('crud_header',$contents);
 		$this->load->view ('crud_body', $contents);
 		$this->load->view ('crud_footer');
+		$this->benchmark->mark('end_render');
 	}
 
 	function render_header ($contents='') {
