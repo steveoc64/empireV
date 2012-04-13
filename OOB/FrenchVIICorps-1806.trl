@@ -261,7 +261,7 @@ icon="bullet_1">
 <CrewFigures type="Text">4</CrewFigures>
 <Howitzers type="Text" init="0">2 x 6&quot; Howitzer</Howitzers>
 <Class type="Choice" format="OG/Class I/Class II/Class III" init="Class II">Class I</Class>
-<MoraleClass type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained">Elite</MoraleClass>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained">Elite</MoraleGrade>
 </Battery>
 <Battery item="y">
 <Name>6th Horse Artillery Regiment, 2nd company</Name>
@@ -271,7 +271,7 @@ icon="bullet_1">
 <NumGuns>2</NumGuns>
 <CrewFigures>2</CrewFigures>
 <Class>Class I</Class>
-<MoraleClass>Elite</MoraleClass>
+<MoraleGrade>Elite</MoraleGrade>
 </Battery>
 </Division>
 <Division item="y">
@@ -475,7 +475,7 @@ icon="bullet_2">
 <NumBases type="Text"></NumBases>
 <Officers type="Number" format="##" init="10"></Officers>
 <ACE type="Number" format="##" init="20"></ACE>
-<MoraleClass type="Choice" format="OG/GRD/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran"></MoraleClass>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran"></MoraleGrade>
 <SmallArms type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran"></SmallArms>
 <BattleCavalry type="Boolean" format="yes/no" init="false"></BattleCavalry>
 <Undistinguished type="Boolean" format="yes/no" init="false"></Undistinguished>

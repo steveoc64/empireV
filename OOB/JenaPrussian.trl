@@ -139,7 +139,7 @@ icon="bullet_2">
 <NumBases type="Text">10</NumBases>
 <Officers type="Number" format="##" init="10">10</Officers>
 <ACE type="Number" format="##" init="20">20</ACE>
-<MoraleClass type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Crack</MoraleClass>
+<MoraleGrade type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Crack</MoraleGrade>
 <SmallArms type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</SmallArms>
 <BattleCavalry type="Boolean" format="yes/no" init="false">false</BattleCavalry>
 <Undistinguished type="Boolean" format="yes/no" init="false">false</Undistinguished>
@@ -156,7 +156,7 @@ icon="bullet_2">
 <NumBases>10</NumBases>
 <Officers>100</Officers>
 <ACE>20</ACE>
-<MoraleClass>Crack</MoraleClass>
+<MoraleGrade>Crack</MoraleGrade>
 <SmallArms>Veteran</SmallArms>
 <BattleCavalry>false</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -172,7 +172,7 @@ icon="bullet_2">
 <NumBases>5</NumBases>
 <Officers>60</Officers>
 <ACE>24</ACE>
-<MoraleClass>Gren</MoraleClass>
+<MoraleGrade>Gren</MoraleGrade>
 <SmallArms>Veteran</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -192,7 +192,7 @@ icon="bullet_1">
 <CrewFigures type="Text">2</CrewFigures>
 <Howitzers type="Number" format="##" init="0"></Howitzers>
 <Class type="Choice" format="OG/Class I/Class II/Class III" init="Class II">Class II</Class>
-<MoraleClass type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained">Veteran</MoraleClass>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained">Veteran</MoraleGrade>
 </Battery>
 </CavBrigade>
 </Division>
@@ -269,7 +269,7 @@ icon="bullet_1">
 <NumGuns>2</NumGuns>
 <CrewFigures>3</CrewFigures>
 <Class>Class III</Class>
-<MoraleClass>Veteran</MoraleClass>
+<MoraleGrade>Veteran</MoraleGrade>
 </Battery>
 </Brigade>
 <Brigade item="y">
@@ -355,7 +355,7 @@ icon="bullet_1">
 <Strength>500</Strength>
 <Officers>50</Officers>
 <ACE>27</ACE>
-<MoraleClass>Guard</MoraleClass>
+<MoraleGrade>Guard</MoraleGrade>
 <SmallArms>Crack</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -371,7 +371,7 @@ icon="bullet_1">
 <Strength>500</Strength>
 <Officers>50</Officers>
 <ACE>27</ACE>
-<MoraleClass>Guard</MoraleClass>
+<MoraleGrade>Guard</MoraleGrade>
 <SmallArms>Crack</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -386,7 +386,7 @@ icon="bullet_1">
 <Calibre>4lb</Calibre>
 <Strength>6</Strength>
 <Class>Class II</Class>
-<MoraleClass>Crack</MoraleClass>
+<MoraleGrade>Crack</MoraleGrade>
 </Battery>
 </CavBrigade>
 </Division>
@@ -463,7 +463,7 @@ icon="bullet_1">
 <NumGuns>2</NumGuns>
 <CrewFigures>3</CrewFigures>
 <Class>Class III</Class>
-<MoraleClass>Veteran</MoraleClass>
+<MoraleGrade>Veteran</MoraleGrade>
 </Battery>
 </Brigade>
 <Brigade item="y">
@@ -533,7 +533,7 @@ icon="bullet_1">
 <NumGuns>2</NumGuns>
 <CrewFigures>3</CrewFigures>
 <Class>Class III</Class>
-<MoraleClass>Veteran</MoraleClass>
+<MoraleGrade>Veteran</MoraleGrade>
 </Battery>
 </Brigade>
 <CavBrigade item="y">
@@ -549,7 +549,7 @@ icon="bullet_1">
 <Strength>600</Strength>
 <Officers>10</Officers>
 <ACE>27</ACE>
-<MoraleClass>Gren</MoraleClass>
+<MoraleGrade>Gren</MoraleGrade>
 <SmallArms>Gren</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -565,7 +565,7 @@ icon="bullet_1">
 <Strength>600</Strength>
 <Officers>10</Officers>
 <ACE>27</ACE>
-<MoraleClass>Gren</MoraleClass>
+<MoraleGrade>Gren</MoraleGrade>
 <SmallArms>Gren</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -579,8 +579,10 @@ icon="bullet_1">
 <Type>Horse</Type>
 <Calibre>4lb</Calibre>
 <Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
 <Class>Class I</Class>
-<MoraleClass>Crack</MoraleClass>
+<MoraleGrade>Crack</MoraleGrade>
 </Battery>
 </CavBrigade>
 </Division>
@@ -657,7 +659,7 @@ icon="bullet_1">
 <NumGuns>2</NumGuns>
 <CrewFigures>3</CrewFigures>
 <Class>Class III</Class>
-<MoraleClass>Veteran</MoraleClass>
+<MoraleGrade>Veteran</MoraleGrade>
 </Battery>
 </Brigade>
 <Brigade item="y">
@@ -726,7 +728,7 @@ icon="bullet_1">
 <NumGuns>2</NumGuns>
 <CrewFigures>3</CrewFigures>
 <Class>Class III</Class>
-<MoraleClass>Veteran</MoraleClass>
+<MoraleGrade>Veteran</MoraleGrade>
 </Battery>
 </Brigade>
 <CavBrigade item="y">
@@ -743,7 +745,7 @@ icon="bullet_1">
 <NumBases>10</NumBases>
 <Officers>10</Officers>
 <ACE>24</ACE>
-<MoraleClass>Guard</MoraleClass>
+<MoraleGrade>Guard</MoraleGrade>
 <SmallArms>Crack</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -760,7 +762,7 @@ icon="bullet_1">
 <NumGuns>3</NumGuns>
 <CrewFigures>2</CrewFigures>
 <Class>Class II</Class>
-<MoraleClass>Elite</MoraleClass>
+<MoraleGrade>Elite</MoraleGrade>
 </Battery>
 </CavBrigade>
 <CavBrigade item="y">
@@ -777,7 +779,7 @@ icon="bullet_1">
 <NumBases>5</NumBases>
 <Officers>10</Officers>
 <ACE>27</ACE>
-<MoraleClass>Gren</MoraleClass>
+<MoraleGrade>Gren</MoraleGrade>
 <SmallArms>Crack</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
@@ -794,7 +796,7 @@ icon="bullet_1">
 <NumBases>5</NumBases>
 <Officers>10</Officers>
 <ACE>27</ACE>
-<MoraleClass>Gren</MoraleClass>
+<MoraleGrade>Gren</MoraleGrade>
 <SmallArms>Crack</SmallArms>
 <BattleCavalry>true</BattleCavalry>
 <Undistinguished>false</Undistinguished>
