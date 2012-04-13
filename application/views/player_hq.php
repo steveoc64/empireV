@@ -105,7 +105,7 @@ if (isset($game)) {
 
 ?>
 	<div id="form">
-	<center><img src=/empire/images/firing-squad.jpg></center>
+	<center><img src=<?site_url()?>images/firing-squad.jpg></center>
 	You are not currently logged in to a game<p>Ask the administrator to setup your<br>account to access a game in progress.
 <?  } ?>
 <center>
@@ -171,7 +171,7 @@ $("#hq").click(function () {
 	$("#main").hide(800);
 	$("#menu").fadeIn(1000); 
 });
-$('#view_orders').click(function(){ document.location.href='/empire/orders'; });
+$('#view_orders').click(function(){ document.location.href='<?site_url()?>orders'; });
 
 </script>
 

@@ -30,7 +30,7 @@ class Units extends MY_Controller
 				// only looking at the subtree for this commander
 				$form->where($this->game_model->get_unit_where_range($id));
 				$title .= "showing unit $id, and subordinate units only";
-				$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','orbat_id');
+				$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','orbat_id','player_id');
 				$form->display_as('orbat_id','ORBAT');
 				$form->callback_column('unit.name',array($this,'indent_name2'));
 				$form->callback_after_update(array($this,'cascade_me'));
@@ -40,9 +40,10 @@ class Units extends MY_Controller
 					$form->or_where('unit.orbat_id',$this->game->orbat_defender);
 					$title .= "Only showing attacker and defender forces for current game (#".$this->game->id." - ".$this->game->name.")";
 					// Add some buttons - dont show them if there is no game selected for admin
-					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','orbat_id');
+					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','orbat_id','player_id');
 					$form->callback_column('casualties',array($this,'get_casualties'));
 					$form->callback_column('last_hour',array($this,'last_hour'));
+					$form->callback_column('player_id',array($this,'get_player'));
 					$form->add_action('Status', '', '','ui-icon-clipboard',array($this,'status_report'));
 					$form->unset_edit();
 				} else {
@@ -83,7 +84,11 @@ class Units extends MY_Controller
 
 			}
 			$form->where($this->game_model->get_unit_where_range($this->game->user->commander_id));
-			$title .= "<h1>Inspect the Troops</h1><img src=images/inspect-troops.jpg>";
+			if ($this->game->national_theme) {
+				$title .= "<h1>Inspect the Troops</h1><img src=".site_url()."themes/".$this->game->national_theme->parade_img.">";
+			} else {
+				$title .= "<h1>Inspect the Troops</h1><img src=images/inspect-troops.jpg>";
+			}
 			$form->unset_edit();
 			// Add some buttons
 			$form->add_action('Visit', '', '','ui-icon-clipboard',array($this,'status_report'));
@@ -107,7 +112,7 @@ class Units extends MY_Controller
 	}
 
 	function status() {
-		$this->render_header('');
+		$this->render_header();
 		$id = $this->input->get('id');
 		if (!$id) {
 			redirect('units');
@@ -149,8 +154,8 @@ class Units extends MY_Controller
 					$this->load->view('oops',array('message',"Your player account is not associated with any on-table commander. Ask the admin to fix this problem please ..."));
 				}
 				// Player can only view units subordinate to their command
-				$min = (int)$game->unit_id_range['start_unit'];
-				$max = (int)$game->unit_id_range['end_unit'];
+				$min = (int)$game->unit_id_range->start_id;
+				$max = (int)$game->unit_id_range->end_id;
 				$uid = (int)$unit->id;
 				if ($uid >= $min && $uid <= $max) {
 					$this->load->view('unit_status_report',$form_data);
@@ -305,6 +310,20 @@ class Units extends MY_Controller
 			}
 		}
 		return '?';
+	}
+
+	function get_player($primary_key,$row) {
+		if ($this->game) {
+			$query = $this->db->get_where('game_unit_stats',array('game_id'=>$this->game->id,'unit_id'=>$row->id));
+			if ($row = $query->row()) {
+				$player_id = $row->player_id;
+				$query = $this->db->get_where('user',array('id'=>$player_id));
+				if ($row = $query->row()) {
+					return $row->username;
+				}
+			}
+		}
+		return '';
 	}
 
 }

@@ -14,8 +14,9 @@ class User_account extends MY_Controller
 	
 			// Fields and Columns
     			$form->columns('username','last_login','email','current_game','role','commander_id');
-    			$form->fields('username','last_login','email','current_game','role','commander_id');
+    			$form->fields('username','last_login','email','current_game','role','commander_id','national_theme');
 			$form->set_relation('role','user_roles','name');
+			$form->set_relation('national_theme','national_theme','name');
 			$form->set_relation('current_game','game','{id} - {name}');
 			//$form->set_relation('commander_id','unit','{id} - {name}',array('is_command' => 'T'));
 			$form->callback_column('commander_id',array($this,'commander_link'));

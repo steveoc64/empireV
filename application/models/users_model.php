@@ -9,6 +9,7 @@ class Users_model extends CI_Model {
 		$this->db->where('password', md5($this->input->post('password')));
 		$query = $this->db->get('user');
 		
+		$theme_id = 1;	// default theme
 		if($query->num_rows == 1)
 		{
 			$row = $query->row();

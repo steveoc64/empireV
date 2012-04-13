@@ -19,4 +19,4 @@ echo form_close();
 <?php echo validation_errors('<p class="error">'); ?>
 </fieldset>
 </div>
-<div id="formimg"><img src=/empire/images/french-commander.jpg height=440></div>
+<div id="formimg"><img src=<?site_url()?>images/french-commander.jpg height=440></div>

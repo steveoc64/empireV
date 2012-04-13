@@ -1,4 +1,4 @@
 <div id="form">
-<center><img src=/empire/images/firing-squad.jpg></center>
+<center><img src=<?site_url()?>images/firing-squad.jpg></center>
 <b><? echo $message; ?>
 </div>

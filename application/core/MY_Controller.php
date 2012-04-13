@@ -71,6 +71,24 @@ class MY_Controller extends CI_Controller {
 		}
 		$contents->title = $title;
 		$contents->extras = $extras;
+		$theme = 1;
+		if ($uid = $this->session->userdata('user_id')) {
+			$row = $this->db->get_where('user',array('id'=>$uid))->row();
+			if ($row) {
+				$theme = (int)$row->national_theme;
+				if (!$theme) {
+					$theme = 1;
+				}
+			}
+		}
+		$row = $this->db->get_where('national_theme',array('id'=>$theme))->row();
+		if ($row) {
+			$contents->background_img = $row->backdrop_img;
+			$contents->main_css_file = $row->css;
+		} else {
+			$contents->main_css_file = 'css/style.css'; 	// cant find anything - hardcode it !
+		}
+	
 		$this->load->view ('crud_header',$contents);
 		$this->load->view ('crud_body', $contents);
 		$this->load->view ('crud_footer');
@@ -78,12 +96,32 @@ class MY_Controller extends CI_Controller {
 	}
 
 	function render_header ($contents='') {
+		if ($uid = (int)$this->session->userdata('user_id')) {
+			$theme = (int)$this->db->get_where('user',array('id'=>$uid))->row()->national_theme;
+		}
+		if (!$theme) {
+			$theme = 1;
+		}
+		$css = 'css/style.css';
+		$row = $this->db->get_where('national_theme',array('id'=>$theme))->row();
+		if (!$row) {
+			$row = $this->db->get_where('national_theme',array('id'=>1))->row();
+			if ($row) {
+				$css = $row->css;
+			}
+			
+		} else {
+			$css = $row->css;
+		}
 		if (!is_object($contents)) {
 			$new_contents->output = $contents;
 			$new_contents->css_files = array();
 			$new_contents->js_files = array();
 			$contents = $new_contents;
 		}
+		$contents->background_img = $row->backdrop_img;
+		$contents->main_css_file = $css;
+		$bg = $row->backdrop_img;
 		$this->load->view ('crud_header',$contents);
 	}
 

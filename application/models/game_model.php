@@ -67,11 +67,21 @@ class Game_model extends CI_Model {
 		if (!$game_id) {
 			return null;
 		}
-			
+
 		// get the game details
 		$game_data = $this->db->get_where('game',array('id' => $game_id))->row();
 		if (!$game_data) {
 			return null;
+		}
+
+		// load the national theme into the game array
+		$theme = (int)$user_data->national_theme;
+		if (!$theme) {
+			$theme = 1;
+		}
+		$row = $this->db->get_where('national_theme',array('id'=>$theme))->row();
+		if ($row) {
+			$game_data->national_theme = $row;
 		}
 
 		if (!$full_details) {

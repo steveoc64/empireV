@@ -3,12 +3,15 @@
 <button id="closereports">Return to HQ</button>
 <button id="statusreport">Status Report</button>
 <button id="unitjournal">Read Unit Journal</button>
+</div>
 <?php
 
 switch ($this->session->userdata('role')) {
 case 'A':
 case 'U': ?>
 <script>
+	$(function(){
+	});
     $("#statusreport").click(function () { $("#menu").fadeOut(500); $("#eventreport").hide("fast"); $("#report").show(500); });
     $("#unitjournal").click(function () { $("#menu").fadeOut(500); $("#report").hide("fast"); $("#eventreport").show(500); });
     $("#closereports").click(function () { $("#report").hide(500); $("#eventreport").hide("fast"); $("#menu").fadeIn(800);  });
@@ -16,6 +19,8 @@ case 'U': ?>
 <? break;
 default: ?>
 <script>
+$(function(){
+});
     $("#statusreport").click(function () { $("#menu").fadeOut(2000); $("#eventreport").hide(1200); $("#report").show(2000); });
     $("#unitjournal").click(function () { $("#menu").fadeOut(2000); $("#report").hide(1200); $("#eventreport").show(2000); });
     $("#closereports").click(function () { $("#report").hide(2000); $("#eventreport").hide(2000); $("#menu").fadeIn(4000);  });
@@ -24,7 +29,6 @@ default: ?>
 }
 ?>
 
-</div>
 <div id="report">
 <center>
 <?
@@ -229,7 +233,6 @@ if ($unit->stats) {
 ?>
 
 </center>
-<div>
 
 <div id="eventreport">
 <center>
@@ -284,7 +287,7 @@ $_ = $this->db->query("select event_type,turn_number,descr,value from game_event
 $i = 0;
 foreach ($_->result() as $row) {
 	if ($i) {
-		echo "<img src=../images/fancy-pants3.png><br>\n";
+		echo "<img src=".site_url()."images/fancy-pants3.png><br>\n";
 	}
 	$et = $this->db->get_where('event_type',array('id'=>$row->event_type))->row();
 	$descr = $row->descr;
@@ -307,10 +310,10 @@ foreach ($_->result() as $row) {
 } else {
 	echo "<br>";
 	echo "<br>";
-	echo "<br><img src=../images/fancy-1.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-1.png><br>";
 	echo "<br>You currently do not have a game selected,<br>so I dont know which journal to fetch ...<br>\n";
 	echo "<br><br><br>";
-	echo "<br><img src=/empire/images/fancy-2.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-2.png><br>";
 	echo "<br><br><br>";
 }
 ?>
@@ -318,5 +321,4 @@ foreach ($_->result() as $row) {
 
 <img src=/empire/images/fancy-2.png>
 </center>
-<div>
 

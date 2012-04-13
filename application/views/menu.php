@@ -7,7 +7,7 @@ $menu = array('Order of Battle' => 'orbat','Scenarios' => 'scenarios','Nations' 
 
 
 foreach ($menu as $k => $v) {
-	echo "<li><a href=\"/empire/$v\" ";
+	echo '<li><a href="'.site_url()."$v\" ";
 	if ($v == $this->uri->segment(1)) {
 		echo "class=\"active\" ";
 	}

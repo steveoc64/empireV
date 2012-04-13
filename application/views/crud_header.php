@@ -3,15 +3,15 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Empire V - Electro Mechanical Apparatus for Combat Simulation</title>
-	<link rel="stylesheet" href="http://15mm-madness.com/empire/css/style.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?echo site_url()."$main_css_file"; ?>" type="text/css" media="screen">
 
 <?php foreach($css_files as $file): ?>
 	<link type="text/css" rel="stylesheet" href="<?php echo $file; ?>" />
 <?php endforeach; ?>
 <?php  if (!$js_files) {
 ?>
-<script src="/empire/assets/jqui/js/jquery-1.7.1.min.js"></script>
-<script src="/empire/assets/jqui/js/jquery-ui-1.8.18.custom.min.js"></script>
+	<script src="<?=site_url()?>assets/jqui/js/jquery-1.7.1.min.js"></script>
+	<script src="<?=site_url()?>assets/jqui/js/jquery-ui-1.8.18.custom.min.js"></script>
 <?php } ?>
 
 <?php foreach($js_files as $file): ?>
@@ -53,7 +53,7 @@ case 'P':
 		'Parade' => 'units',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',
-		'Logout' => 'logout'
+		'Dissmissed' => 'logout'
 	);
 	break;
 case 'S':
@@ -62,11 +62,11 @@ case 'S':
 		'Units' => 'units',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',
-		'Logout' => 'logout'
+		'Dissmissed' => 'logout'
 	);
 	break;
 default:
-	$menu = array('Login' => 'login');
+	$menu = array('Fall In' => 'login');
 
 	break;
 }
@@ -76,13 +76,14 @@ if (isset($menu)) {
 	$u = ucfirst($u);
 	echo "<center><b>$u</b><br>$menutitle</center>";
 	foreach ($menu as $k => $v) {
-		echo "<li><a href=\"/empire/$v\" ";
+		echo '<li><a href="'.site_url().$v.'" ';
 		if ($v == $this->uri->segment(1)) {
 			echo "class=\"active\" ";
 		}
 		echo "<span>$k</span></a></li>\n";
 	}
 }
+
 ?>
 </ul>
 </div>

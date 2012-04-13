@@ -1,5 +1,5 @@
 <div id="form">
-	<h1>Login</h1>
+	<h1>Fall In</h1>
 <fieldset>
 <?php
 	echo form_open('login/validate');
@@ -12,4 +12,4 @@
 ?>
 </fieldset>
 </div>
-<div id="formimg"><img src=/empire/images/french-commander.jpg height=234></div>
+<div id="formimg"><img src=<?site_url()?>images/french-commander.jpg height=234></div>
