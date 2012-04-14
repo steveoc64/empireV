@@ -5,20 +5,63 @@
 	<title>Empire V - Electro Mechanical Apparatus for Combat Simulation</title>
 	<link rel="stylesheet" href="<?echo site_url()."$main_css_file"; ?>" type="text/css" media="screen">
 
-<?php foreach($css_files as $file): ?>
+<?php
+$gotjq = false;
+foreach($css_files as $file): ?>
+	<? if (strpos($file,'jquery-ui')) { $gotjq = true; } ?>
 	<link type="text/css" rel="stylesheet" href="<?php echo $file; ?>" />
-<?php endforeach; ?>
-<?php  if (!$js_files) {
+<?php endforeach; 
+if (!$gotjq) {
+?>
+<? /*<link type="text/css" rel="stylesheet" href="<?=site_url()?>assets/jqui/css/ui-lightness/jquery-ui-1.8.18.custom.css">
+<link type="text/css" rel="stylesheet" href="<?=site_url()?false>assets/jqui/css/custom-theme/jquery-ui-1.8.18.custom.css">*/?>
+<link type="text/css" rel="stylesheet" href="<?site_url()?>assets/grocery_crud/themes/datatables/css/ui/simple/jquery-ui-1.8.10.custom.css" />
+<?php  } ?>
+
+<?php  
+if (!$js_files) {
 ?>
 	<script src="<?=site_url()?>assets/jqui/js/jquery-1.7.1.min.js"></script>
 	<script src="<?=site_url()?>assets/jqui/js/jquery-ui-1.8.18.custom.min.js"></script>
+<?php } else { ?>
+
+<?php
+$gotjq = false;
+foreach($js_files as $file): ?>
+	<? if (strpos($file,'jquery-ui')) { $gotjq = true; } ?>
+	<script src="<?php echo $file; ?>"></script>
+<?php endforeach;
+if (true || !$gotjq) {
+?>
+<script src="<?=site_url()?>assets/jqui/js/jquery-ui-1.8.18.custom.min.js"></script>
+<?php  } ?>
+
 <?php } ?>
 
-<?php foreach($js_files as $file): ?>
-	<script src="<?php echo $file; ?>"></script>
-<?php endforeach; ?>
+<?php
+	/*
+  <link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
+  
+  <script>
+  $(document).ready(function(){
+    $('#switcher').themeswitcher();
+  });
+  </script>
+	 */?>
+</head>
+  
 </head>
 <body>
+
+<?php
+	 /*
+<script type="text/javascript"
+  src="http://jqueryui.com/themeroller/themeswitchertool/">
+</script>
+<div id="switcher"></div>
+	  */
+?>
+
 <div id="menu">
 <ul class="vmenu">
 <?php
@@ -28,6 +71,7 @@ switch ($this->session->userdata('role')) {
 case 'A':
 	$menutitle = 'Admin Menu';
 	$menu = array('Game HQ' => 'umpire_console',
+		'Messages' => 'messages',
 		'Order of Battle' => 'orbat',
 		'Units' => 'units',
 		'Scenario' => 'scenario',
@@ -41,6 +85,7 @@ case 'A':
 case 'U':
 	$menutitle = 'Umpire Menu';
 	$menu = array('Game HQ' => 'umpire_console',
+		'Messages' => 'messages',
 		'Units' => 'units',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',
@@ -49,7 +94,8 @@ case 'U':
 	break;
 case 'P':
 	$menutitle = 'Player Menu';
-	$menu = array('HQ' => 'player_hq',
+	$menu = array('HQ' => 'player_console',
+		'Messages' => 'messages',
 		'Parade' => 'units',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',

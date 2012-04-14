@@ -1,5 +1,5 @@
-<button id="hq">Return to HQ</button>
-<div id="console">
+<div id="console" style"top:40px">
+<button id="hq">Return to HQ</button></td>
 <?
 
 // Show game stats
@@ -21,25 +21,15 @@ if (isset($game)) {
 		echo "<div id=orders></div>";
 		echo "<div id=results></div>";
 		break;
-	case PHASE_MORALE:
+	case PHASE_ME_DET:
 		echo "<h2>Morale Determination Phase ~ ".$game->hrs."</h2>\n";
 		echo "<button id=me_determination>Re-Roll Determination Test</button>";
 		echo "<div id=me_determination_results></div>";
+		echo "<button id=accept_me_determination>Accept ME Determination Test</button>\n";
 		echo "<button id=me_morale>Accept ME Determination Test</button>\n";
 		break;
-	case PHASE_LEADERS:
-		break;
-	case PHASE_BREAKOFF:
-		break;
-	case PHASE_GT:
-		break;
-	case PHASE_ENGAGE:
-		break;
-	case PHASE_TACTICAL:
-		break;
-	case PHASE_LEADERCAS:
-		break;
-	case PHASE_RALLY:
+	case PHASE_ME_MORALE:
+		echo "<h2>ME Morale Phase ~ ".$game->hrs."</h2>\n";
 		break;
 	default:
 		break;
@@ -73,7 +63,11 @@ $(function() {
 		$("#orders").hide().load('umpire_console/refresh_orders').fadeIn(3000);
 	}, 10000);
 
+	// Phase 2 buttons init
+	$("#accept_me_determination").hide();
+	$("#me_morale").hide();
 	$("#me_determination_results").load("umpire_console/me_determination");
+	$("#accept_me_determination").fadeIn(5000);
 
 	// Kick off the ME determination test
 
@@ -125,6 +119,11 @@ $("#me_determination").click(function(){
 });
 
 // PHASE 2 - accept the determination test and proceed to ME morale test
-$("#me_moral").click(function(){
+$("#accept_me_determination").click(function(){
+	$("#accept_me_determination").hide();
+	$("#me_determination").hide();
+	$("#me_determination_results").hide().load('umpire_console/accept_me_determination').fadeIn(3000);
+	$("#me_morale").fadeIn(4000);
+	location.reload();
 });
 </script>

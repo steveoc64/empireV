@@ -285,10 +285,8 @@ if ($game_id) {
 $unit_id = $unit->id;
 $_ = $this->db->query("select event_type,turn_number,descr,value from game_event where game_id=$game_id and unit_id=$unit_id");
 $i = 0;
+$last_turn = 0;
 foreach ($_->result() as $row) {
-	if ($i) {
-		echo "<img src=".site_url()."images/fancy-pants3.png><br>\n";
-	}
 	$et = $this->db->get_where('event_type',array('id'=>$row->event_type))->row();
 	$descr = $row->descr;
 	$descr = str_replace('\n','<br>',$descr);
@@ -302,9 +300,18 @@ foreach ($_->result() as $row) {
 		break;
 	}
 	// Calculate the hour
+	$turn = (int)$row->turn_number;
 	$hour = (int)$unit->start_hour + (int)$row->turn_number -1;
-	echo "</center><b> Time: $hour:00hrs</b> (Turn ".$row->turn_number.")<br>Event: ".$et->descr." ".$event_details."<br>\n";
-	echo "&nbsp;<i>$descr</i><br><center>\n";
+	if ($turn != $last_turn) {
+		if ($i) { echo "<img src=".site_url()."images/fancy-pants3.png><br>\n"; }
+		echo "<b> Time: $hour:00hrs</b> (Turn ".$row->turn_number.")<br>";
+	}
+
+	echo "</center>";
+	echo "<br>Event: ".$et->descr." ".$event_details."<br>\n";
+	echo "&nbsp;<i>$descr</i><br>\n";
+	echo "<center>";
+	$last_turn = $turn;
 	$i++;
 }
 } else {

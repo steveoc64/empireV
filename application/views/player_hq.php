@@ -1,5 +1,5 @@
-<button id="hq">Return to HQ</button>
-<div id="console">
+<div id="console" style"top:40px">
+<button id="hq">Return to HQ</button></td>
 <?
 // Show game stats
 
@@ -74,29 +74,10 @@ if (isset($game)) {
 
 	
 		break;
-	case PHASE_MORALE:
+	case PHASE_ME_DET:
+	case PHASE_ME_MORALE:
 		echo "<h2>Morale Phase ~ ".$game->hrs."</h2>";
-		break;
-	case PHASE_LEADERS:
-		echo "<h2>Leader Attachments Phase ~ ".$game->hrs."</h2>";
-		break;
-	case PHASE_BREAKOFF:
-		echo "<h2>Breakoff Moves  ~ ".$game->hrs."</h2>";
-		break;
-	case PHASE_GT:
-		echo "<h2>Grand Tactical Movement ~ ".$game->hrs."</h2>";
-		break;
-	case PHASE_ENGAGE:
-		echo "<h2>Engagements ~ ".$game->hrs."</h2>";
-		break;
-	case PHASE_TACTICAL:
-		echo "<h2>Tactical Combat Phase ~ ".$game->hrs."</h2>";
-		break;
-	case PHASE_LEADERCAS:
-		echo "<h2>Leader Casualties ~ ".$game->hrs."</h2>";
-		break;
-	case PHASE_RALLY:
-		echo "<h2>Rally ~ ".$game->hrs."</h2>";
+		echo "Umpire is just working out who is doing what .. try again soon";
 		break;
 	default:
 		break;

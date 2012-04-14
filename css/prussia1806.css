@@ -3,7 +3,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: arial;
-	background-image: url(../images/scenario-master.jpg);
+	background-image: url(../themes/prussia1806/3.jpg);
 	background-attachment: fixed;;
 	background-repeat:no-repeat;
 	background-position: top;
@@ -58,8 +58,9 @@ body {
 }
 #eventreport {
 	top: 240px;
-	left: 240px;
+	left: 200px;
 	width: 800px;
+	margin: 40px auto 0;
 	position: absolute;
 	background: url(../images/reports-bg.png);
 	background-size: cover;

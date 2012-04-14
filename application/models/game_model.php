@@ -1,14 +1,19 @@
 <?php
 
 define ('PHASE_ORDERS',1);
-define ('PHASE_MORALE',2);
-define ('PHASE_LEADERS',3);
-define ('PHASE_BREAKOFF',4);
-define ('PHASE_GT',5);
-define ('PHASE_ENGAGE',6);
-define ('PHASE_TACTICAL',7);
-define ('PHASE_LEADERCAS',8);
-define ('PHASE_RALLY',9);
+define ('PHASE_ME_DET',2);
+define ('PHASE_ME_MORALE',3);
+define ('PHASE_ATTACH_LEADER',4);
+define ('PHASE_DECLARE_ORDERS',5);
+define ('PHASE_ACTIVATE_ORDERS',6);
+define ('PHASE_BREAKOFF',7);
+define ('PHASE_GT',8);
+define ('PHASE_DETERMINE_BOMBARDMENT',9);
+define ('PHASE_ENGAGE',10);
+define ('PHASE_COMMANDER_CAS',11);
+define ('PHASE_RALLY',12);
+define ('PHASE_REST',13);
+define ('PHASE_END_OF_HOUR',14);
 
 function d100 () {
 	return rand(1,100);
@@ -63,6 +68,7 @@ class Game_model extends CI_Model {
 		if (!$user_data) {
 			return null;
 		}
+
 		$game_id = $user_data->current_game;
 		if (!$game_id) {
 			return null;
@@ -73,6 +79,7 @@ class Game_model extends CI_Model {
 		if (!$game_data) {
 			return null;
 		}
+		$game_data->user = $user_data;
 
 		// load the national theme into the game array
 		$theme = (int)$user_data->national_theme;
@@ -89,7 +96,6 @@ class Game_model extends CI_Model {
 		}
 
 		// We have a game, so accumulate some details into the return value
-		$game_data->user = $user_data;
 		if ($user_data->commander_id) {
 			$game_data->unit_id_range = $this->get_unit_id_range($user_data->commander_id);
 			$game_data->unit_where_range = "(unit.id >= ".$game_data->unit_id_range->start_id." and unit.id <= ".$game_data->unit_id_range->end_id.")";
@@ -369,6 +375,8 @@ class Game_model extends CI_Model {
 								$result = 4;
 							} elseif ($dieroll <= $r) {
 								echo "<li>The whole ME is in RETREAT";
+								$distance = (int) (800 / $game->ground_scale);
+								echo "<li>All units fall back 800 yds ($distance inches)";
 								$result = 3;
 							} elseif ($dieroll <= $s) {
 								echo "<li>The whole ME is SHAKEN";
@@ -425,8 +433,10 @@ class Game_model extends CI_Model {
 									$data->game_id = $game_id;
 									$data->turn_number = $game->turn_number + 1;
 									$data->player_id = $unit->stats->player_id;
+									$data->unit_id = $unit->id;
 									$data->sent_turn = $game->turn_number;
 									$data->message = $message;
+									$data->letter_icon = rand(1,6);
 								$this->db->insert('game_message',$data);
 							}
 						} // if send mesg
@@ -438,7 +448,127 @@ class Game_model extends CI_Model {
 				} // is an infantry ME
 			} // foreach ME
 		} // for each player
-	} // close orders function
+	} // close me_determination function
+
+	function accept_me_determination () {
+		// Find which game the user is on
+		$user = $this->db->get_where('user',array('username' => $this->session->userdata('username')))->row();
+		$game_id = (int)$user->current_game;
+		if (!$game_id) {
+			die ("No game selected ... ?????");
+		}
+		
+		// get the game details
+		$game = $this->db->get_where('game',array('id' => $game_id))->row();
+		if (!$game) {
+			die ("Cannot find game ID $game_id ... ?????");
+		}
+
+		// Check that we are the first phase (allowing orders to be set)
+		$phase = (int) $game->phase;
+		if ($phase != 2) {
+			die ("We are in phase $phase of game $game_id .. need to be in phase 2 to accept ME determination test");
+		}
+
+
+		if ($game->turn_number == 1) {
+			die ("No need to check ME determination on turn 1");
+		} 
+
+		// for each me determination test result in this turn ... apply it
+		$this->load->model('unit_model');
+		$query = $this->db->get_where('game_me_det',array('game_id'=>$game_id,'turn_number'=>$game->turn_number));
+		foreach ($query->result() as $row) {
+			switch ($row->result) {
+			case 1:
+				// they passed the test, nothing to do
+				echo "Test passed";
+				print_r($row);
+				break;
+			case 2:
+				// they are shaken - set all units in the ME to shaken
+				$unit = $this->unit_model->get($row->unit_id,$game_id);
+				$this->unit_model->is_shaken($game_id,$game->turn_number,$unit);
+				$this->get_me_subunits($game_id,$unit);
+				foreach ($unit->me_subunit as $subunit) {
+					$this->unit_model->is_shaken($game_id,$game->turn_number,$subunit);
+				}
+				$message = "the officers and men of ".$unit->name." are shamefully losing confidence !";
+				// Now - send an immediate message to all players that this ME is losing confidence
+				$query = $this->db->query("select id,username from user where current_game=$game_id");
+				foreach ($query->result() as $row) {
+					$data = new stdClass;
+						$data->game_id = $game_id;
+						$data->turn_number = $game->turn_number;
+						$data->sent_turn = $game->turn_number;
+						$data->player_id = $row->id;
+						$data->unit_id = $unit->id;
+						$data->message = "Sir, we have immediate news that $message";
+						$data->letter_icon = rand(1,6);
+					$this->db->insert('game_message',$data);
+				}
+				echo "$message <p>";
+				break;
+			case 3:
+				// they are in retreat - set all units in the ME to retreat
+				$unit = $this->unit_model->get($row->unit_id,$game_id);
+				$this->unit_model->is_retreating($game_id,$game->turn_number,$unit);
+				$this->get_me_subunits($game_id,$unit);
+				foreach ($unit->me_subunit as $subunit) {
+					$this->unit_model->is_retreating($game_id,$game->turn_number,$unit);
+				}
+				// Now - send an immediate message to all players that this ME is in retreat
+				$message = "Sir, we have astounding news that ".$unit->name." are in cowardly retreat !";
+				$query = $this->db->query("select id from user where current_game=$game_id");
+				foreach ($query->result() as $row) {
+					$data = new stdClass;
+						$data->game_id = $game_id;
+						$data->turn_number = $game->turn_number;
+						$data->sent_turn = $game->turn_number;
+						$data->player_id = $row->id;
+						$data->message = $message;
+						$data->unit_id = $unit->id;
+						$data->letter_icon = rand(1,6);
+					$this->db->insert('game_message',$data);
+				}
+				$distance = (int) (800 / $game->ground_scale);
+				echo "The officers and men of ".$unit->name." are in retreat - they must fall back $distance inches immediately.<p>";
+				echo "TODO: If any subunits of that ME are within engagement range of formed enemy cavalry, the owner of the cavalry may demand that retreating infantry units be pinned - which will cost the pinned unit an extra 2 fatigue points.<p>";
+				break;
+			case 4:
+				// they are broken - set all units in the ME to retreat
+				$unit = $this->unit_model->get($row->unit_id,$game_id);
+				$this->unit_model->is_broken($game_id,$game->turn_number,$unit);
+				$this->get_me_subunits($game_id,$unit);
+				foreach ($unit->me_subunit as $subunit) {
+					$this->unit_model->is_broken($game_id,$game->turn_number,$unit);
+				}
+				// Now - send an immediate message to all players that this ME is in retreat
+				$message = "Sir, there are unconfirmed reports that ".$unit->name." may well have broken in disgraceful panic !";
+				$query = $this->db->query("select id from user where current_game=$game_id");
+				foreach ($query->result() as $row) {
+					$data = new stdClass;
+						$data->game_id = $game_id;
+						$data->turn_number = $game->turn_number;
+						$data->sent_turn = $game->turn_number;
+						$data->player_id = $row->id;
+						$data->unit_id = $unit->id;
+						$data->message = "Sir, there are unconfirmed reports that $message";
+						$data->letter_icon = rand(1,6);
+					$this->db->insert('game_message',$data);
+				}
+				$distance = (int) (800 / $game->ground_scale);
+				echo "Unit ".$unit->name." breaks in shameful panic - they must run away a total of $distance inches immediately, facing away from the enemy, and in a state of general disorder.<p>";
+				break;
+			}
+
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=3 where id=$game_id");
+	}
+
+
 }
 
 

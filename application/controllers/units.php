@@ -24,6 +24,7 @@ class Units extends MY_Controller
 
 			// Admin can see all units, unless he has selected a game to play, in which case he can 
 			// only see units that are part of the current game.
+			$form->set_theme('datatables');
 
 			$id = (int) $this->uri->segment(3);
 			if ($id) {
@@ -220,6 +221,11 @@ class Units extends MY_Controller
 
 		$row = $this->db->query("select max(id) as last_child from unit where parent_id=$id")->row();
 		if ($row && $row->last_child) {
+			// top level army ?
+			$last_id = $row->last_child;
+			$row = $this->db->query("select max(id) as last_child from unit where parent_id=".$row->last_child)->row();
+			if ($row && $row->last_child) {
+
 			// Last Corps level
 			//echo "last Corps of that one is ".$row->last_child."<br>";
 			$last_id = $row->last_child;
@@ -242,6 +248,7 @@ class Units extends MY_Controller
 					//echo "ID range is $start_id to $last_id<br>";
 				}
 				//echo "ID range is $start_id to $last_id<br>";
+			}
 			}
 			//echo "ID range is $start_id to $last_id<br>";
 

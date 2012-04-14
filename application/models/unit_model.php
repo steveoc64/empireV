@@ -248,4 +248,85 @@ Class Unit_model extends CI_Model {
 		$this->disorder($id,50);
 	}
 
+	function is_shaken ($game_id,$turn_number,$unit) {
+		if (is_object($unit) && isset($unit->id)) {
+			// Just add a fatigue point, and add a random amount of disorder to the unit
+			// between 10-60% disorder 
+			$d = rand(10,60);
+			// Lets be nasty and allow a few of them to run away as well
+			$c = rand(10,100);
+			$this->db->query("update game_unit_stats set fatigue=fatigue+1,disorder=disorder+$d,morale_state=2,casualties=casualties+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
+			$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit->id." and casualties > initial_strength");
+			
+			// Create a change of morale event
+			$data = new stdClass;
+				$data->game_id = $game_id;
+				$data->turn_number = $turn_number;
+				$data->unit_id = $unit->id;
+				$data->event_type = 23;
+				$data->value = 2;
+				$data->descr = "Unit is shaken, as the ME failed a determination test. $c men had fled the ranks";
+			$this->db->insert('game_event',$data);
+		}
+	}
+
+	function is_retreating ($game_id,$turn_number,$unit) {
+		if (is_object($unit) && isset($unit->id)) {
+			// Just add 2 fatigue points, and add a random amount of disorder to the unit
+			// between 30-90% disorder 
+			$d = rand(30,90);
+			// Lets be nasty and allow some of them to run away as well
+			$c = rand(20,200);
+			$this->db->query("update game_unit_stats set fatigue=fatigue+2,disorder=disorder+$d,morale_state=3,casualties=casualties+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
+			$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit->id." and casualties > initial_strength");
+			
+			// Create a change of morale event
+			$data = new stdClass;
+				$data->game_id = $game_id;
+				$data->turn_number = $turn_number;
+				$data->unit_id = $unit->id;
+				$data->event_type = 23;
+				$data->value = 3;
+				$data->descr = "Unit is retreat, as the ME failed a determination test. $c men had fled the ranks";
+			$this->db->insert('game_event',$data);
+				
+			// Create a Disgrace event
+				$data->event_type = 22;
+				$data->descr = "In disgrace for retreating without orders";
+			$this->db->insert('game_event',$data);
+		}
+	}
+
+	function is_broken ($game_id,$turn_number,$unit) {
+		if (is_object($unit) && isset($unit->id)) {
+			// Just add 6 fatigue points, and add a random amount of disorder to the unit
+			// between 50-100% disorder 
+			$d = rand(50,100);
+			// Lets be nasty and allow lots of them to run away as well
+			$c = rand(100,400);
+			$this->db->query("update game_unit_stats set fatigue=fatigue+6,disorder=disorder+$d,morale_state=4,casualties=casualties+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
+			// Any unlimbered artillery in this unit abandon their guns - the utter cowards !
+			$this->db->query("update game_unit_stats set guns_abandoned='T' where is_limbered='F' and game_id=".$game_id." and unit_id=".$unit->id);
+			$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit->id." and casualties > initial_strength");
+	
+			// Create a change of morale event
+			$data = new stdClass;
+				$data->game_id = $game_id;
+				$data->turn_number = $turn_number;
+				$data->unit_id = $unit->id;
+				$data->event_type = 23;
+				$data->value = 4;
+				$data->descr = "Unit has broken, as the ME failed a determination test. $c men had fled the ranks";
+			$this->db->insert('game_event',$data);
+				
+			// Create a Disgrace event
+				$data->event_type = 22;
+				$data->descr = "In utter disgrace for having fallen apart in battle";
+			$this->db->insert('game_event',$data);
+
+		}
+	}
+
+
+
 }

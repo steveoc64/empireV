@@ -12,4 +12,4 @@
 ?>
 </fieldset>
 </div>
-<div id="formimg"><img src=<?site_url()?>images/french-commander.jpg height=234></div>
+<div id="formimg"><img src=<?=site_url()?>images/french-commander.jpg height=234></div>

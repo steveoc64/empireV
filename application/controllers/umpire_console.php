@@ -33,7 +33,13 @@ class Umpire_Console extends MY_Controller
 			$this->load->model('game_model');
 			$this->game_model->me_determination();
 		}
+	}
 
+	function accept_me_determination() {
+		if ($this->check_role(array('A','U'))) {
+			$this->load->model('game_model');
+			$this->game_model->accept_me_determination();
+		}
 	}
 
 	function refresh_orders() {

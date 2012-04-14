@@ -90,6 +90,9 @@ class MY_Controller extends CI_Controller {
 		}
 	
 		$this->load->view ('crud_header',$contents);
+		$this->load->model ('game_model');
+		$game = $this->game_model->get_current_game(false);
+		if ($game) { $this->load->view('game_messages',array('game'=>$game));  }
 		$this->load->view ('crud_body', $contents);
 		$this->load->view ('crud_footer');
 		$this->benchmark->mark('end_render');
@@ -123,6 +126,12 @@ class MY_Controller extends CI_Controller {
 		$contents->main_css_file = $css;
 		$bg = $row->backdrop_img;
 		$this->load->view ('crud_header',$contents);
+		/*
+		$this->load->model ('game_model');
+		$game = $this->game_model->get_current_game(false);
+		if ($game) { $this->load->view('game_messages',array('game'=>$game));  }
+		 */
+	
 	}
 
 	function render_body ($contents) {
