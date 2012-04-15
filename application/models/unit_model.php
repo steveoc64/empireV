@@ -242,7 +242,7 @@ Class Unit_model extends CI_Model {
 		$unit_data = $this->db->get_where('unit', array('id' => $id))->row();
 		$new_morale = $unit_data->morale_state + 1;
 		if ($new_morale > 4) {
-			$new_mprale = 4;
+			$new_morale = 4;
 		} 
 		$this->db->query("update unit set morale_state=$new_morale where id=$id");
 		$this->disorder($id,50);
@@ -255,8 +255,8 @@ Class Unit_model extends CI_Model {
 			$d = rand(10,60);
 			// Lets be nasty and allow a few of them to run away as well
 			$c = rand(10,100);
-			$this->db->query("update game_unit_stats set fatigue=fatigue+1,disorder=disorder+$d,morale_state=2,casualties=casualties+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
-			$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit->id." and casualties > initial_strength");
+			$this->db->query("update game_unit_stats set fatigue=fatigue+1,disorder=disorder+$d,morale_state=2,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
+			$this->cap_max($game_id,$unit->id);
 			
 			// Create a change of morale event
 			$data = new stdClass;
@@ -265,7 +265,7 @@ Class Unit_model extends CI_Model {
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
 				$data->value = 2;
-				$data->descr = "Unit is shaken, as the ME failed a determination test. $c men had fled the ranks";
+				$data->descr = "Unit is shaken. Dozens of men have fled the ranks in fear.";
 			$this->db->insert('game_event',$data);
 		}
 	}
@@ -277,8 +277,8 @@ Class Unit_model extends CI_Model {
 			$d = rand(30,90);
 			// Lets be nasty and allow some of them to run away as well
 			$c = rand(20,200);
-			$this->db->query("update game_unit_stats set fatigue=fatigue+2,disorder=disorder+$d,morale_state=3,casualties=casualties+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
-			$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit->id." and casualties > initial_strength");
+			$this->db->query("update game_unit_stats set fatigue=fatigue+2,disorder=disorder+$d,morale_state=3,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
+			$this->cap_max($game_id,$unit->id);
 			
 			// Create a change of morale event
 			$data = new stdClass;
@@ -287,7 +287,7 @@ Class Unit_model extends CI_Model {
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
 				$data->value = 3;
-				$data->descr = "Unit is retreat, as the ME failed a determination test. $c men had fled the ranks";
+				$data->descr = "Unit is in retreat. Scores of cowards have left the ranks in shame.";
 			$this->db->insert('game_event',$data);
 				
 			// Create a Disgrace event
@@ -304,10 +304,10 @@ Class Unit_model extends CI_Model {
 			$d = rand(50,100);
 			// Lets be nasty and allow lots of them to run away as well
 			$c = rand(100,400);
-			$this->db->query("update game_unit_stats set fatigue=fatigue+6,disorder=disorder+$d,morale_state=4,casualties=casualties+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
+			$this->db->query("update game_unit_stats set fatigue=fatigue+6,disorder=disorder+$d,morale_state=4,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
 			// Any unlimbered artillery in this unit abandon their guns - the utter cowards !
 			$this->db->query("update game_unit_stats set guns_abandoned='T' where is_limbered='F' and game_id=".$game_id." and unit_id=".$unit->id);
-			$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit->id." and casualties > initial_strength");
+			$this->cap_max($game_id,$unit->id);
 	
 			// Create a change of morale event
 			$data = new stdClass;
@@ -316,7 +316,7 @@ Class Unit_model extends CI_Model {
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
 				$data->value = 4;
-				$data->descr = "Unit has broken, as the ME failed a determination test. $c men had fled the ranks";
+				$data->descr = "Unit has broken. Great droves of the scoundrels have deserted the colours in disgrace.";
 			$this->db->insert('game_event',$data);
 				
 			// Create a Disgrace event
@@ -325,6 +325,14 @@ Class Unit_model extends CI_Model {
 			$this->db->insert('game_event',$data);
 
 		}
+	}
+
+	function cap_max($game_id,$unit_id) {
+		$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit_id." and casualties > initial_strength");
+		$this->db->query("update game_unit_stats set casualties_this_hour=initial_strength where game_id=".$game_id." and unit_id=".$unit_id." and casualties_this_hour > initial_strength");
+		$this->db->query("update game_unit_stats set fatigue=breakpoint where game_id=".$game_id." and unit_id=".$unit_id." and fatigue > breakpoint");
+		$this->db->query("update game_unit_stats set fled=initial_strength where game_id=".$game_id." and unit_id=".$unit_id." and fled > initial_strength");
+		$this->db->query("update game_unit_stats set disorder=100 where game_id=".$game_id." and unit_id=".$unit_id." and disorder > 100");
 	}
 
 

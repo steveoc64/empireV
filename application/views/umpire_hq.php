@@ -177,7 +177,7 @@ $("#morale_test_done").click(function() {
 	if (has_any) {
 		alert('You still have un-processed Morale Checks selected');
 	} else {
-		if (confirm('Are you all finished with Morale Tests then ?  Click YES to complete morale tests and move on to the next phase')) {
+		if (confirm('Are you all finished with Morale Tests then ?\nOnly proceed if you are absolutely sure that all ME morale checks are complete, which will advance the game to the next phase')) {
 			$("#morale_form").fadeOut(3000);
 			alert('All done then');
 		}
