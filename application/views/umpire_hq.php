@@ -30,6 +30,10 @@ if (isset($game)) {
 		break;
 	case PHASE_ME_MORALE:
 		echo "<h2>ME Morale Phase ~ ".$game->hrs."</h2>\n";
+		echo "<button id=morale_test>Run Selected Morale Tests</button>";
+		echo "<button id=morale_help>Morale Test Help Notes</button>";
+		echo "<div id=morale_test_form></div>";
+		echo "<button id=morale_test_done>All Done .. continue to next Phase</button>";
 		break;
 	default:
 		break;
@@ -39,7 +43,11 @@ if (isset($game)) {
 ?>
 	<div id="form">
 	<center><img src=<?site_url()?>images/firing-squad.jpg></center>
-	You are not currently logged in to a game<p>Ask the administrator to setup your<br>account to access a game in progress.
+<? if ($this->session->userdata('role') == 'A') {
+	echo "You need to select which game to Umpire.<p>Please go to the <a href=game>Game List</a> and select the game by hitting the 'Play' button. Thanks.";
+} else {
+	echo "You are not currently logged in to a game<p>Ask the administrator to setup your<br>account to access a game in progress.";
+}?>
 	</div>
 <?  } ?>
 
@@ -63,13 +71,19 @@ $(function() {
 		$("#orders").hide().load('umpire_console/refresh_orders').fadeIn(3000);
 	}, 10000);
 
-	// Phase 2 buttons init
+	// Phase 2 buttons init and kick off tests
 	$("#accept_me_determination").hide();
 	$("#me_morale").hide();
 	$("#me_determination_results").load("umpire_console/me_determination");
 	$("#accept_me_determination").fadeIn(5000);
 
-	// Kick off the ME determination test
+	// Phase 3 buttons init and kick off tests
+	$("#morale_test_done").hide();
+	$("#morale_test").fadeIn(3000);
+	$("#morale_test_form").load("umpire_console/morale_test_form",function(){ 
+		$("#morale_test_done").fadeIn(4000);
+	});
+
 
 	// Kick off the clock
 	var seconds = 0;
@@ -125,5 +139,48 @@ $("#accept_me_determination").click(function(){
 	$("#me_determination_results").hide().load('umpire_console/accept_me_determination').fadeIn(3000);
 	$("#me_morale").fadeIn(4000);
 	location.reload();
+});
+
+// PHASE 3 - Run Morale Tests
+$("#morale_help").click(function() {
+	$('<div id=help_dialog></div>').load('morale_help').dialog({modal:true, width:800, height:400});
+});
+$("#morale_test").click(function() {
+	var units = new Array();
+	$(':checkbox').map(function() {
+		if (this.checked) {
+			units.push(this.name);
+		}
+	});
+	if (units.length == 0) {
+		alert("No units selected ... :(");
+	} else {
+		if (confirm("Do you want to run a morale check for "+units+"\n\nYou are sure that these units are within 400yds of an ME which failed in some way,\nand these units are not 2 or more morale grades above them ?")) {
+			$('<div></div>').load('umpire_console/morale_test',{'units[]': units}).dialog({modal:true, width:900, height:600});
+			$("#morale_test_form").load("umpire_console/morale_test_form",function(){ $("#morale_test_done").fadeIn(2000);});
+			//$(':checkbox').map(function() {
+				//this.checked = false;
+			//});
+		}
+	}
+
+});
+
+$("#morale_test_done").click(function() {
+
+	var has_any = false;
+	$(':checkbox').map(function() {
+		if (this.checked) {
+			has_any=true;
+		}
+	});
+	if (has_any) {
+		alert('You still have un-processed Morale Checks selected');
+	} else {
+		if (confirm('Are you all finished with Morale Tests then ?  Click YES to complete morale tests and move on to the next phase')) {
+			$("#morale_form").fadeOut(3000);
+			alert('All done then');
+		}
+	}
 });
 </script>

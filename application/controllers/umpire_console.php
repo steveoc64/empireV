@@ -49,4 +49,18 @@ class Umpire_Console extends MY_Controller
 		}
 	}
 
+	function morale_test_form() {
+		if ($this->check_role(array('A','U'))) {
+			$this->load->model('game_model');
+			$this->game_model->morale_test_form();
+		}
+	}
+
+	function morale_test() {
+		if ($this->check_role(array('A','U'))) {
+			$this->load->model('game_model');
+			$this->game_model->morale_test();
+		}
+	}
+
 }

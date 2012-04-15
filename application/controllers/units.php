@@ -24,24 +24,34 @@ class Units extends MY_Controller
 
 			// Admin can see all units, unless he has selected a game to play, in which case he can 
 			// only see units that are part of the current game.
-			$form->set_theme('datatables');
+			//$form->set_theme('datatables');
 
 			$id = (int) $this->uri->segment(3);
 			if ($id) {
 				// only looking at the subtree for this commander
 				$form->where($this->game_model->get_unit_where_range($id));
 				$title .= "showing unit $id, and subordinate units only";
-				$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','orbat_id','player_id');
-				$form->display_as('orbat_id','ORBAT');
+				//$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','orbat_id','player_id');
+				$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','player_id');
+				//$form->display_as('orbat_id','ORBAT');
 				$form->callback_column('unit.name',array($this,'indent_name2'));
+				$form->callback_column('player_id',array($this,'get_player'));
 				$form->callback_after_update(array($this,'cascade_me'));
+				if ($this->game) {
+					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace');
+					$form->callback_column('casualties',array($this,'get_casualties'));
+					$form->callback_column('last_hour',array($this,'last_hour'));
+					$form->add_action('Status', '', '','ui-icon-clipboard',array($this,'status_report'));
+					$form->unset_edit();
+				}
 			} else {
 				if ($this->game) {
 					$form->where('unit.orbat_id',$this->game->orbat_attacker);
 					$form->or_where('unit.orbat_id',$this->game->orbat_defender);
 					$title .= "Only showing attacker and defender forces for current game (#".$this->game->id." - ".$this->game->name.")";
 					// Add some buttons - dont show them if there is no game selected for admin
-					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','orbat_id','player_id');
+					//$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','orbat_id','player_id');
+					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','player_id');
 					$form->callback_column('casualties',array($this,'get_casualties'));
 					$form->callback_column('last_hour',array($this,'last_hour'));
 					$form->callback_column('player_id',array($this,'get_player'));
@@ -54,8 +64,8 @@ class Units extends MY_Controller
 					$form->display_as('orbat_id','ORBAT');
 					$form->callback_after_update(array($this,'cascade_me'));
 				}
-				$form->callback_column('unit.name',array($this,'indent_name2'));
 			}
+			$form->callback_column('unit.name',array($this,'indent_name2'));
 			break;
 		case 'U':
 			$form->set_theme('datatables');

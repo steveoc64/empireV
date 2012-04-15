@@ -78,6 +78,7 @@ if (isset($game)) {
 	case PHASE_ME_MORALE:
 		echo "<h2>Morale Phase ~ ".$game->hrs."</h2>";
 		echo "Umpire is just working out who is doing what .. try again soon";
+		echo "<div id=reloader></div><button id=refresh_page>Refresh Page</button>";
 		break;
 	default:
 		break;
@@ -145,6 +146,15 @@ $(function() {
 			}
 		}
 	});
+
+	// If the reloader is defined, then re-load the page every 10 seconds
+	//setInterval(function() {
+		//if ($("#reloader").length != 0) {
+			//$('#console').fadeOut(4000);
+			//location.reload();
+		//}
+	//}, 10000);
+
 });  
 $("#hq").click(function () { 
 	$("#console").hide(1000); 
@@ -153,6 +163,7 @@ $("#hq").click(function () {
 	$("#menu").fadeIn(1000); 
 });
 $('#view_orders').click(function(){ document.location.href='<?site_url()?>orders'; });
+$('#refresh_page').click(function(){ $('#console').fadeOut(2000); location.reload(); });
 
 </script>
 

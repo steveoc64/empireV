@@ -283,10 +283,10 @@ case TYPE_BATTERY:
 $game_id = $unit->game_id;
 if ($game_id) {
 $unit_id = $unit->id;
-$_ = $this->db->query("select event_type,turn_number,descr,value from game_event where game_id=$game_id and unit_id=$unit_id");
+$query = $this->db->query("select event_type,turn_number,descr,value from game_event where game_id=$game_id and unit_id=$unit_id");
 $i = 0;
 $last_turn = 0;
-foreach ($_->result() as $row) {
+foreach ($query->result() as $row) {
 	$et = $this->db->get_where('event_type',array('id'=>$row->event_type))->row();
 	$descr = $row->descr;
 	$descr = str_replace('\n','<br>',$descr);
@@ -296,7 +296,13 @@ foreach ($_->result() as $row) {
 	case 1:	// order received
 	case 2:	// order activated
 		$_ = $this->db->get_where('order_types',array('id'=>$row->value))->row();
-		$event_details = "(".$_->name." Order)";
+		if ($_) {
+			$event_details = "(".$_->name." Order)";
+		} else {
+			echo "Unknown order type ".$row->value." in event : ";
+			print_r($row);
+			die ("Exiting ...");
+		}
 		break;
 	}
 	// Calculate the hour

@@ -199,6 +199,7 @@ class Game_model extends CI_Model {
 		$me_unit->stats->casualties_this_hour = 0;
 		$me_unit->num_subunits = 0;
 		$me_unit->avg_morale = 0;
+		$me_unit->me_subunit = array();
 		foreach ($query->result() as $row) {
 			$unit = $this->unit_model->get($row->id,$game_id);
 			$me_unit->me_subunit[] = $unit;
@@ -229,6 +230,8 @@ class Game_model extends CI_Model {
 			}
 		} else {
 			$me_unit->avg_morale_name = '';
+			$me_unit->avg_morale = 7;
+			echo "<hr><font color=red>WARNING: ME Unit ".$me_unit->id." - ".$me_unit->name." has no subunits .. that wont work very well.<p>You really should fix the ORBAT file for this unit, or turn off the 'is ME' flag for this unit.</font><p>First deselect the current game from the <a href=".site_url()."game target=_blank>Game List</a>, and then Click <a href=".site_url()."units/index/edit/".$me_unit->id.">HERE</a> to fix this unit.<p>In the meantime, I am going to have to treat this unit as Conscript morale grade for Average ME morale. So the ME wont last long on the battlefield until the data is fixed :)<hr>";
 		}
 		
 		// Pre calculate some derived values (on the top level ME) for convenience
@@ -490,8 +493,10 @@ class Game_model extends CI_Model {
 				$unit = $this->unit_model->get($row->unit_id,$game_id);
 				$this->unit_model->is_shaken($game_id,$game->turn_number,$unit);
 				$this->get_me_subunits($game_id,$unit);
+				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
 					$this->unit_model->is_shaken($game_id,$game->turn_number,$subunit);
+				}
 				}
 				$message = "the officers and men of ".$unit->name." are shamefully losing confidence !";
 				// Now - send an immediate message to all players that this ME is losing confidence
@@ -514,8 +519,10 @@ class Game_model extends CI_Model {
 				$unit = $this->unit_model->get($row->unit_id,$game_id);
 				$this->unit_model->is_retreating($game_id,$game->turn_number,$unit);
 				$this->get_me_subunits($game_id,$unit);
+				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
 					$this->unit_model->is_retreating($game_id,$game->turn_number,$unit);
+				}
 				}
 				// Now - send an immediate message to all players that this ME is in retreat
 				$message = "Sir, we have astounding news that ".$unit->name." are in cowardly retreat !";
@@ -540,8 +547,10 @@ class Game_model extends CI_Model {
 				$unit = $this->unit_model->get($row->unit_id,$game_id);
 				$this->unit_model->is_broken($game_id,$game->turn_number,$unit);
 				$this->get_me_subunits($game_id,$unit);
+				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
 					$this->unit_model->is_broken($game_id,$game->turn_number,$unit);
+				}
 				}
 				// Now - send an immediate message to all players that this ME is in retreat
 				$message = "Sir, there are unconfirmed reports that ".$unit->name." may well have broken in disgraceful panic !";
@@ -568,6 +577,234 @@ class Game_model extends CI_Model {
 		$this->db->query("update game set phase=3 where id=$game_id");
 	}
 
+	function morale_test_form() {
+		// Find which game the user is on
+		$user = $this->db->get_where('user',array('username' => $this->session->userdata('username')))->row();
+		$game_id = (int)$user->current_game;
+		if (!$game_id) {
+			die ("No game selected ... ?????");
+		}
+		
+		// get the game details
+		$game = $this->db->get_where('game',array('id' => $game_id))->row();
+		if (!$game) {
+			die ("Cannot find game ID $game_id ... ?????");
+		}
+
+		// Check that we are the first phase (allowing orders to be set)
+		$phase = (int) $game->phase;
+		if ($phase != 3) {
+			die ("We are in phase $phase of game $game_id .. need to be in phase 3 to run morale tests");
+		}
+
+		if ($game->turn_number == 1) {
+			die ("No need to check Morale on turn 1 - that would be a terrible thing if troops failed before the game starts");
+		} 
+
+		if (!$game->ground_scale) {
+			$game->ground_scale=40;
+		}
+		$distance = (int) (400 / $game->ground_scale);
+		echo "<i>NOTE: Testing Proximity = $distance inches at 1\"=".$game->ground_scale."yds current game scale</i><p>";
+
+		echo "<b><u>Players and their units</u></b>";
+		echo form_open(site_url()."umpire_console/do_morale_test");
+		echo "<table width=100% border=1>";
+		$query = $this->db->get_where('user',array('current_game'=>$game_id));
+		foreach ($query->result() as $row) {
+			// For each user in this game - get their commander ID
+			if ($row->commander_id != 0) {
+				echo "<tr><td colspan=8><b>Player $row->username in command of unit [".$row->commander_id."]</td></tr>";
+				echo "<tr><td>ID</td><td>ME Name</td><td>Orders</td><td>Tests</td><td>Grade</td><td>Current State</td><td>Losses<br>(This Hour)</td></tr>";
+				$range = $this->get_unit_id_range($row->commander_id);
+				$me_list = $this->get_me_list($game_id,$range->start_id,$range->end_id);
+				foreach ($me_list as $me_unit) {
+				if ($me_unit->stats->player_id == $row->id) { // not all MEs under this commander belong to the same player
+					echo "<tr><td>".$me_unit->id."</td><td>".$me_unit->name."</td>";
+					$exempt = false;
+					if ($me_unit->current_order->order_type == 9) {
+						$exempt = true;
+						echo "<td><font color=red>".$me_unit->current_order_type."</font></td>";
+					} else {
+						echo "<td>".$me_unit->current_order_type."</td>";
+					}
+					// Add test checkboxen - unless they were affected by an ME det failure
+					echo "<td>";
+					$_ = $this->db->query("select count(*) as count from game_me_det where game_id=$game_id and unit_id=".$me_unit->id." and turn_number=".$game->turn_number." and result >= 2")->row();
+					if ($_->count > 0) {
+						$exempt = true;
+					}
+
+					if ($exempt) {
+						echo "<font color=red>Exempt</font>";
+					} else {
+						echo form_checkbox($me_unit->id,'Retreated into');
+					}
+					echo "</td>";
+
+					echo "<td>".$me_unit->avg_morale_name."</td>";
+					echo "<td>".$me_unit->morale_state_descr."</td>";
+					if ($me_unit->percent_lost) {
+						echo "<td>".$me_unit->percent_lost."% (".$me_unit->percent_lost_this_hour."%)</td></tr>";
+					} else {
+						echo "<td></td></tr>";
+					}
+				} // that belongs to this player
+				} // foreach ME under this commander
+
+			}
+		}
+		echo "</table>";
+		echo form_close();
+	}
+
+	function morale_test() {
+		$units = $this->input->post('units');
+		if (!$units) {
+			die ("No units selected for morale test ...");
+		}
+		
+		// Find which game the user is on
+		$user = $this->db->get_where('user',array('username' => $this->session->userdata('username')))->row();
+		$game_id = (int)$user->current_game;
+		if (!$game_id) {
+			die ("No game selected ... ?????");
+		}
+		
+		// get the game details
+		$game = $this->db->get_where('game',array('id' => $game_id))->row();
+		if (!$game) {
+			die ("Cannot find game ID $game_id ... ?????");
+		}
+
+		// Check that we are the first phase (allowing orders to be set)
+		$phase = (int) $game->phase;
+		if ($phase != 3) {
+			die ("We are in phase $phase of game $game_id .. need to be in phase 3 to run morale tests");
+		}
+
+		if ($game->turn_number == 1) {
+			die ("No need to check Morale on turn 1 - that would be a terrible thing if troops failed before the game starts");
+		} 
+
+		$this->load->model('unit_model');
+		$i = 0;
+		foreach ($units as $unit_id) {
+			$unit = $this->unit_model->get($unit_id,$game_id);
+			if ($unit->is_me == 'T') {
+				if ($i) {
+					echo "<hr>";
+				}
+				$i++;
+
+				$this->get_me_subunits($game_id,$unit);
+				// Morale breaks for ME morale test - pp 47 of EmpireV rulebook
+				switch ($unit->avg_morale) {
+				case 1: // OldGuard
+				case 2: // Guard
+					$s=3; $b=-1; $grp='I';
+					break;
+				case 3: // Grenadiers
+				case 4: // Elites
+					$s=9; $b=-3; $grp='II';
+					break;
+				case 5: // Crack Line
+				case 6: // Veterans
+					$s=19; $b=-6; $grp='III';
+					break;
+				case 7: // Conscripts
+				case 8: // Landwehr
+					$s=38; $b=-15; $grp='IV';
+					break;
+				case 9: // Trained Militia
+					$s=48; $b=-29; $grp='V';
+					break;
+				case 10: // Untrained rabble
+					$s=68; $b=-45; $grp='VI';
+					break;
+				}
+				echo "Unit [$unit_id] ".$unit->name." of Avg Morale: ".$unit->avg_morale_name." ($grp)<br>";
+				$dieroll = d100();
+				echo "<i>dieroll = $dieroll</i>: ";
+				if ($dieroll <= $b) {
+					echo "<font color=red>BROKEN</font><br>";
+					$this->unit_model->is_broken($game_id,$game->turn_number,$unit);
+					if ($unit->me_subunit) {
+					foreach ($unit->me_subunit as $sub) {
+						$this->unit_model->is_broken($game_id,$game->turn_number,$sub);
+					}
+					}
+					switch ($unit->unit_type) {
+					case TYPE_DIVISION:
+						$message = "From Division [".$unit->id."] Commander ".$unit->division->commander."<br>";
+						break;
+					case TYPE_BRIGADE:
+						$message = "From Brigade [".$unit->id."] Commander ".$unit->brigade->commander."<br>";
+						break;
+					default:
+						$message = '';
+						break;
+					}
+					$message .= "Terrible rumours suggest that ".$unit->name." may have broken, and are fleeing for their lives.";
+					$data = new stdClass;
+						$data->game_id = $game_id;
+						$data->turn_number = $game->turn_number + 1;
+						$data->player_id = $unit->stats->player_id;
+						$data->unit_id = $unit->id;
+						$data->sent_turn = $game->turn_number;
+						$data->message = $message;
+						$data->letter_icon = rand(1,6);
+					$this->db->insert('game_message',$data);
+
+				} elseif ($dieroll <= $s) {
+					echo "<font color=orange>SHAKEN</font><br>";
+					$this->unit_model->is_shaken($game_id,$game->turn_number,$unit);
+					if ($unit->me_subunit) {
+					foreach ($unit->me_subunit as $sub) {
+						$this->unit_model->is_shaken($game_id,$game->turn_number,$sub);
+					}
+					}
+					switch ($unit->unit_type) {
+					case TYPE_DIVISION:
+						$message = "From Division [".$unit->id."] Commander ".$unit->division->commander."<br>";
+						break;
+					case TYPE_BRIGADE:
+						$message = "From Brigade [".$unit->id."] Commander ".$unit->brigade->commander."<br>";
+						break;
+					default:
+						$message = '';
+						break;
+					}
+					$message .= "The junior officers of ".$unit->name." are losing confidence, and may disgrace the good name of the regiment before long. Stern measures are being undertaken to stop the rot.";
+					$data = new stdClass;
+						$data->game_id = $game_id;
+						$data->turn_number = $game->turn_number + 1;
+						$data->player_id = $unit->stats->player_id;
+						$data->unit_id = $unit->id;
+						$data->sent_turn = $game->turn_number;
+						$data->message = $message;
+						$data->letter_icon = rand(1,6);
+					$this->db->insert('game_message',$data);
+
+
+				} else {
+					echo "<font color=green>PASS</font><br>";
+				}
+			} else {
+				die ("Unit $unit_id ".$unit->name." is not an ME");
+			}
+		}
+		// print the morale check table
+		echo "<table border=0 width=100%><tr bgcolor=#33cc33><td>Group I</td><td>3% to become shaken</td></tr>";
+		echo "<tr bgcolor=#99ff33><td>Group II</td><td>9% to become shaken<br>3% to break</td></tr>";
+		echo "<tr bgcolor=#ccff33><td>Group III</td><td>19% to become shaken<br>6% to break</td></tr>";
+		echo "<tr bgcolor=#ffff00><td>Group IV</td><td>38% to become shaken<br>15% to break</td></tr>";
+		echo "<tr bgcolor=#ff9900><td>Group V</td><td>48% to become shaken<br>29% to break</td></tr>";
+		echo "<tr bgcolor=#cc3300><td>Group VI</td><td>68% to become shaken<br>45% to break</td></tr>";
+		echo "</table>";
+
+
+	}
 
 }
 
