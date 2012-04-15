@@ -1,0 +1,61 @@
+Installation Guide
+------------------
+
+Sun Apr 15 09:46:25 CST 2012
+There is obviously a lot to write here, but all this should be redundant as soon as the program includes a decent installation loader.
+
+Also note that this being a development jig, which is rapidly changing, there is not too much point writing a whole pile of documentation at this stage.
+
+Having said that, here are some handy hints on getting it running :
+
+1) Database Setup
+
+Lets get the database setup first. Create a database under mysql called 'empire' :
+
+$ mysql -u root -p
+> create database empire;
+> connect empire;
+
+.. now you can load in the sample database to get running. This is in the SQL directory, called empire.sql
+
+> \. SQL/empire.sql
+.. lots of messages about loading records
+> \q
+
+all done!
+
+
+Be careful if you want to wipe the demo database and start with something fresh. Some of the tables in the database are
+game specific and therefore easily removed, some are scenario or orbat specific, and removing them will kill all games in 
+progress ... other files are system specific, and the data in them is needed in order for the system to run.
+
+There are facilities in the web front end to delete whole Orbats, which cleanly remove just what is needed from the database
+and leave all the required data there.
+
+The data structures are changing rapidly with each git update, so dont get too attached to whats there for now.
+
+In the production release, the program will include all the tools needed to purge and maintain the database, and repair
+missing data which is required for the system to run. Until then - proceed with caution !!!
+
+
+1) CodeIgniter Setup
+
+Like any CodeIgniter application, you need to setup a few configuration params to suit your environment.
+
+All the config files are in the :
+application/config 
+directory.
+
+You need to define your database password (and name of database if different from 'empire') in the database.php file.
+
+Some other paramaters also in the config.php file are worth a look at. This is really dependent on how your web server is setup.
+
+The default install uses mod_rewrite to clean up all the internally used URI's, ie - to get rid of 'index.php' in the addresses.
+
+There may be some issues with using mod_rewrite on a Windows machine if running from localhost. If you are trying to use Windows 
+as a web server, then you may be better off running without the rewrite capability. If so, edit the .htaccess file, and run with
+the full URI names.  Should be fine as a test machine.
+
+If you want to run this as a hosted server though, its unlikely you would want to run the whole thing from a Windows box anyway ..
+I would recommend using a real web server for hosting.
+
