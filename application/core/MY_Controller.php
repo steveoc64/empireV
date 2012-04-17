@@ -21,6 +21,10 @@ class MY_Controller extends CI_Controller {
 
 		$this->output->set_profiler_sections($sections);
 		$this->output->enable_profiler(false);
+
+		$this->load->model('unit_model');
+		$this->load->model('game_model');
+		$this->game = $this->game_model->get_current_game(true);
 	}		
 
 	function check_role($allowed_roles) {
@@ -39,12 +43,16 @@ class MY_Controller extends CI_Controller {
 				}
 			}
 
-			$this->render_header();
-			$this->load->view('oops',array('message'=>'Unauthorised access attempt'));
-			$this->render_footer();
+			$this->oops('Unauthorised access attempt');
 			return false;
 		}
 		return true;
+	}
+
+	function oops($message) {
+		$this->render_header();
+		$this->load->view('oops',array('message'=>$message));
+		$this->render_footer();
 	}
 
 	protected function is_logged_in()
@@ -90,9 +98,7 @@ class MY_Controller extends CI_Controller {
 		}
 	
 		$this->load->view ('crud_header',$contents);
-		$this->load->model ('game_model');
-		$game = $this->game_model->get_current_game(false);
-		if ($game) { $this->load->view('game_messages',array('game'=>$game));  }
+		if ($this->game) { $this->load->view('game_messages',array('game'=>$this->game));  }
 		$this->load->view ('crud_body', $contents);
 		$this->load->view ('crud_footer');
 		$this->benchmark->mark('end_render');

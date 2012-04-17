@@ -24,7 +24,7 @@ class User_account extends MY_Controller
 			//
 			$form->callback_after_update(array($this,'set_unit_player_id'));
 
-			$this->render($form->render());
+			$this->render($form->render(),'<h1>User Accounts</h1>');
 		}
 	}
 

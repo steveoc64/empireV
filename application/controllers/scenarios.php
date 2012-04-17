@@ -1,6 +1,6 @@
 <?php
 
-class Scenario extends MY_Controller {
+class Scenarios extends MY_Controller {
 
 	function index ($offset = 0) {
 		
@@ -22,7 +22,7 @@ class Scenario extends MY_Controller {
 			$form->set_relation('orbat_defender','orbat','{id} {filename}'); 
 			$form->unset_texteditor('latitude','longitude','descr','video_intro');
 	
-			$this->render($form->render(),'<h4>Scenarios Database</h4>');
+			$this->render($form->render(),'<h1>Scenarios Database</h1>');
 		}
 
 	}

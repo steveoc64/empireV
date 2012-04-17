@@ -4,11 +4,9 @@ class Player_login extends MY_Controller
 {
 	function index() {
 
-		$this->load->model('game_model');
-		$game = $this->game_model->get_current_game(false);
 		$img = "images/french-line.jpg";
-		if ($game && $game->national_theme) {
-			$img = "themes/".$game->national_theme->login_img;
+		if ($this->game && $this->game->national_theme) {
+			$img = "themes/".$this->game->national_theme->login_img;
 		} 
 		$_ = <<<EOF
 <h1>Welcome to the Empire V - Electro Mechanical Apparatus for Combat Simulation</h1><p>

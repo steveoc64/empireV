@@ -248,6 +248,9 @@ Class Unit_model extends CI_Model {
 		$this->disorder($id,50);
 	}
 
+	function add_casualties ($unit,$game_id,$turn_number,$kills,$fatigue,$disorder,$morale,$flee) {
+	}
+
 	function is_shaken ($game_id,$turn_number,$unit) {
 		if (is_object($unit) && isset($unit->id)) {
 			// Just add a fatigue point, and add a random amount of disorder to the unit

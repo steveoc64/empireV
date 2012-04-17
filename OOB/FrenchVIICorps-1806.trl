@@ -275,18 +275,18 @@ icon="bullet_1">
 </Battery>
 </Division>
 <Division item="y">
-<Name>2nd Division: Gardanne</Name>
-<Commander>General of Division Gaspard Amédée Gardanne</Commander>
+<Name>2nd Division: de Bierre</Name>
+<Commander>General of Division Étienne Heudelet de Bierre</Commander>
 <Inspiration>Impersonal</Inspiration>
 <ProfessionalSkill>Good</ProfessionalSkill>
 <Doctrine>Corps</Doctrine>
 <Brigade item="y">
-<Name>Brigade d' Legere Marcognet</Name>
-<Commander>General of Brigade Pierre-Louis Binet de Marcognet</Commander>
+<Name>Brigade d' Legere Amey</Name>
+<Commander>General of Brigade François Pierre Amey</Commander>
 <Inspiration>Inspirational</Inspiration>
 <Drill>French</Drill>
 <Battalion item="y">
-<Name>25eme Legere, 1e Bn</Name>
+<Name>7eme Legere, 1e Bn</Name>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -305,7 +305,26 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>25eme Legere, 2e Bn</Name>
+<Name>7eme Legere, 2e Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>14</ACE>
+<MoraleGrade>Elite</MoraleGrade>
+<SmallArms>Elite</SmallArms>
+<Skirmishers>2</Skirmishers>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>true</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>7eme Legere, 3e Bn</Name>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -325,12 +344,12 @@ icon="bullet_1">
 </Battalion>
 </Brigade>
 <Brigade item="y">
-<Name>Brigade d' Ligne Delabassé</Name>
-<Commander>General of Brigade Mathieu Delabassé</Commander>
+<Name>Brigade d' Ligne Sarrut</Name>
+<Commander>General of Brigade Jacques Thomas Sarrut</Commander>
 <Inspiration>Impersonal</Inspiration>
 <Drill>French</Drill>
 <Battalion item="y">
-<Name>27eme Ligne, 1e Bn</Name>
+<Name>24eme Ligne, 1e Bn</Name>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -349,7 +368,7 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>27eme Ligne, 2e Bn</Name>
+<Name>24eme Ligne, 2e Bn</Name>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -368,7 +387,7 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>50eme Ligne, 1e Bn</Name>
+<Name>24eme Ligne, 3e Bn</Name>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -387,7 +406,7 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>50eme Ligne, 2e Bn</Name>
+<Name>63eme Ligne, 1e Bn</Name>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -406,26 +425,7 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>59eme Ligne, 1e Bn</Name>
-<MoraleState>Good</MoraleState>
-<Strength>720</Strength>
-<NumBases>4</NumBases>
-<Ranks>3</Ranks>
-<Officers>10</Officers>
-<ACE>10</ACE>
-<MoraleGrade>Veteran</MoraleGrade>
-<SmallArms>Veteran</SmallArms>
-<Skirmishers>1</Skirmishers>
-<OpenOrder>true</OpenOrder>
-<Rifles>false</Rifles>
-<ClosedColumn>true</ClosedColumn>
-<ShockTroops>false</ShockTroops>
-<BattalionGuns>false</BattalionGuns>
-<Breakpoint>80</Breakpoint>
-<Fatigue>0</Fatigue>
-</Battalion>
-<Battalion item="y">
-<Name>59eme Ligne, 2e Bn</Name>
+<Name>63eme Ligne, 2e Bn</Name>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -444,18 +444,196 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 </Brigade>
+<Brigade item="y">
+<Name>Brigade Allied</Name>
+<Commander>General of Brigade Jacques Thomas Sarrut</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Hesse Darmstadt Fuslier, 1st Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>800</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Hesse Darmstadt Fuslier, 1st Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>800</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Nassau Infantrie Regiment, 3rd Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>800</Strength>
+<NumBases>4</NumBases>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+</Brigade>
+<Battery item="y">
+<Name>3rd Foot Artillery Regiment, 3rd company</Name>
+<Type>Foot</Type>
+<Calibre>12lb</Calibre>
+<Strength>4</Strength>
+<NumGuns>1</NumGuns>
+<CrewFigures>4</CrewFigures>
+<Howitzers>2 x 6&quot; Howitzer</Howitzers>
+<Class>Class I</Class>
+<MoraleGrade>Elite</MoraleGrade>
+</Battery>
+<Battery item="y">
+<Name>6th Horse Artillery Regiment, 2nd company</Name>
+<Type>Horse</Type>
+<Calibre>6lb</Calibre>
+<Strength>4</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>2</CrewFigures>
+<Class>Class I</Class>
+<MoraleGrade>Elite</MoraleGrade>
+</Battery>
 </Division>
 <CavBrigade item="y"
 line0="{*Name*}"
 line1="{*Name*}"
 childtype="Squadron"
 icon="person">
-<Name type="Text" ref="y">Brigade d' Cheval  Colbert-Chabanais</Name>
+<Name type="Text" ref="y">Brigade d' Cheval  Auguste Durosnel</Name>
 <BattleGroup type="Boolean" format="yes/no" init="true">true</BattleGroup>
-<Commander type="Text">General of Brigade Auguste François-Marie de Colbert-Chabanais</Commander>
+<Commander type="Text">General of Brigade Antoine Jean Auguste Durosnel</Commander>
 <Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised" init="Inspiring">Impersonal</Inspiration>
 <Doctrine type="Choice" format="Scouting/Packed/Linear" init="Packed">Packed</Doctrine>
+<Squadron item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_2">
+<Name type="Text" ref="y">7e Chasseurs</Name>
+<FacingColours type="Text"></FacingColours>
+<Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon">Chass</Type>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Strength type="Number" format="###" init="120">480</Strength>
+<NumBases type="Text">4</NumBases>
+<Officers type="Number" format="##" init="10">10</Officers>
+<ACE type="Number" format="##" init="20">20</ACE>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</MoraleGrade>
+<SmallArms type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</SmallArms>
+<BattleCavalry type="Boolean" format="yes/no" init="false">false</BattleCavalry>
+<Undistinguished type="Boolean" format="yes/no" init="false">false</Undistinguished>
+<Skirmisher type="Number" format="##" init="0">0</Skirmisher>
+<MoveRate type="Choice" format="Light/Heavy" init="Light">Light</MoveRate>
+<Breakpoint type="Number" format="###" init="80">80</Breakpoint>
+<Fatigue type="Number" format="###" init="0">0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>20e Chasseurs</Name>
+<Type>Chass</Type>
+<MoraleState>Good</MoraleState>
+<Strength>360</Strength>
+<NumBases>3</NumBases>
+<Officers>10</Officers>
+<ACE>20</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>false</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Battery item="y">
+<Name>6th Horse Artillery Regiment, 5th company</Name>
+<Type>Horse</Type>
+<Calibre>4lb</Calibre>
+<Strength>4</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>2</CrewFigures>
+<Class>Class I</Class>
+<MoraleGrade>Elite</MoraleGrade>
+</Battery>
 </CavBrigade>
+<Division item="y">
+<Name>Corps Artillery</Name>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Good</ProfessionalSkill>
+<Doctrine>Corps</Doctrine>
+<Battery item="y">
+<Name>Heavy battery</Name>
+<Type>Foot</Type>
+<Calibre>12lb</Calibre>
+<Strength>4</Strength>
+<NumGuns>1</NumGuns>
+<CrewFigures>4</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class I</Class>
+<MoraleGrade>Crack</MoraleGrade>
+</Battery>
+<Battery item="y">
+<Name>1e Artillery d Pied</Name>
+<Type>Foot</Type>
+<Calibre>8lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Howitzers>2 x 6&quot; howitzers</Howitzers>
+<Class>Class I</Class>
+<MoraleGrade>Crack</MoraleGrade>
+</Battery>
+<Battery item="y">
+<Name>1e Artillery d pied</Name>
+<Type>Foot</Type>
+<Calibre>8lb</Calibre>
+<Strength>6</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Howitzers>2 x 6&quot; howitzer</Howitzers>
+<Class>Class I</Class>
+<MoraleGrade>Crack</MoraleGrade>
+</Battery>
+<Battery item="y">
+<Name>2e Artillery d Cheval</Name>
+<Type>Horse</Type>
+<Calibre>4lb</Calibre>
+<Strength>4</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>2</CrewFigures>
+<Class>Class I</Class>
+<MoraleGrade>Crack</MoraleGrade>
+</Battery>
+</Division>
 <Army item="n"
 line0="{*Name*}"
 line1="{*Name*}"
@@ -463,27 +641,6 @@ childtype="Corps"
 icon="book_1">
 <Name type="Text" ref="y"></Name>
 </Army>
-<Squadron item="n"
-line0="{*Name*}"
-line1="{*Name*}"
-icon="bullet_2">
-<Name type="Text" ref="y"></Name>
-<FacingColours type="Text"></FacingColours>
-<Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon"></Type>
-<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good"></MoraleState>
-<Strength type="Number" format="###" init="120"></Strength>
-<NumBases type="Text"></NumBases>
-<Officers type="Number" format="##" init="10"></Officers>
-<ACE type="Number" format="##" init="20"></ACE>
-<MoraleGrade type="Choice" format="OG/GRD/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran"></MoraleGrade>
-<SmallArms type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran"></SmallArms>
-<BattleCavalry type="Boolean" format="yes/no" init="false"></BattleCavalry>
-<Undistinguished type="Boolean" format="yes/no" init="false"></Undistinguished>
-<Skirmisher type="Number" format="##" init="0"></Skirmisher>
-<MoveRate type="Choice" format="Light/Heavy" init="Light"></MoveRate>
-<Breakpoint type="Number" format="###" init="80"></Breakpoint>
-<Fatigue type="Number" format="###" init="0"></Fatigue>
-</Squadron>
 <Wing item="n"
 line0="{*Name*}"
 line1="{*Name*}"

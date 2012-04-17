@@ -15,9 +15,7 @@ class Units extends MY_Controller
 		$form->callback_column('is_me',array($this,'convert_me'));
 
 		// Apply restrictions
-		$title = '';
-		$this->load->model('game_model');
-		$this->game = $this->game_model->get_current_game();
+		$title = '<h1>Units</h1>';
 		
 		switch($this->session->userdata('role')) {
 		case 'A':
@@ -94,11 +92,11 @@ class Units extends MY_Controller
 
 
 			}
-			$form->where($this->game_model->get_unit_where_range($this->game->user->commander_id));
+			$form->where($this->game->unit_where_range);
 			if ($this->game->national_theme) {
-				$title .= "<h1>Inspect the Troops</h1><img src=".site_url()."themes/".$this->game->national_theme->parade_img.">";
+				$title = "<h1>Inspect the Troops</h1><img src=".site_url()."themes/".$this->game->national_theme->parade_img.">";
 			} else {
-				$title .= "<h1>Inspect the Troops</h1><img src=images/inspect-troops.jpg>";
+				$title = "<h1>Inspect the Troops</h1><img src=images/inspect-troops.jpg>";
 			}
 			$form->unset_edit();
 			// Add some buttons
@@ -129,13 +127,8 @@ class Units extends MY_Controller
 			redirect('units');
 		}
 		
-		// Get game data
-		$this->load->model('game_model');
-		$game = $this->game_model->get_current_game();
-
 		// So far so good, now get the unit and associated game data
-		$this->load->model('unit_model');
-		$unit = $this->unit_model->get($id,$game->id);
+		$unit = $this->unit_model->get($id,$this->game->id);
 		if (!$unit) {
 			redirect('units');
 		}
@@ -152,7 +145,7 @@ class Units extends MY_Controller
 		case 'U':
 			if (!$fail) {
 				// Umpire can only view report for units in this game
-				if ($unit->orbat_id == $game->orbat_attacker || $unit->orbat_id == $game->orbat_defender) {
+				if ($unit->orbat_id == $this->game->orbat_attacker || $unit->orbat_id == $this->game->orbat_defender) {
 					$this->load->view('unit_status_report',$form_data);
 				} else {
 					$fail = true;
@@ -161,12 +154,12 @@ class Units extends MY_Controller
 			break;
 		case 'P':
 			if (!$fail) {
-				if (! $game->user->commander_id) {
-					$this->load->view('oops',array('message',"Your player account is not associated with any on-table commander. Ask the admin to fix this problem please ..."));
+				if (! $this->game->user->commander_id) {
+					$this->oops("Your player account is not associated with any on-table commander. Ask the admin to fix this problem please ...");
 				}
 				// Player can only view units subordinate to their command
-				$min = (int)$game->unit_id_range->start_id;
-				$max = (int)$game->unit_id_range->end_id;
+				$min = (int)$this->game->unit_id_range->start_id;
+				$max = (int)$this->game->unit_id_range->end_id;
 				$uid = (int)$unit->id;
 				if ($uid >= $min && $uid <= $max) {
 					$this->load->view('unit_status_report',$form_data);
@@ -177,7 +170,7 @@ class Units extends MY_Controller
 			break;
 		}
 		if ($fail) {
-			$this->load->view('oops',array('message' => 'Unauthorised access to unit data.<br>Report to the system admin immediately !'));
+			$this->oops('Unauthorised access to unit data.<br>Report to the system admin immediately !');
 		}
 		$this->render_footer();
 	}

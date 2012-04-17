@@ -36,7 +36,7 @@ class Orbat extends MY_Controller
 			$extras .= '</form>';
 			$_->extras = $extras;
 
-			$this->render($_,'<h4>ORBAT files that are currently loaded</h4>');
+			$this->render($_,'<h1>ORBAT files that are currently loaded</h1>');
 
 
 		}

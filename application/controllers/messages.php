@@ -4,14 +4,13 @@ class Messages extends MY_Controller
 {
 	function index() {
 
-		$this->load->model('game_model');
-		$this->game = $this->game_model->get_current_game();
 		if ($this->game) {
 			// Create basic form
 			$form = new grocery_CRUD();
 			$form->set_theme('datatables');
 			$form->set_table('game_message');
 			$form->set_subject('Messages');
+			$extras = '';
 			switch ($this->session->userdata('role')) {
 			case 'A':
 			case 'U':
@@ -37,6 +36,8 @@ class Messages extends MY_Controller
 			$form->callback_column('message',array($this,'message'));
 			$form->display_as('sent_turn','Sent');
 			$this->render($form->render(),"<h2>Messages Received from the Staff Officers</h2>$extras");
+		} else {
+			$this->oops('You need to be logged in to a game to be able to view messages');
 		}
 	}
 

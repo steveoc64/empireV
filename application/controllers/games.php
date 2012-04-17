@@ -1,6 +1,6 @@
 <?php
 
-class Game extends MY_Controller {
+class Games extends MY_Controller {
 
 	function index ($offset = 0) {
 		
@@ -31,7 +31,7 @@ class Game extends MY_Controller {
 			$form->callback_column('playing',array($this,'is_playing'));
 			$form->order_by('playing','desc');
 
-			$this->render($form->render());
+			$this->render($form->render(),'<h1>Games in Progress</h1>');
 		}
 
 	}
@@ -46,7 +46,7 @@ class Game extends MY_Controller {
 	}
 
 	function select_game ($primary_ley,$row) {
-		return site_url('game/play?id='.$row->id);
+		return site_url('games/play?id='.$row->id);
 	}
 
 	function play() {
@@ -57,7 +57,7 @@ class Game extends MY_Controller {
 			$id = 0;	// Allows the user to toggle playing the game or not !
 		}
 		$this->db->query("update user set current_game=$id,role='A' where username='$username'");
-		redirect('game');
+		redirect('games');
 	}
 
 	function create_new_game ($post_array,$primary_key) {

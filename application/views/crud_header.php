@@ -72,10 +72,11 @@ case 'A':
 	$menutitle = 'Admin Menu';
 	$menu = array('Game HQ' => 'umpire_console',
 		'Messages' => 'messages',
+		'Briefing' => 'briefing',
 		'Order of Battle' => 'orbat',
 		'Units' => 'units',
-		'Scenario' => 'scenario',
-		'Game' => 'game',
+		'Scenario' => 'scenarios',
+		'Game' => 'games',
 		'User Accounts' => 'user_account',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',
@@ -86,6 +87,7 @@ case 'U':
 	$menutitle = 'Umpire Menu';
 	$menu = array('Game HQ' => 'umpire_console',
 		'Messages' => 'messages',
+		'Briefing' => 'briefing',
 		'Units' => 'units',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',
@@ -96,6 +98,7 @@ case 'P':
 	$menutitle = 'Player Menu';
 	$menu = array('HQ' => 'player_console',
 		'Messages' => 'messages',
+		'Briefing' => 'briefing',
 		'Parade' => 'units',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',
@@ -105,6 +108,8 @@ case 'P':
 case 'S':
 	$menutitle = 'Solo Menu';
 	$menu = array('Reports' => 'status_report',
+		'Messages' => 'messages',
+		'Briefing' => 'briefing',
 		'Units' => 'units',
 		'Orders' => 'orders',
 		'Engagements' => 'engagements',

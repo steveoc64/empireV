@@ -45,7 +45,7 @@ class Orders extends MY_Controller
 			break;
 		}
 
-		$this->render($form->render(),$extras,$extras);
+		$this->render($form->render(),'<h1>Orders</h1>',$extras);
 	}
 
 	function display_hour($primary_key,$row) {

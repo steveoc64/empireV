@@ -53,7 +53,6 @@ function ace_adjust($start_ace,$add) {
 
 }
 
-
 class Game_model extends CI_Model {
 
 	function start_game($scenario_id) {
@@ -63,6 +62,7 @@ class Game_model extends CI_Model {
 	}
 
 	function get_current_game($full_details = true) {
+
 		// Find which game the user is on
 		$user_data = $this->db->get_where('user',array('username' => $this->session->userdata('username')))->row();
 		if (!$user_data) {
@@ -75,60 +75,86 @@ class Game_model extends CI_Model {
 		}
 
 		// get the game details
-		$game_data = $this->db->get_where('game',array('id' => $game_id))->row();
-		if (!$game_data) {
+		$game = $this->db->get_where('game',array('id' => $game_id))->row();
+		if (!$game) {
 			return null;
 		}
-		$game_data->user = $user_data;
+		// The user is in a game, and we found the game, so create the object
+		$this->user = $user_data;
+		$this->id = $game->id;
+			$this->name = $game->name;
+			$this->scenario_id = $game->scenario_id;
+			$this->playing = $game->playing;
+			$this->turn_number = $game->turn_number;
+			$this->start_hour = $game->start_hour;
+			$this->phase = $game->phase;
+			$this->orbat_attacker = $game->orbat_attacker;
+			$this->orbat_defender = $game->orbat_defender;
+			$this->situation = $game->situation;
+			$this->attacker_briefing = $game->attacker_briefing;
+			$this->defender_briefing = $game->defender_briefing;
+			$this->latitude = $game->latitude;
+			$this->longitude = $game->longitude;
+			$this->ground_scale = $game->ground_scale;
+			$this->figure_scale = $game->figure_scale;
+			$this->infantry_base = $game->infantry_base;
+			$this->cavalry_base = $game->cavalry_base;
+			$this->video_intro = $game->video_intro;
 
 		// load the national theme into the game array
-		$theme = (int)$user_data->national_theme;
+		$theme = (int)$this->user->national_theme;
 		if (!$theme) {
 			$theme = 1;
 		}
 		$row = $this->db->get_where('national_theme',array('id'=>$theme))->row();
 		if ($row) {
-			$game_data->national_theme = $row;
+			$this->national_theme = $row;
+		} else {
+			$this->national_theme = null;
 		}
 
 		if (!$full_details) {
-			return $game_data;
+			return $game;
 		}
 
 		// We have a game, so accumulate some details into the return value
-		if ($user_data->commander_id) {
-			$game_data->unit_id_range = $this->get_unit_id_range($user_data->commander_id);
-			$game_data->unit_where_range = "(unit.id >= ".$game_data->unit_id_range->start_id." and unit.id <= ".$game_data->unit_id_range->end_id.")";
+		if ($this->user->commander_id) {
+			$this->unit_id_range = $this->get_unit_id_range($this->user->commander_id);
+			$this->unit_where_range = "(unit.id >= ".$this->unit_id_range->start_id." and unit.id <= ".$this->unit_id_range->end_id.")";
 			// Get a list of the top level commands, and their current orders
-			$game_data->me = $this->get_me_list($game_id,$game_data->unit_id_range->start_id,$game_data->unit_id_range->end_id);
+			$this->me = $this->get_me_list($game_id,$this->unit_id_range->start_id,$this->unit_id_range->end_id);
+		} else {
+			$this->unit_id_range = new stdClass;
+			$this->unit_id_range->start_id = $this->unit_id_range->end_id = 0;
+			$this->unit_where_range = '';
 		}
 
 		// Get the weather details in a nice format
-		$game_data->turn = $this->db->get_where('game_turn',array('game_id'=>$game_id,'turn_number'=>$game_data->turn_number))->row();
-		if ((int)$game_data->turn->wind_speed) {
-			$wind_dir = $this->db->get_where('direction',array('id'=>$game_data->turn->wind_direction))->row();
-			$wind = sprintf("%dkm/h %s winds", $game_data->turn->wind_speed,$wind_dir->name);
+		$this->game_turn = $this->db->get_where('game_turn',array('game_id'=>$game_id,'turn_number'=>$this->turn_number))->row();
+		if ((int)$this->game_turn->wind_speed) {
+			$wind_dir = $this->db->get_where('direction',array('id'=>$this->game_turn->wind_direction))->row();
+			$wind = sprintf("%dkm/h %s winds", $this->game_turn->wind_speed,$wind_dir->name);
 		} else {
 			$wind = 'No wind';
 		}
-		if ((int)$game_data->turn->rain) {
-			$rain = sprintf("%dmm rain", $game_data->turn->rain);
+		if ((int)$this->game_turn->rain) {
+			$rain = sprintf("%dmm rain", $this->game_turn->rain);
 		} else {
 			$rain = 'Dry';
 		}
 	
-		$game_data->weather_report = sprintf("%s %dC %s, %s, gound condition %d, visibility %dm",
-			$game_data->turn->weather_conditions,
-			$game_data->turn->temperature,
+		$this->weather_report = sprintf("%s %dC %s, %s, gound condition %d, visibility %dm",
+			$this->game_turn->weather_conditions,
+			$this->game_turn->temperature,
 			$wind, $rain,
-			$game_data->turn->ground_conditions,
-			$game_data->turn->visibility);
+			$this->game_turn->ground_conditions,
+			$this->game_turn->visibility);
 
 		// Get the hour in a nice format
-		$hour = $game_data->start_hour + $game_data->turn_number -1;
-		$game_data->hrs = sprintf("%02d:00hrs", $hour);
+		$this->hour = $this->start_hour + $this->turn_number -1;
+		$this->hrs = sprintf("%02d:00hrs", $this->hour);
 
-		return $game_data;
+		return $this;
 	}
 
 	function get_unit_where_range ($id) {
@@ -174,7 +200,6 @@ class Game_model extends CI_Model {
 	// grade for each top level ME
 	function get_me_list ($game_id,$start_unit, $end_unit) {
 
-		$this->load->model('unit_model');
 		$retval = array();
 		$query = $this->db->query("select id from unit where id >= $start_unit and id <= $end_unit and is_me='T' order by id");
 		foreach ($query->result() as $row) {
@@ -454,33 +479,26 @@ class Game_model extends CI_Model {
 	} // close me_determination function
 
 	function accept_me_determination () {
-		// Find which game the user is on
-		$user = $this->db->get_where('user',array('username' => $this->session->userdata('username')))->row();
-		$game_id = (int)$user->current_game;
+		var_dump($this);
+		$game_id = (int)$this->id;
 		if (!$game_id) {
 			die ("No game selected ... ?????");
 		}
 		
-		// get the game details
-		$game = $this->db->get_where('game',array('id' => $game_id))->row();
-		if (!$game) {
-			die ("Cannot find game ID $game_id ... ?????");
-		}
-
 		// Check that we are the first phase (allowing orders to be set)
-		$phase = (int) $game->phase;
+		$phase = (int) $this->phase;
 		if ($phase != 2) {
 			die ("We are in phase $phase of game $game_id .. need to be in phase 2 to accept ME determination test");
 		}
 
 
-		if ($game->turn_number == 1) {
+		if ($this->turn_number == 1) {
 			die ("No need to check ME determination on turn 1");
 		} 
 
 		// for each me determination test result in this turn ... apply it
 		$this->load->model('unit_model');
-		$query = $this->db->get_where('game_me_det',array('game_id'=>$game_id,'turn_number'=>$game->turn_number));
+		$query = $this->db->get_where('game_me_det',array('game_id'=>$game_id,'turn_number'=>$this->turn_number));
 		foreach ($query->result() as $row) {
 			switch ($row->result) {
 			case 1:
@@ -491,11 +509,11 @@ class Game_model extends CI_Model {
 			case 2:
 				// they are shaken - set all units in the ME to shaken
 				$unit = $this->unit_model->get($row->unit_id,$game_id);
-				$this->unit_model->is_shaken($game_id,$game->turn_number,$unit);
+				$this->unit_model->is_shaken($game_id,$this->turn_number,$unit);
 				$this->get_me_subunits($game_id,$unit);
 				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
-					$this->unit_model->is_shaken($game_id,$game->turn_number,$subunit);
+					$this->unit_model->is_shaken($game_id,$this->turn_number,$subunit);
 				}
 				}
 				$message = "the officers and men of ".$unit->name." are shamefully losing confidence !";
@@ -504,8 +522,8 @@ class Game_model extends CI_Model {
 				foreach ($query->result() as $row) {
 					$data = new stdClass;
 						$data->game_id = $game_id;
-						$data->turn_number = $game->turn_number;
-						$data->sent_turn = $game->turn_number;
+						$data->turn_number = $this->turn_number;
+						$data->sent_turn = $this->turn_number;
 						$data->player_id = $row->id;
 						$data->unit_id = $unit->id;
 						$data->message = "Sir, we have immediate news that $message";
@@ -517,11 +535,11 @@ class Game_model extends CI_Model {
 			case 3:
 				// they are in retreat - set all units in the ME to retreat
 				$unit = $this->unit_model->get($row->unit_id,$game_id);
-				$this->unit_model->is_retreating($game_id,$game->turn_number,$unit);
+				$this->unit_model->is_retreating($game_id,$this->turn_number,$unit);
 				$this->get_me_subunits($game_id,$unit);
 				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
-					$this->unit_model->is_retreating($game_id,$game->turn_number,$unit);
+					$this->unit_model->is_retreating($game_id,$this->turn_number,$unit);
 				}
 				}
 				// Now - send an immediate message to all players that this ME is in retreat
@@ -530,26 +548,26 @@ class Game_model extends CI_Model {
 				foreach ($query->result() as $row) {
 					$data = new stdClass;
 						$data->game_id = $game_id;
-						$data->turn_number = $game->turn_number;
-						$data->sent_turn = $game->turn_number;
+						$data->turn_number = $this->turn_number;
+						$data->sent_turn = $this->turn_number;
 						$data->player_id = $row->id;
 						$data->message = $message;
 						$data->unit_id = $unit->id;
 						$data->letter_icon = rand(1,6);
 					$this->db->insert('game_message',$data);
 				}
-				$distance = (int) (800 / $game->ground_scale);
+				$distance = (int) (800 / $this->ground_scale);
 				echo "The officers and men of ".$unit->name." are in retreat - they must fall back $distance inches immediately.<p>";
 				echo "TODO: If any subunits of that ME are within engagement range of formed enemy cavalry, the owner of the cavalry may demand that retreating infantry units be pinned - which will cost the pinned unit an extra 2 fatigue points.<p>";
 				break;
 			case 4:
 				// they are broken - set all units in the ME to retreat
 				$unit = $this->unit_model->get($row->unit_id,$game_id);
-				$this->unit_model->is_broken($game_id,$game->turn_number,$unit);
+				$this->unit_model->is_broken($game_id,$this->turn_number,$unit);
 				$this->get_me_subunits($game_id,$unit);
 				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
-					$this->unit_model->is_broken($game_id,$game->turn_number,$unit);
+					$this->unit_model->is_broken($game_id,$this->turn_number,$unit);
 				}
 				}
 				// Now - send an immediate message to all players that this ME is in retreat
@@ -558,15 +576,15 @@ class Game_model extends CI_Model {
 				foreach ($query->result() as $row) {
 					$data = new stdClass;
 						$data->game_id = $game_id;
-						$data->turn_number = $game->turn_number;
-						$data->sent_turn = $game->turn_number;
+						$data->turn_number = $this->turn_number;
+						$data->sent_turn = $this->turn_number;
 						$data->player_id = $row->id;
 						$data->unit_id = $unit->id;
 						$data->message = "Sir, there are unconfirmed reports that $message";
 						$data->letter_icon = rand(1,6);
 					$this->db->insert('game_message',$data);
 				}
-				$distance = (int) (800 / $game->ground_scale);
+				$distance = (int) (800 / $this->ground_scale);
 				echo "Unit ".$unit->name." breaks in shameful panic - they must run away a total of $distance inches immediately, facing away from the enemy, and in a state of general disorder.<p>";
 				break;
 			}

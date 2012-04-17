@@ -2,6 +2,12 @@
 <button id="hq">Return to HQ</button></td>
 <?
 
+// Calculate 400yds in inches, based on the current game scale
+if ($game->ground_scale != 0) {
+	$distance400 = sprintf("400yds (%d inches)",(int)(400/$game->ground_scale));;
+} else {
+	$distance400 = "400yds (10 inches)";
+}
 // Show game stats
 
 if (isset($game)) {
@@ -136,9 +142,7 @@ $("#me_determination").click(function(){
 $("#accept_me_determination").click(function(){
 	$("#accept_me_determination").hide();
 	$("#me_determination").hide();
-	$("#me_determination_results").hide().load('umpire_console/accept_me_determination').fadeIn(3000);
-	$("#me_morale").fadeIn(4000);
-	location.reload();
+	$("#me_determination_results").hide().load('umpire_console/accept_me_determination',function(){ location.reload(); });
 });
 
 // PHASE 3 - Run Morale Tests
@@ -155,7 +159,7 @@ $("#morale_test").click(function() {
 	if (units.length == 0) {
 		alert("No units selected ... :(");
 	} else {
-		if (confirm("Do you want to run a morale check for "+units+"\n\nYou are sure that these units are within 400yds of an ME which failed in some way,\nand these units are not 2 or more morale grades above them ?")) {
+		if (confirm("Do you want to run a morale check for "+units+"\n\nYou are sure that these units are within <?=$distance400?> of an ME which failed in some way,\nand these units are not 2 or more morale grades above them ?")) {
 			$('<div></div>').load('umpire_console/morale_test',{'units[]': units}).dialog({modal:true, width:900, height:600});
 			$("#morale_test_form").load("umpire_console/morale_test_form",function(){ $("#morale_test_done").fadeIn(2000);});
 			//$(':checkbox').map(function() {

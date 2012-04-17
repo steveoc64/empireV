@@ -1,15 +1,12 @@
 <?php
 
-class Update_unit_order extends CI_Controller {
+class Update_unit_order extends MY_Controller {
 	
 	function index() {
 
-		$this->load->model('game_model');
-		$this->load->model('unit_model');
-		$game = $this->game_model->get_current_game(false);
-		if ($game) {
+		if ($this->game) {
 			// Check that we are in phase 1 only !!
-			if ($game->phase != 1) {
+			if ($this->game->phase != 1) {
 				die("Unfortunately, the time for dispatching orders has expired");
 			}
 			$unitid = (int)$this->input->post('unit');
@@ -17,7 +14,7 @@ class Update_unit_order extends CI_Controller {
 			$objective = mysql_escape_string($this->input->post('objective'));
 
 			// check that we own this unit
-			$unit = $this->unit_model->get($unitid,$game->id);
+			$unit = $this->unit_model->get($unitid,$this->game->id);
 			if (!$unit) {
 				die ("No such unit $unitid");
 			}
@@ -28,10 +25,10 @@ class Update_unit_order extends CI_Controller {
 			}
 
 			// Clear out any existing orders for this unit which are not yet activated
-			$this->db->query("delete from game_order where activate_turn=0 and game_id=".$game->id." and unit_id=".$unitid);
+			$this->db->query("delete from game_order where activate_turn=0 and game_id=".$this->game->id." and unit_id=".$unitid);
 
-			$data = array('game_id' => $game->id,
-				'turn_number' => $game->turn_number,
+			$data = array('game_id' => $this->game->id,
+				'turn_number' => $this->game->turn_number,
 				'activate_turn' => 0,   // Activate turn gets calculated when the umpire closes off orders
 				'unit_id' => $unitid,
 				'player_name' => $this->session->userdata('username'),
