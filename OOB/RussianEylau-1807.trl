@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Army item="y" tlversion="1.2.4"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Corps"
+icon="book_1">
+<Name type="Text" ref="y">Russian Army - Eylau 1807</Name>
+<Corps item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Division"
+icon="person">
+<Name type="Text" ref="y">Prussian Corps l'Estocq</Name>
+<Commander type="Text">Lieutenant General Anton von l'Estocq</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised">Impersonal</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable">Poor</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps">DivisionGroup</Doctrine>
+<Division item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Brigade"
+icon="person">
+<Name type="Text" ref="y">Advanced Guard</Name>
+<Commander type="Text">Advanced Guard Commander</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised" init="Impersonal">Impersonal</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good">Poor</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps">DivisionGroup</Doctrine>
+</Division>
+<Division item="y">
+<Name>3rd Division</Name>
+<Commander>Major General von Auer</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>DivisionGroup</Doctrine>
+</Division>
+<Division item="y">
+<Name>2nd Division</Name>
+<Commander>Major General von Rembow</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>DivisionGroup</Doctrine>
+</Division>
+<Division item="y">
+<Name>1st Division</Name>
+<Commander>Major General von Diericke</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>DivisionGroup</Doctrine>
+</Division>
+<Division item="y">
+<Name>Rear Guard</Name>
+<Commander>Major General von Prittwitz</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>DivisionGroup</Doctrine>
+</Division>
+</Corps>
+<Wing item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="person">
+<Name type="Text" ref="y">Right Wing</Name>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Commander type="Text">Tuchov I, GL Nikolai Alexeievich</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised"></Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good">Poor</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps" init="Corps">Regimental</Doctrine>
+<Division item="y">
+<Name>5th Division</Name>
+<Commander>Lieutenant General N.A. Tuchkov I</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+</Division>
+<Battery item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_1">
+<Name type="Text" ref="y">Prussian Artillery - Heavy Battery I</Name>
+<Type type="Choice" format="Foot/Horse" init="Foot">Foot</Type>
+<Calibre type="Choice" format="4lb/6lb/8lb/12lb" init="6">12lb</Calibre>
+<Strength type="Number" format="##" init="6">4</Strength>
+<NumGuns type="Text">1</NumGuns>
+<CrewFigures type="Text">4</CrewFigures>
+<Howitzers type="Text" init="0">0</Howitzers>
+<Class type="Choice" format="OG/Class I/Class II/Class III" init="Class II">Class II</Class>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained">Veteran</MoraleGrade>
+</Battery>
+<Battery item="y">
+<Name>Prussian Artillery - Heavy Battery II</Name>
+<Type>Foot</Type>
+<Calibre>12lb</Calibre>
+<Strength>4</Strength>
+<NumGuns>1</NumGuns>
+<CrewFigures>4</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class II</Class>
+<MoraleGrade>Veteran</MoraleGrade>
+</Battery>
+<Battery item="y">
+<Name>Prussian Artillery - Medium Battery</Name>
+<Type>Foot</Type>
+<Calibre>6lb</Calibre>
+<Strength>10</Strength>
+<NumGuns>3</NumGuns>
+<CrewFigures>3</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class II</Class>
+<MoraleGrade>Veteran</MoraleGrade>
+</Battery>
+</Wing>
+<Wing item="y">
+<Name>Center</Name>
+<MoraleState>Good</MoraleState>
+<Commander>Osten-Sacken I, GL Fabian Wilhelmovich, Baron von der</Commander>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<Division item="y">
+<Name>3rd Division</Name>
+<Commander>Lieutenant General Baron von der Osten-Sacken</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+</Division>
+<Division item="y">
+<Name>8th Division</Name>
+<Commander>Lieutenant General P.K. Essen 3</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+</Division>
+</Wing>
+<Wing item="y">
+<Name>Left Wing</Name>
+<MoraleState>Good</MoraleState>
+<Commander>Ostermann-Tolstoi, GL Alexander Ivanovich, Count</Commander>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<Division item="y">
+<Name>2nd Division</Name>
+<Commander>Lieutenant General Count A.I. Ostermann-Tolstoi</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<CavBrigade item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Squadron"
+icon="person">
+<Name type="Text" ref="y">Cavalry Brigade MG Kozhin</Name>
+<BattleGroup type="Boolean" format="yes/no" init="true">true</BattleGroup>
+<Commander type="Text">MG (Major General) Kozhin</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised" init="Inspiring">Impersonal</Inspiration>
+<Doctrine type="Choice" format="Scouting/Packed/Linear" init="Packed">Packed</Doctrine>
+<Squadron item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_2">
+<Name type="Text" ref="y">Leib Cuirassiers</Name>
+<FacingColours type="Text"></FacingColours>
+<Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon">Cuirassier</Type>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Strength type="Number" format="###" init="120">540</Strength>
+<NumBases type="Text">5</NumBases>
+<Officers type="Number" format="##" init="10">10</Officers>
+<ACE type="Number" format="##" init="20">27</ACE>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</MoraleGrade>
+<SmallArms type="Choice" format="OG/Guard/Gren/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</SmallArms>
+<BattleCavalry type="Boolean" format="yes/no" init="false">true</BattleCavalry>
+<Undistinguished type="Boolean" format="yes/no" init="false">false</Undistinguished>
+<Skirmisher type="Number" format="##" init="0">0</Skirmisher>
+<MoveRate type="Choice" format="Light/Heavy" init="Light">Heavy</MoveRate>
+<Breakpoint type="Number" format="###" init="80">80</Breakpoint>
+<Fatigue type="Number" format="###" init="0">0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Kargopol Dragoons</Name>
+<Type>Dragoon</Type>
+<MoraleState>Good</MoraleState>
+<Strength>540</Strength>
+<NumBases>5</NumBases>
+<Officers>10</Officers>
+<ACE>24</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Izum Hussar</Name>
+<Type>Hussar</Type>
+<MoraleState>Good</MoraleState>
+<Strength>1000</Strength>
+<NumBases>10</NumBases>
+<Officers>10</Officers>
+<ACE>20</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>false</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Ilowaiski 9 Cossacks</Name>
+<Type>Cossack</Type>
+<MoraleState>Good</MoraleState>
+<Strength>540</Strength>
+<NumBases>5</NumBases>
+<Officers>10</Officers>
+<ACE>18</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>false</BattleCavalry>
+<Undistinguished>true</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Efremov 3 Cossacks</Name>
+<Type>Cossack</Type>
+<MoraleState>Good</MoraleState>
+<Strength>540</Strength>
+<NumBases>5</NumBases>
+<Officers>10</Officers>
+<ACE>18</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>false</BattleCavalry>
+<Undistinguished>true</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+</CavBrigade>
+<Brigade item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="Battalion"
+icon="person">
+<Name type="Text" ref="y">Brigade MG Masowski</Name>
+<Commander type="Text">MG Masowski</Commander>
+<Inspiration type="Choice" format="Inspirational/Impersonal/Despised" init="Impersonal">Impersonal</Inspiration>
+<Drill type="Choice" format="None/Prussian/French" init="Prussian">Prussian</Drill>
+<Image type="Picture" html="y"></Image>
+<Battalion item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="bullet_3">
+<Name type="Text" ref="y">Pavlovski Grenadiers 1Bn</Name>
+<FacingColours type="Text"></FacingColours>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Strength type="Number" format="####" init="720">720</Strength>
+<NumBases type="Text"></NumBases>
+<Ranks type="Choice" format="3/2/OpenOrder" init="3">3</Ranks>
+<Officers type="Number" format="##" init="10">10</Officers>
+<ACE type="Number" format="###" init="10">18</ACE>
+<MoraleGrade type="Choice" format="OG/GRD/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">GRD</MoraleGrade>
+<SmallArms type="Choice" format="OG/Guard/Gren/Elite/Crack/Veteran/Conscript/Landwehr/Militia/Untrained" init="Veteran">Veteran</SmallArms>
+<Skirmishers type="Number" format="##"></Skirmishers>
+<OpenOrder type="Boolean" format="yes/no" init="false">false</OpenOrder>
+<Rifles type="Boolean" format="yes/no" init="false">false</Rifles>
+<ClosedColumn type="Boolean" format="yes/no" init="false">false</ClosedColumn>
+<ShockTroops type="Boolean" format="yes/no" init="false">true</ShockTroops>
+<BattalionGuns type="Boolean" format="yes/no" init="false">false</BattalionGuns>
+<Breakpoint type="Number" format="###" init="80">80</Breakpoint>
+<Fatigue type="Number" format="##" init="0">0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Pavlovski Grenadiers 2Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>18</ACE>
+<MoraleGrade>GRD</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>true</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Pavlovski Grenadiers 3Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>18</ACE>
+<MoraleGrade>GRD</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>true</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Rostov Musketeers 1Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Rostov Musketeers 2Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Rostov Musketeers 3Bn</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+</Brigade>
+<Brigade item="y">
+<Name>Brigade MG Sukin 2</Name>
+<Commander>MG Sukin 2</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+</Brigade>
+<Brigade item="y">
+<Name>Brigade MG Diven 3</Name>
+<Commander>MG Diven 3</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+</Brigade>
+<Brigade item="y">
+<Name>Artillery Brigade Col Stavitsky 1</Name>
+<Commander>Col Stavitsky 1</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+</Brigade>
+</Division>
+<Division item="y">
+<Name>6th Division</Name>
+<Commander>Brigade MG K.F. Baggovut</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<Brigade item="y">
+<Name>Brigade MG K.F. Baggovut</Name>
+<Commander>MG K.F. Baggovut</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+</Brigade>
+</Division>
+</Wing>
+<Wing item="y">
+<Name>Reserve</Name>
+<MoraleState>Good</MoraleState>
+<Commander>Dohkturov, GL Dimitri Sergeievich</Commander>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+<Division item="y">
+<Name>4th Division</Name>
+<Commander>Major General A.A. Somov</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+</Division>
+<Division item="y">
+<Name>7th Division</Name>
+<Commander>Lieutenant General D.S. Dokhturov</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+</Division>
+<Division item="y">
+<Name>14th Division</Name>
+<Commander>Major General Count N. M. Kamensky 2d</Commander>
+<Inspiration>Impersonal</Inspiration>
+<ProfessionalSkill>Poor</ProfessionalSkill>
+<Doctrine>Regimental</Doctrine>
+</Division>
+</Wing>
+<DEFAULT item="n"
+line0="{*Name*}"
+line1="{*Name*}">
+<Name type="Text" ref="y"></Name>
+</DEFAULT>
+<ROOT item="n"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="DEFAULT">
+<Name type="Text" ref="y"></Name>
+</ROOT>
+</Army>
