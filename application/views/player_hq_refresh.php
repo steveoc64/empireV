@@ -15,7 +15,7 @@ if (isset($game)) {
 		echo "<center><div id=clock>$t</div></center>";
 		//echo "You may submit new orders for the following Maneuvre Elements<p>";
 
-		echo "<input id=objective size=90 value='Enter a short objective for the orders here.'></input>";
+		echo "<input id=objective size=100 value='Enter a short objective for the orders here.'></input>";
 		echo "<div id=orders>";
 		echo "<div id=order order=1 class=ui-widget-content>Defend</div>";
 		echo "<div id=order order=2 class=ui-widget-content>Attack</div>";

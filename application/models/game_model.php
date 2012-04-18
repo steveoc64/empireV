@@ -191,7 +191,7 @@ class Game_model extends CI_Model {
 			$rain = 'Dry';
 		}
 	
-		$vinches = $this->yards_to_inches($data->visibility);
+		$vinches = $this->yards_to_inches($this->game_turn->visibility);
 		$this->weather_report = sprintf("%s %dC %s, %s, gound condition %d, visibility %dyd ($vinches inches)",
 			$this->game_turn->weather_conditions,
 			$this->game_turn->temperature,
@@ -201,7 +201,12 @@ class Game_model extends CI_Model {
 
 		// Get the hour in a nice format
 		$this->hour = $this->start_hour + $this->turn_number -1;
-		$this->hrs = sprintf("%02d:00hrs", $this->hour);
+		$this->day = 1;
+		while ($this->hour > 24) {
+			$this->hour -= 24;
+			$this->day ++;
+		}
+		$this->hrs = sprintf("Day %d ~ %02d:00hrs", $this->day, $this->hour);
 
 		return $this;
 	}
@@ -415,7 +420,9 @@ class Game_model extends CI_Model {
 					// Is an infantry brigade - so jump into the ME determination test
 					echo "<ul>";
 					if ($unit->stats->morale_state >= 4) {
-						echo "<li><font color=red>Unit : [".$unit->id."] - ".$unit->name." is already BROKEN</font>";
+						echo "<li><font color=#880000>Unit : [".$unit->id."] - ".$unit->name." is already BROKEN</font>";
+						$distance = $this->yards_to_inches(640);
+						echo "<ul><b><font color=#880000>Unit must fall back 640 yds ($distance inches)</font></b></ul>";
 					} elseif ($unit->percent_lost >= 20) {
 						echo "<li>Unit : [".$unit->id."] - ".$unit->name." has ".$unit->percent_lost."% losses - starting ME test";
 						echo "<font color=blue><ul>";
@@ -454,11 +461,13 @@ class Game_model extends CI_Model {
 							echo "<li><i>rolls dice</i> ... $dieroll";
 							if ($dieroll <= $b) {
 								echo "<li>The whole ME is BROKEN";
+								echo "<ul><font color=#880000>All units in this ME fall back 640 yds ($distance inches)</font></ul>";
 								$result = 4;
 							} elseif ($dieroll <= $r) {
 								echo "<li>The whole ME is in RETREAT";
 								$distance = $this->yards_to_inches(640);
-								echo "<li>All units fall back 640 yds ($distance inches)";
+								echo "<ul><font color=#880000>All units in this ME fall back 640 yds ($distance inches)</font>";
+								echo "<li>Formed enemy cavalry within engagement range may choose to pin the unit in place.";
 								$result = 3;
 							} elseif ($dieroll <= $s) {
 								echo "<li>The whole ME is SHAKEN";
