@@ -7,9 +7,12 @@ if (isset($game)) {
 	echo '<i>Weather Report: '.$game->weather_report.'</i>';
 	echo "<br>";
 
+	$t = '<font size=+2><b>0:00</b></font>';
+
 	switch ($game->phase) {
 	case PHASE_ORDERS:
 		echo "<h2>Orders Phase ~ ".$game->hrs."</h2>";
+		echo "<center><div id=clock>$t</div></center>";
 		//echo "You may submit new orders for the following Maneuvre Elements<p>";
 
 		echo "<input id=objective size=90 value='Enter a short objective for the orders here.'></input>";
@@ -76,51 +79,63 @@ if (isset($game)) {
 	case PHASE_ME_DET:
 	case PHASE_ME_MORALE:
 		echo "<h2>Morale Phase ~ ".$game->hrs."</h2>";
-		echo "Umpire is just working out who is doing what .. try again soon";
+		echo "<center><div id=clock>$t</div></center>";
+		echo "Umpire is just working out morale tests .. try again soon ";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_LEADER_ATTACH:
 		echo "<h2>Leader Attach Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_DECLARE_ORDERS:
 		echo "<h2>Declare Orders Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_ACTIVATE_ORDERS:
 		echo "<h2>Activate Orders Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_BREAKOFF:
 		echo "<h2>Units on BreakOff Orders Disengage ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "</div><button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_GT:
 		echo "<h2>Grand Tactical Movement Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_DETERMINE_BOMBARDMENT:
 		echo "<h2>Determine Bombardment Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_ENGAGE:
 		echo "<h2>Run Engagements (Tactical Movement) Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_COMMANDER_CAS:
 		echo "<h2>Commander Casualties Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_RALLY:
 		echo "<h2>Rally Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_REST:
 		echo "<h2>Rest Phase ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 	case PHASE_END_OF_HOUR:
 		echo "<h2>End of Hour ~ ".$game->hrs."</h2>\n";
+		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
 		break;
 

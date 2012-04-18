@@ -314,28 +314,9 @@ $("#determine_bombardment_done").click(function() { $("<div></div>").load('umpir
 $("#engage_done").click(function() { $("<div></div>").load('umpire_console/engage_done',function() { $("#console").load('umpire_console/refresh')})});
 $("#commander_cas_done").click(function() { $("<div></div>").load('umpire_console/commander_cas_done',function() { $("#console").load('umpire_console/refresh')})});
 $("#rally_done").click(function() { $("<div></div>").load('umpire_console/rally_done',function() { $("#console").load('umpire_console/refresh')})});
-$("#rest_done").click(function() { $("<div></div>").load('umpire_console/rest_done',function() { $("#console").load('umpire_console/refresh',showclock())})});
-$("#end_of_hour_done").click(function() { $("<div></div>").load('umpire_console/end_of_hour_done',function() {
-	seconds=0;
-	showclock();
-	$("#console").load('umpire_console/refresh')
-})});
+$("#rest_done").click(function() { $("<div></div>").load('umpire_console/rest_done',function() { $("#console").load('umpire_console/refresh')})});
+$("#end_of_hour_done").click(function() { $("<div></div>").load('umpire_console/end_of_hour_done', function() { $("#console").load('umpire_console/refresh') })});
 
 $("#rewind").click(function() { $("<div></div>").load('umpire_console/rewind',function() { $("#console").load('umpire_console/refresh')})});
-
-function showclock() {
- 	if (seconds < 60) {
-		color='green';
-	} else if (seconds < 120) {
-		color='blue';
-	} else {
-		color='red';
-	}
-	var min = parseInt(seconds / 60);
-	var sec = seconds % 60;
-	if (sec < 10) { sec = '0'+sec; }
-	if (min < 10) { min = '0'+min; }
-	$('#clock').html('<font size=+2 color='+color+'><b>'+min+':'+sec+'</b></font>');
-}
 
 </script>

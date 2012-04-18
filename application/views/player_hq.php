@@ -12,6 +12,17 @@
 </style>
 
 <script>
+<?
+// get the actual elapsed seconds !!
+
+$query = $this->db->query("select now()-realtime as elapsed from game_turn where game_id=".$game->id." and turn_number=".$game->turn_number);
+foreach ($query->result() as $row) {
+	$elapsed = (int)$row->elapsed;
+	break;
+}
+echo "var seconds = ".$elapsed.";\n";
+?>
+
 $.ajaxSetup ({  cache: false  });  
   
 $(function() { 
@@ -65,6 +76,27 @@ $(function() {
 			//location.reload();
 		//}
 	//}, 10000);
+
+	// Kick off the clock
+	setInterval(function() {
+		if (seconds < 60) {
+			color='green';
+		} else if (seconds < 120) {
+			color='blue';
+		} else if (seconds < 600) {
+			color='#880000';
+		} else if (seconds < 1200) {
+			color='#aa0000';
+		} else {
+			color='red';
+		}
+		var min = parseInt(seconds / 60);
+		var sec = seconds % 60;
+		if (sec < 10) { sec = '0'+sec; }
+		if (min < 10) { min = '0'+min; }
+		$('#clock').html('<font size=+2 color='+color+'><b>'+min+':'+sec+'</b></font>');
+		seconds ++;
+	}, 1000);
 
 });  
 $("#hq").click(function () { 
