@@ -10,4 +10,8 @@ class Player_console extends MY_Controller
 		}
 
 	}
+
+	function refresh() {
+		$this->load->view('player_hq_refresh',array('game'=>$this->game));
+	}
 }

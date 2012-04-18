@@ -154,6 +154,11 @@ if ($unit->stats) {
 			echo "This unit comprises a number of Officers and their staff.\n";
 			break;
 		}
+		$infantry_figs_per_base = (int)$game->infantry_base;
+		$cavalry_figs_per_base = (int)$game->cavalry_base;
+		if ($infantry_figs_per_base < 1) { $infantry_figs_per_base = 3; }
+		if ($cavalry_figs_per_base < 1) { $cavalry_figs_per_base = 2; }
+
 		switch($this->session->userdata('role')) {
 		case 'A':
 		case 'U':
@@ -165,10 +170,12 @@ if ($unit->stats) {
 
 			switch ($unit->unit_type) {
 			case TYPE_BATTALION:
-				echo "<br><i>Which equates to $unit->num_figures figures or $unit->num_bases bases at 1:$unit->scale ratio</i> - 3 figs per base<br>\n";
+				$num_bases = ($unit->num_figures / $infantry_figs_per_base);
+				echo "<br><i>Which equates to $unit->num_figures figures or $num_bases bases at 1:$unit->scale ratio</i> - $infantry_figs_per_base figs per base<br>\n";
 				break;
 			case TYPE_SQUADRON:
-				echo "<br><i>Which equates to $unit->num_figures figures or $unit->num_bases bases at 1:$unit->scale ratio</i> - 2 figs per base<br>\n";
+				$num_bases = ($unit->num_figures / $cavalry_figs_per_base);
+				echo "<br><i>Which equates to $unit->num_figures figures or $num_bases bases at 1:$unit->scale ratio</i> - $cavalry_figs_per_base figs per base<br>\n";
 				break;
 			case TYPE_BATTERY:
 				$crew = $unit->battery->crew_figures;

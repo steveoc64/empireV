@@ -3,7 +3,7 @@
 define ('PHASE_ORDERS',1);
 define ('PHASE_ME_DET',2);
 define ('PHASE_ME_MORALE',3);
-define ('PHASE_ATTACH_LEADER',4);
+define ('PHASE_LEADER_ATTACH',4);
 define ('PHASE_DECLARE_ORDERS',5);
 define ('PHASE_ACTIVATE_ORDERS',6);
 define ('PHASE_BREAKOFF',7);
@@ -79,7 +79,8 @@ class Game_model extends CI_Model {
 		if (!$game) {
 			return null;
 		}
-		// The user is in a game, and we found the game, so create the object
+		// The user is in a game, and we found the game, so fill in this object
+		// (longhand hack, till I find an elegant way that works the way I want it to)
 		$this->user = $user_data;
 		$this->id = $game->id;
 			$this->name = $game->name;
@@ -100,6 +101,10 @@ class Game_model extends CI_Model {
 			$this->infantry_base = $game->infantry_base;
 			$this->cavalry_base = $game->cavalry_base;
 			$this->video_intro = $game->video_intro;
+		if ($this->ground_scale == 0) { $this->ground_scale = 40; }	// Empire default
+		if ($this->figure_scale == 0) { $this->figure_scale = 60; }	// Empire default
+		if ($this->infantry_base == 0) { $this->infantry_base = 3; }	// Empire default
+		if ($this->cavalry_base == 0) { $this->cavalry_base = 2; }	// Empire default
 
 		// load the national theme into the game array
 		$theme = (int)$this->user->national_theme;
@@ -143,7 +148,8 @@ class Game_model extends CI_Model {
 			$rain = 'Dry';
 		}
 	
-		$this->weather_report = sprintf("%s %dC %s, %s, gound condition %d, visibility %dm",
+		$vinches = (int)($this->game_turn->visibility / $this->ground_scale);
+		$this->weather_report = sprintf("%s %dC %s, %s, gound condition %d, visibility %dyd ($vinches inches)",
 			$this->game_turn->weather_conditions,
 			$this->game_turn->temperature,
 			$wind, $rain,
@@ -168,6 +174,10 @@ class Game_model extends CI_Model {
 
 		$row = $this->db->query("select max(id) as last_child from unit where parent_id=$id")->row();
 		if ($row && $row->last_child) {
+			// Army level ?
+			$last_id = $row->last_child;
+			$row = $this->db->query("select max(id) as last_child from unit where parent_id=".$row->last_child)->row();
+			if ($row && $row->last_child) {
 			// Last Corps level
 			$last_id = $row->last_child;
 			$row = $this->db->query("select max(id) as last_child from unit where parent_id=".$row->last_child)->row();
@@ -185,6 +195,7 @@ class Game_model extends CI_Model {
 					}
 				}
 			}
+			} // add an extra army level above corps
 
 		}
 
@@ -289,27 +300,25 @@ class Game_model extends CI_Model {
 	}
 
 	function close_orders () {
-		// Find which game the user is on
-		$user = $this->db->get_where('user',array('username' => $this->session->userdata('username')))->row();
-		$game_id = (int)$user->current_game;
-		if (!$game_id) {
+		if (!$this->id) {
 			die ("No game selected ... ?????");
 		}
 		
-		// get the game details
-		$game = $this->db->get_where('game',array('id' => $game_id))->row();
-		if (!$game) {
-			die ("Cannot find game ID $game_id ... ?????");
-		}
-
 		// Check that we are the first phase (allowing orders to be set)
-		$phase = (int) $game->phase;
+		$phase = (int) $this->phase;
 		if ($phase > 1) {
 			die ("We are already in phase $phase of game $game_id .. cannot close orders");
 		}
 
+		// on Turn 1, skip morale tests and go straight to phase 4
+		$turn = (int) $this->turn_number;
+		$next_phase = 2;
+		if ($turn == 1) {
+			$next_phase = 4;
+		}
+		
 		// All good, bump the game to the next phase
-		$this->db->query("update game set phase=2 where id=$game_id");
+		$this->db->query("update game set phase=$next_phase where id=".$this->id);
 	}
 
 	function me_determination () {
@@ -362,7 +371,9 @@ class Game_model extends CI_Model {
 				} else {
 					// Is an infantry brigade - so jump into the ME determination test
 					echo "<ul>";
-					if ($unit->percent_lost >= 20) {
+					if ($unit->stats->morale_state >= 4) {
+						echo "<li><font color=red>Unit : [".$unit->id."] - ".$unit->name." is already BROKEN</font>";
+					} elseif ($unit->percent_lost >= 20) {
 						echo "<li>Unit : [".$unit->id."] - ".$unit->name." has ".$unit->percent_lost."% losses - starting ME test";
 						echo "<font color=blue><ul>";
 						if ($unit->stats->did_close_combat) {
@@ -479,7 +490,6 @@ class Game_model extends CI_Model {
 	} // close me_determination function
 
 	function accept_me_determination () {
-		var_dump($this);
 		$game_id = (int)$this->id;
 		if (!$game_id) {
 			die ("No game selected ... ?????");
@@ -491,13 +501,7 @@ class Game_model extends CI_Model {
 			die ("We are in phase $phase of game $game_id .. need to be in phase 2 to accept ME determination test");
 		}
 
-
-		if ($this->turn_number == 1) {
-			die ("No need to check ME determination on turn 1");
-		} 
-
 		// for each me determination test result in this turn ... apply it
-		$this->load->model('unit_model');
 		$query = $this->db->get_where('game_me_det',array('game_id'=>$game_id,'turn_number'=>$this->turn_number));
 		foreach ($query->result() as $row) {
 			switch ($row->result) {
@@ -580,7 +584,7 @@ class Game_model extends CI_Model {
 						$data->sent_turn = $this->turn_number;
 						$data->player_id = $row->id;
 						$data->unit_id = $unit->id;
-						$data->message = "Sir, there are unconfirmed reports that $message";
+						$data->message = $message;
 						$data->letter_icon = rand(1,6);
 					$this->db->insert('game_message',$data);
 				}
@@ -638,8 +642,21 @@ class Game_model extends CI_Model {
 				$me_list = $this->get_me_list($game_id,$range->start_id,$range->end_id);
 				foreach ($me_list as $me_unit) {
 				if ($me_unit->stats->player_id == $row->id) { // not all MEs under this commander belong to the same player
-					echo "<tr><td>".$me_unit->id."</td><td>".$me_unit->name."</td>";
+
 					$exempt = false;
+					$highlight = '';
+
+					$_ = $this->db->query("select count(*) as count from game_me_det where game_id=$game_id and unit_id=".$me_unit->id." and turn_number=".$game->turn_number." and result >= 2")->row();
+					if ($_->count > 0) {
+						$exempt = true;
+						$highlight = ' bgcolor=#ff8888';
+					}
+					// If they are already broken, they dont need to test
+					if ($me_unit->stats->morale_state >= 4) {
+						$exempt = true;
+					}
+
+					echo "<tr$highlight><td>".$me_unit->id."</td><td>".$me_unit->name."</td>";
 					if ($me_unit->current_order->order_type == 9) {
 						$exempt = true;
 						echo "<td><font color=red>".$me_unit->current_order_type."</font></td>";
@@ -648,11 +665,6 @@ class Game_model extends CI_Model {
 					}
 					// Add test checkboxen - unless they were affected by an ME det failure
 					echo "<td>";
-					$_ = $this->db->query("select count(*) as count from game_me_det where game_id=$game_id and unit_id=".$me_unit->id." and turn_number=".$game->turn_number." and result >= 2")->row();
-					if ($_->count > 0) {
-						$exempt = true;
-					}
-
 					if ($exempt) {
 						echo "<font color=red>Exempt</font>";
 					} else {
@@ -820,9 +832,306 @@ class Game_model extends CI_Model {
 		echo "<tr bgcolor=#ff9900><td>Group V</td><td>48% to become shaken<br>29% to break</td></tr>";
 		echo "<tr bgcolor=#cc3300><td>Group VI</td><td>68% to become shaken<br>45% to break</td></tr>";
 		echo "</table>";
+	}
 
+	function morale_test_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_ME_MORALE) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=4 where id=".$this->id);
+	}
+
+	function leader_attach_done() {
+		if (!$this->id) {
+			die ("no game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_LEADER_ATTACH) {
+			die ("we are already in phase $phase of game $game_id .. cannot close leader attachments");
+		}
+
+		// all good, bump the game to the next phase
+		$this->db->query("update game set phase=5 where id=".$this->id);
+	}
+
+	function declare_orders_done() {
+		if (!$this->id) {
+			die ("no game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_DECLARE_ORDERS) {
+			die ("we are already in phase $phase of game $game_id .. cannot close leader attachments");
+		}
+
+		// all good, bump the game to the next phase
+		$this->db->query("update game set phase=6 where id=".$this->id);
+	}
+
+
+	function activate_orders_done() {
+		if (!$this->id) {
+			die ("no game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_ACTIVATE_ORDERS) {
+			die ("we are already in phase $phase of game $game_id .. cannot close leader attachments");
+		}
+
+		// all good, bump the game to the next phase
+		$this->db->query("update game set phase=7 where id=".$this->id);
+	}
+
+
+	function get_briefing () {
+		switch ($this->session->userdata('role')) {
+		case 'A':
+		case 'U':
+			// Get both briefings for this game
+			return '<h4>Situation</h4>'.$this->situation.'<hr><h4>Attacker Briefing :</h4>'.$this->attacker_briefing.'<hr><h4>Defender Briefing</h4>'.$this->defender_briefing;
+			break;
+		case 'P':
+			// Are we attacker or defender ?
+			$b = '';
+			$got_briefing = false;
+			$query = $this->db->get_where('orbat',array('id'=>$this->orbat_attacker));
+			$commander_id = (int)$this->user->commander_id;
+			foreach ($query->result() as $orbat) {
+				$start = (int)$orbat->starting_id;
+				$end = (int)$orbat->ending_id;
+				if ($commander_id >= $start && $commander_id <= $end) {
+					$b = $this->attacker_briefing;
+					$got_briefing = true;
+				}
+			}
+			if (!$got_briefing) {
+				$query = $this->db->get_where('orbat',array('id'=>$this->orbat_defender));
+				foreach ($query->result() as $orbat) {
+					$start = (int)$orbat->starting_id;
+					$end = (int)$orbat->ending_id;
+					if ($commander_id >= $start && $commander_id <= $end) {
+						$b = $this->defender_briefing;
+						$got_briefing = true;
+					}
+				}
+			}
+			if (!$got_briefing) {
+				echo "Commander = $commander_id<br>";
+				return '<h4>Situation</h4>'.$this->situation.'<hr>The unit you are commanding in this game is in neither the attacker or the defender force ... no briefing possible';
+			}
+
+			return '<h4>Situation</h4>'.$this->situation.'<hr><h4>Briefing :</h4>'.$b;
+			break;
+		}
+	}
+
+	function breakoff_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_BREAKOFF) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=8 where id=".$this->id);
 
 	}
+
+	function gt_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_GT) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=9 where id=".$this->id);
+	}
+
+	function determine_bombardment_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_DETERMINE_BOMBARDMENT) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=10 where id=".$this->id);
+	}
+
+	function engage_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_ENGAGE) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=11 where id=".$this->id);
+	}
+
+	function commander_cas_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_COMMANDER_CAS) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=12 where id=".$this->id);
+	}
+
+	function rally_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_RALLY) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=13 where id=".$this->id);
+	}
+
+	function rest_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_REST) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=14 where id=".$this->id);
+	}
+
+	function rewind() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase <= PHASE_ME_MORALE) {
+			die ("We cannot rewind from  phase $phase of game $game_id .. too late for that");
+		}
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=phase-1 where id=".$this->id);
+	}
+
+
+	function end_of_hour_done() {
+		if (!$this->id) {
+			die ("No game selected ... ?????");
+		}
+		$game_id = (int)$this->id;
+		
+		// check that we are in the right phase
+		$phase = (int) $this->phase;
+		if ($phase != PHASE_END_OF_HOUR) {
+			die ("We are already in phase $phase of game $game_id .. cannot close morale test");
+		}
+
+		// Create a new game turn record
+		$data = new stdClass;
+			$data->game_id = $this->id;
+			$data->turn_number = $this->turn_number + 1;
+			$data->initiative = 1;
+			$data->temperature = $this->game_turn->temperature + rand(-2,4);
+			$data->wind_direction = $this->game_turn->wind_direction + rand(-1,1); 
+			if ($data->wind_direction < 1) {
+				$data->wind_direction = 1;
+			}
+			if ($data->wind_direction > 8) {
+				$data->wind_direction = 8;
+			}
+
+			$data->wind_speed = $this->game_turn->wind_speed + rand(-2,2);
+			if ($data->game_turn->wind_speed < 0) {
+				$data->game_turn->wind_speed = 0;
+			}
+			$data->rain = $this->game_turn->rain + rand(-3,2); // tendency towards no rain, it may rain for a little for an hour or 2, but will tend to no rain
+			if ($data->rain < 0) {
+				$data->rain = 0;
+			}
+			// Visibility gets worse as the battle continues, as smoke fills the area
+			$data->visibility = $this->game_turn->visibility + rand(-50,20) - ($data->rain * 20);
+
+			// calculate ground conditions depending on the last hours weather
+			$data->ground_conditions = $this->game_turn->ground_conditions;
+			if ($this->game_turn->rain > 2) {
+				$data->ground_conditions++;
+			} else {
+				// No rain and warm - improve ground conditions
+				if ($this->game_turn->temperature > 28) {
+					$data->ground_conditions--;
+				}
+			}
+			if ($data->ground_conditions < 1) {
+				$data->ground_conditions = 1;
+			}
+			if ($data->ground_conditions > 10) {
+				$data->ground_conditions = 10;
+			}
+		$this->db->insert('game_turn',$data);
+
+		// All good, bump the game to the next phase
+		$this->db->query("update game set phase=1,turn_number=turn_number+1 where id=".$this->id);
+
+	}
+
 
 }
 

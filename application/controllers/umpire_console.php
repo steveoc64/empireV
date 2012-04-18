@@ -11,6 +11,12 @@ class Umpire_Console extends MY_Controller
 		}
 	}
 
+	function refresh() {
+		if ($this->check_role(array('A','U'))) {
+			$this->load->view('umpire_hq_refresh',array('game'=>$this->game));
+		}
+	}
+
 	function close_orders() {
 		if ($this->check_role(array('A','U'))) {
 			$this->game->close_orders();
@@ -45,6 +51,84 @@ class Umpire_Console extends MY_Controller
 	function morale_test() {
 		if ($this->check_role(array('A','U'))) {
 			$this->game->morale_test();
+		}
+	}
+
+	function morale_test_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->morale_test_done();
+		}
+	}
+
+	function leader_attach_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->leader_attach_done();
+		}
+	}
+
+	function declare_orders_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->declare_orders_done();
+		}
+	}
+
+	function activate_orders_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->activate_orders_done();
+		}
+	}
+
+	function breakoff_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->breakoff_done();
+		}
+	}
+
+	function gt_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->gt_done();
+		}
+	}
+
+	function determine_bombardment_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->determine_bombardment_done();
+		}
+	}
+
+	function engage_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->engage_done();
+		}
+	}
+
+	function commander_cas_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->commander_cas_done();
+		}
+	}
+
+	function rally_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->rally_done();
+		}
+	}
+
+	function rest_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->rest_done();
+		}
+	}
+
+	function end_of_hour_done() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->end_of_hour_done();
+		}
+	}
+
+	function rewind() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->rewind();
 		}
 	}
 

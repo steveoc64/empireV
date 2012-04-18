@@ -256,8 +256,20 @@ Class Unit_model extends CI_Model {
 			// Just add a fatigue point, and add a random amount of disorder to the unit
 			// between 10-60% disorder 
 			$d = rand(10,60);
+			$c = 0;
+			$extra = '';
 			// Lets be nasty and allow a few of them to run away as well
-			$c = rand(10,100);
+			switch ($unit->unit_type) {
+			case TYPE_BATTALION:
+			case TYPE_SQUADRON:
+				// between 0 and 2% of initial strength runs away
+				$percent = rand(0,2);
+				if ($percent) {
+					$c = (int)(($percent * $unit->stats->initial_strength)/100);
+					$extra = ' Dozens of men have fled the ranks in fear';
+				}
+				break;
+			}
 			$this->db->query("update game_unit_stats set fatigue=fatigue+1,disorder=disorder+$d,morale_state=2,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
 			$this->cap_max($game_id,$unit->id);
 			
@@ -268,7 +280,8 @@ Class Unit_model extends CI_Model {
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
 				$data->value = 2;
-				$data->descr = "Unit is shaken. Dozens of men have fled the ranks in fear.";
+				$data->descr = "Unit is shaken.$extra";
+				$data->fled = $c;
 			$this->db->insert('game_event',$data);
 		}
 	}
@@ -279,7 +292,22 @@ Class Unit_model extends CI_Model {
 			// between 30-90% disorder 
 			$d = rand(30,90);
 			// Lets be nasty and allow some of them to run away as well
-			$c = rand(20,200);
+			$c = 0;
+			$extra = '';
+			switch ($unit->unit_type) {
+			case TYPE_BATTALION:
+			case TYPE_SQUADRON:
+				// between 0 and 10% of initial strength runs away
+				$percent = rand(0,10);
+				if ($percent) {
+					$c = (int)(($percent * $unit->stats->initial_strength)/100);
+					$extra = ' Scores of cowards have left the ranks in disgrace';
+				} else {
+					$extra = ' Discipline remains excellent';
+				}
+				break;
+			}
+
 			$this->db->query("update game_unit_stats set fatigue=fatigue+2,disorder=disorder+$d,morale_state=3,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
 			$this->cap_max($game_id,$unit->id);
 			
@@ -290,7 +318,8 @@ Class Unit_model extends CI_Model {
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
 				$data->value = 3;
-				$data->descr = "Unit is in retreat. Scores of cowards have left the ranks in shame.";
+				$data->descr = "Unit is in retreat. $extra";
+				$data->fled = $c;
 			$this->db->insert('game_event',$data);
 				
 			// Create a Disgrace event
@@ -306,7 +335,20 @@ Class Unit_model extends CI_Model {
 			// between 50-100% disorder 
 			$d = rand(50,100);
 			// Lets be nasty and allow lots of them to run away as well
-			$c = rand(100,400);
+			$c = 0;
+			$extra = '';
+			switch ($unit->unit_type) {
+			case TYPE_BATTALION:
+			case TYPE_SQUADRON:
+				// between 0 and 25% of initial strength runs away
+				$percent = rand(0,25);
+				if ($percent) {
+					$c = (int)(($percent * $unit->stats->initial_strength)/100);
+					$extra = ' Great droves of the scoundrels have deserted the colours in utter disgrace';
+				}
+				break;
+			}
+
 			$this->db->query("update game_unit_stats set fatigue=fatigue+6,disorder=disorder+$d,morale_state=4,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
 			// Any unlimbered artillery in this unit abandon their guns - the utter cowards !
 			$this->db->query("update game_unit_stats set guns_abandoned='T' where is_limbered='F' and game_id=".$game_id." and unit_id=".$unit->id);
@@ -319,7 +361,8 @@ Class Unit_model extends CI_Model {
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
 				$data->value = 4;
-				$data->descr = "Unit has broken. Great droves of the scoundrels have deserted the colours in disgrace.";
+				$data->descr = "Unit has broken.$extra";
+				$data->fled = $c;
 			$this->db->insert('game_event',$data);
 				
 			// Create a Disgrace event

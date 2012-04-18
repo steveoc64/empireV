@@ -22,6 +22,7 @@ class Orders extends MY_Controller
 		$form->set_relation('order_type','order_types','name');
 		$form->display_as('turn_number','Hour');
 		$form->callback_column('turn_number',array($this,'display_hour'));
+		$form->callback_column('objective',array($this,'display_objective'));
 
 		switch ($this->session->userdata('role')) {
 		case 'A':
@@ -54,6 +55,11 @@ class Orders extends MY_Controller
 
 	function display_turn($primary_key,$row) {
 		return "Turn ".$row->activate_turn;
+	}
+
+	// Hack to show the full length objective, otherwise it gets truncated by the CRUD library
+	function display_objective($primary_key,$row) {
+		return $row->objective;
 	}
 
 

@@ -133,6 +133,7 @@ class Units extends MY_Controller
 			redirect('units');
 		}
 		$form_data['unit'] = $unit;
+		$form_data['game'] = $this->game;
 
 		$fail = false;
 
