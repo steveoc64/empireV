@@ -315,7 +315,13 @@ $("#engage_done").click(function() { $("<div></div>").load('umpire_console/engag
 $("#commander_cas_done").click(function() { $("<div></div>").load('umpire_console/commander_cas_done',function() { $("#console").load('umpire_console/refresh')})});
 $("#rally_done").click(function() { $("<div></div>").load('umpire_console/rally_done',function() { $("#console").load('umpire_console/refresh')})});
 $("#rest_done").click(function() { $("<div></div>").load('umpire_console/rest_done',function() { $("#console").load('umpire_console/refresh')})});
-$("#end_of_hour_done").click(function() { $("<div></div>").load('umpire_console/end_of_hour_done', function() { $("#console").load('umpire_console/refresh') })});
+$("#end_of_hour_done").click(function() { $("<div></div>").load('umpire_console/end_of_hour_done', function() { 
+	seconds=0;
+	var d = new Date();
+	var now = parseInt(d.getTime()/1000); // getTime returns milliseconds since the start of Unix Time
+	start_of_turn = now;
+	$("#console").load('umpire_console/refresh')
+})});
 
 $("#rewind").click(function() { $("<div></div>").load('umpire_console/rewind',function() { $("#console").load('umpire_console/refresh')})});
 

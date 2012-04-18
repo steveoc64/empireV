@@ -7,16 +7,12 @@
 <?
 // get the actual elapsed seconds !!
 
-$query = $this->db->query("select now()-realtime as elapsed from game_turn where game_id=".$game->id." and turn_number=".$game->turn_number);
+$query = $this->db->query("select unix_timestamp(realtime) as start_of_turn from game_turn where game_id=".$game->id." and turn_number=".$game->turn_number);
 foreach ($query->result() as $row) {
-	$elapsed = (int)$row->elapsed;
-	if ($elapsed > 100000) {
-		$elapsed = 0;
-		$this->db->query("update game_turn set realtime=now() where game_id=".$game->id." and turn_number=".$game->turn_number);
-	}
+	$start_of_turn = (int)$row->start_of_turn;
 	break;
 }
-echo "var seconds = ".$elapsed.";\n";
+echo "var start_of_turn = ".$start_of_turn.";\n";
 ?>
 $(function() { 
 	$("#menu").hide();
@@ -44,6 +40,11 @@ $(function() {
 
 	// Kick off the clock
 	setInterval(function() {
+		var d = new Date();
+		var now = parseInt(d.getTime()/1000); // getTime returns milliseconds since the start of Unix Time
+		var seconds = now - start_of_turn;
+		var min = parseInt(seconds / 60);
+		var sec = seconds % 60;
 		if (seconds < 60) {
 			color='green';
 		} else if (seconds < 120) {
@@ -55,8 +56,7 @@ $(function() {
 		} else {
 			color='red';
 		}
-		var min = parseInt(seconds / 60);
-		var sec = seconds % 60;
+
 		if (sec < 10) { sec = '0'+sec; }
 		if (min < 10) { min = '0'+min; }
 		$('#clock').html('<font size=+2 color='+color+'><b>'+min+':'+sec+'</b></font>');
