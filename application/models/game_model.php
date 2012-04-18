@@ -61,6 +61,48 @@ class Game_model extends CI_Model {
 		echo "Started new game $this->game_id with a start time of 0500hrs<br>\n";
 	}
 
+	function yards_to_inches ($yards) {
+		if ($this->id) {
+			if (!$this->ground_scale) {
+				$this->ground_scale = 40;	// Default 40 yards to the inch in Empire
+			}
+			return (int)($yards / $this->ground_scale);
+		}
+		return 0;
+	}
+
+	function troops_to_figures ($troops) {
+		if ($this->id) {
+			if (!$this->figure_scale) {
+				$this->figure_scale = 60;	// Default 60 troops to the figure
+			}
+			return (int)($troops / $this->figure_scale);
+		}
+		return 0;
+	}
+
+	function troops_to_bases ($troops) {
+		if ($this->id) {
+			if (!$this->infantry_base) {
+				$this->infantry_base = 3;	// Default 3 infantry figs to a base
+			}
+			$figs = $this->troops_to_figures($troops);
+			return (int)($figs / $this->infantry_base);
+		}
+		return 0;
+	}
+
+	function horses_to_bases ($horses) {
+		if ($this->id) {
+			if (!$this->cavalry_base) {
+				$this->cavalry_base = 2;	// Default 2 horsey figs to a base
+			}
+			$figs = $this->troops_to_figures($horses);
+			return (int)($figs / $this->cavalry_base);
+		}
+		return 0;
+	}
+
 	function get_current_game($full_details = true) {
 
 		// Find which game the user is on
@@ -101,6 +143,7 @@ class Game_model extends CI_Model {
 			$this->infantry_base = $game->infantry_base;
 			$this->cavalry_base = $game->cavalry_base;
 			$this->video_intro = $game->video_intro;
+			$this->rain_factor = $game->rain_factor;
 		if ($this->ground_scale == 0) { $this->ground_scale = 40; }	// Empire default
 		if ($this->figure_scale == 0) { $this->figure_scale = 60; }	// Empire default
 		if ($this->infantry_base == 0) { $this->infantry_base = 3; }	// Empire default
@@ -148,7 +191,7 @@ class Game_model extends CI_Model {
 			$rain = 'Dry';
 		}
 	
-		$vinches = (int)($this->game_turn->visibility / $this->ground_scale);
+		$vinches = $this->yards_to_inches($data->visibility);
 		$this->weather_report = sprintf("%s %dC %s, %s, gound condition %d, visibility %dyd ($vinches inches)",
 			$this->game_turn->weather_conditions,
 			$this->game_turn->temperature,
@@ -414,8 +457,8 @@ class Game_model extends CI_Model {
 								$result = 4;
 							} elseif ($dieroll <= $r) {
 								echo "<li>The whole ME is in RETREAT";
-								$distance = (int) (800 / $game->ground_scale);
-								echo "<li>All units fall back 800 yds ($distance inches)";
+								$distance = $this->yards_to_inches(640);
+								echo "<li>All units fall back 640 yds ($distance inches)";
 								$result = 3;
 							} elseif ($dieroll <= $s) {
 								echo "<li>The whole ME is SHAKEN";
@@ -560,7 +603,7 @@ class Game_model extends CI_Model {
 						$data->letter_icon = rand(1,6);
 					$this->db->insert('game_message',$data);
 				}
-				$distance = (int) (800 / $this->ground_scale);
+				$distance = $this->yards_to_inches(640);
 				echo "The officers and men of ".$unit->name." are in retreat - they must fall back $distance inches immediately.<p>";
 				echo "TODO: If any subunits of that ME are within engagement range of formed enemy cavalry, the owner of the cavalry may demand that retreating infantry units be pinned - which will cost the pinned unit an extra 2 fatigue points.<p>";
 				break;
@@ -588,7 +631,7 @@ class Game_model extends CI_Model {
 						$data->letter_icon = rand(1,6);
 					$this->db->insert('game_message',$data);
 				}
-				$distance = (int) (800 / $this->ground_scale);
+				$distance = $this->yards_to_inches(640);
 				echo "Unit ".$unit->name." breaks in shameful panic - they must run away a total of $distance inches immediately, facing away from the enemy, and in a state of general disorder.<p>";
 				break;
 			}
@@ -623,10 +666,7 @@ class Game_model extends CI_Model {
 			die ("No need to check Morale on turn 1 - that would be a terrible thing if troops failed before the game starts");
 		} 
 
-		if (!$game->ground_scale) {
-			$game->ground_scale=40;
-		}
-		$distance = (int) (400 / $game->ground_scale);
+		$distance = $this->yards_to_inches(400);
 		echo "<i>NOTE: Testing Proximity = $distance inches at 1\"=".$game->ground_scale."yds current game scale</i><p>";
 
 		echo "<b><u>Players and their units</u></b>";
@@ -1102,12 +1142,21 @@ class Game_model extends CI_Model {
 			if ($data->game_turn->wind_speed < 0) {
 				$data->game_turn->wind_speed = 0;
 			}
-			$data->rain = $this->game_turn->rain + rand(-3,2); // tendency towards no rain, it may rain for a little for an hour or 2, but will tend to no rain
-			if ($data->rain < 0) {
-				$data->rain = 0;
+			// Calculate amount of rain using the rain factor in the game.
+			// Note that if rain factor is 0, then it cannot rain at all in the game
+			// tendency towards no rain, it may rain for a little for an hour or 2, but will tend to no rain
+			if ($this->rain_factor) {
+				$low_rain = (int)($this->rain_factor * -1) - 1;
+				$hi_rain = (int)$this->rain_factor;
+				$data->rain = $this->game_turn->rain + rand($low_rain,$hi_rain);
+				if ($data->rain < 0) {
+					$data->rain = 0;
+				}
+			} else {
+				$this->rain = 0;
 			}
-			// Visibility gets worse as the battle continues, as smoke fills the area
-			$data->visibility = $this->game_turn->visibility + rand(-50,20) - ($data->rain * 20);
+			// Visibility generally gets worse as the battle continues, as smoke fills the area
+			$data->visibility = $this->game_turn->visibility + rand(-50,40) - ($data->rain * 20);
 
 			// calculate ground conditions depending on the last hours weather
 			$data->ground_conditions = $this->game_turn->ground_conditions;
