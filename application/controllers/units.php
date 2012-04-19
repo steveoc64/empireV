@@ -128,7 +128,7 @@ class Units extends MY_Controller
 		}
 		
 		// So far so good, now get the unit and associated game data
-		$unit = $this->unit_model->get($id,$this->game->id);
+		$unit = $this->game->get_unit($id);
 		if (!$unit) {
 			redirect('units');
 		}

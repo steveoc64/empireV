@@ -69,11 +69,11 @@ case TYPE_BATTERY:
 	break;
 }
 
-if ($unit->stats) {
-	$s1 = $unit->stats->initial_strength;
-	$s2 = $unit->stats->initial_officers;
-	$l1 = $unit->stats->casualties;
-	$l2 = $unit->stats->officers_killed;
+if ($unit) {
+	$s1 = $unit->initial_strength;
+	$s2 = $unit->initial_officers;
+	$l1 = $unit->casualties;
+	$l2 = $unit->officers_killed;
 
 	echo "<br>";
 	echo "<br>";
@@ -94,7 +94,7 @@ if ($unit->stats) {
 	echo "<font color=".COLOR_5."><b>Color 5</b></font><br>";
 	 /**/
 
-	echo "<b><u><font size=+1>Status Report as of ".$unit->hrs." in game ".$unit->game_id."</font></u></b><br><br>\n";
+	echo "<b><u><font size=+1>Status Report as of ".$game->hrs." in game ".$unit->game_id."</font></u></b><br><br>\n";
 	if ($cmd) {
 		echo "This officer has a well deserved reputation as a truly $unit->inspiration_descr leader.<br><br>\n";
 		echo "The professional competence of the staff could best be described as $unit->skill_descr<br><br>\n";
@@ -186,7 +186,7 @@ if ($unit->stats) {
 			break;
 		default:
 
-			if ($unit->stats->casualties == 0) {
+			if ($unit->casualties == 0) {
 				echo "<font color=".COLOR_1."><b>We have yet to lose a single man !</b></font><br>\n";
 			} elseif ($unit->percent_lost < 10.0) {
 				echo "<font color=".COLOR_2."><b>Insignificant losses, not worth reporting.</b></font><br>\n";
@@ -314,7 +314,7 @@ foreach ($query->result() as $row) {
 	}
 	// Calculate the hour
 	$turn = (int)$row->turn_number;
-	$hour = (int)$unit->start_hour + (int)$row->turn_number -1;
+	$hour = (int)$game->start_hour + (int)$row->turn_number -1;
 	if ($turn != $last_turn) {
 		if ($i) { echo "<img src=".site_url()."images/fancy-pants3.png><br>\n"; }
 		echo "<b> Time: $hour:00hrs</b> (Turn ".$row->turn_number.")<br>";

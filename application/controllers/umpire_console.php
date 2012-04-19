@@ -60,6 +60,12 @@ class Umpire_Console extends MY_Controller
 		}
 	}
 
+	function leader_attach_form() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->leader_attach_form();
+		}
+	}
+
 	function leader_attach_done() {
 		if ($this->check_role(array('A','U'))) {
 			$this->game->leader_attach_done();

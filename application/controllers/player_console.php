@@ -14,4 +14,8 @@ class Player_console extends MY_Controller
 	function refresh() {
 		$this->load->view('player_hq_refresh',array('game'=>$this->game));
 	}
+
+	function leader_attach_form() {
+		$this->game->leader_attach_form();
+	}
 }

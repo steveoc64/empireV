@@ -35,7 +35,13 @@ class Messages extends MY_Controller
 			$form->callback_column('turn_number',array($this,'turn_number'));
 			$form->callback_column('message',array($this,'message'));
 			$form->display_as('sent_turn','Sent');
-			$this->render($form->render(),"<h2>Messages Received from the Staff Officers</h2>$extras");
+			echo "<button id=mark_as_read>Mark all Messages as Read</button>";
+			echo "<button id=mark_as_unread>Unmark Messages from this Turn</button>";
+			$addscript = '<script>';
+			$addscript .= '("#mark_as_read").click(function() { $().get("messages/mark_as_read"); location.reload(); });';
+			$addscript .= '$("#mark_as_unread").click(function() { $().get("messages/mark_as_unread"); location.reload(); });';
+			$addscript .= '</script>';
+			$this->render($form->render(),"<h2>Messages Received from the Staff Officers</h2>$extras",$addscript);
 		} else {
 			$this->oops('You need to be logged in to a game to be able to view messages');
 		}
@@ -53,6 +59,23 @@ class Messages extends MY_Controller
 
 	function message($primary_key,$row) {
 		return $row->message;
+	}
+
+	function mark_as_read () {
+
+		if ($this->game) {
+			$this->db->query("update game_message set is_read='T' where game_id=".$this->game->id." and player_id=".$this->game->user->id." and turn_number <= ".$this->game->turn_number);
+			//echo $this->db->last_query();
+		}
+	}
+
+	function mark_as_unread () {
+
+		$turn = (int)$this->game->turn_number;
+		$last_turn = (int)$this->game->turn_number;
+		if ($this->game) {
+			$this->db->query("update game_message set is_read='F' where game_id=".$this->game->id." and player_id=".$this->game->user->id." and turn_number in (".$turn.',',$last_turn.')');
+		}
 	}
 
 }

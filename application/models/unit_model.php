@@ -18,13 +18,19 @@ define ('COLOR_6','#ff0000');
 
 Class Unit_model extends CI_Model {
 
-	function get($id, $game_id=0) {
+	function get($id, $game) {
 
-		$unit_data = $this->db->get_where('unit', array('id' => $id))->row();
-		if (!$unit_data) {
-			return null;
+		if ($game) {
+			$unit_data = $game->get_unit($id);
+			$unit_data->game_id = $game->id;
+			return $unit_data;
+		} else {
+			$unit_data = $this->db->get_where('unit', array('id' => $id))->row();
+			if (!$unit_data) {
+				return null;
+			}
+			$unit_data->game_id = 0;
 		}
-		$unit_data->game_id = $game_id;
 
 		$unit_data->inspiration_descr = '<font color='.COLOR_3.'>Lacking appropriate class.</font>';
 		$unit_data->skill_descr = '<font color='.COLOR_3.'>Not quite staff material.</font>';
@@ -33,31 +39,41 @@ Class Unit_model extends CI_Model {
 		switch($unit_data->unit_type) {
 		case TYPE_ARMY:
 			$unit_data->army = $this->db->get_where('unit_army', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->db->get_where('inspiration',array('id'=>$unit_data->army->inspiration))->row()->name;
-			$unit_data->skill_descr = $this->db->get_where('professional_skill',array('id'=>$unit_data->army->professional_skill))->row()->name;
-			$unit_data->doctrine_descr = $this->db->get_where('doctrine',array('id'=>$unit_data->army->doctrine))->row()->name;
+			if ($game) {
+			$unit_data->inspiration_descr = $game->get_inspiration($unit_data->army->inspiration)->name;
+			$unit_data->skill_descr = $game->get_professional_skill($unit_data->army->professional_skill)->name;
+			$unit_data->doctrine_descr = $game->get_doctrine($unit_data->army->doctrine)->name;
+			}
 			break;
 		case TYPE_CORPS:
 		case TYPE_WING:
 			$unit_data->corps = $this->db->get_where('unit_corps', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->db->get_where('inspiration',array('id'=>$unit_data->corps->inspiration))->row()->name;
-			$unit_data->skill_descr = $this->db->get_where('professional_skill',array('id'=>$unit_data->corps->professional_skill))->row()->name;
-			$unit_data->doctrine_descr = $this->db->get_where('doctrine',array('id'=>$unit_data->corps->doctrine))->row()->name;
+			if ($game) {
+			$unit_data->inspiration_descr = $game->get_inspiration($unit_data->corps->inspiration)->name;
+			$unit_data->skill_descr = $game->get_professional_skill($unit_data->corps->professional_skill)->name;
+			$unit_data->doctrine_descr = $game->get_doctrine($unit_data->corps->doctrine)->name;
+			}
 			break;
 		case TYPE_DIVISION:
 			$unit_data->division = $this->db->get_where('unit_division', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->db->get_where('inspiration',array('id'=>$unit_data->division->inspiration))->row()->name;
-			$unit_data->skill_descr = $this->db->get_where('professional_skill',array('id'=>$unit_data->division->professional_skill))->row()->name;
-			$unit_data->doctrine_descr = $this->db->get_where('doctrine',array('id'=>$unit_data->division->doctrine))->row()->name;
+			if ($game) {
+			$unit_data->inspiration_descr = $game->get_inspiration($unit_data->division->inspiration)->name;
+			$unit_data->skill_descr = $game->get_professional_skill($unit_data->division->professional_skill)->name;
+			$unit_data->doctrine_descr = $game->get_doctrine($unit_data->division->doctrine)->name;
+			}
 			break;
 		case TYPE_BRIGADE:
 			$unit_data->brigade = $this->db->get_where('unit_brigade', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->db->get_where('inspiration',array('id'=>$unit_data->brigade->inspiration))->row()->name;
-			$unit_data->drill_descr = $this->db->get_where('drill_type',array('id'=>$unit_data->brigade->drill))->row()->name;
+			if ($game) {
+			$unit_data->inspiration_descr = $game->get_inspiration($unit_data->brigade->inspiration)->name;
+			$unit_data->drill_descr = $game->get_drill($unit_data->brigade->drill)->name;
+			}
 			break;
 		case TYPE_CAV_BRIGADE:
 			$unit_data->cavbrigade = $this->db->get_where('unit_cavbrigade', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->db->get_where('inspiration',array('id'=>$unit_data->cavbrigade->inspiration))->row()->name;
+			if ($game) {
+			$unit_data->inspiration_descr = $game->get_inspiration($unit_data->cavbrigade->inspiration)->name;
+			}
 			break;
 		case TYPE_BATTALION:
 			$unit_data->battalion = $this->db->get_where('unit_battalion', array('id' => $unit_data->type_id))->row();
@@ -73,32 +89,30 @@ Class Unit_model extends CI_Model {
 		$unit_data->current_morale_state = $unit_data->morale_state;
 		$unit_data->current_fatigue = $unit_data->fatigue;
 		$unit_data->current_disorder = $unit_data->disorder;
-		if ($game_id) {
+		if ($game) {
 			// We are in a game, so dig deeper into the data to get the current status
 			// of the unit for the current game turn
-			$unit_data->stats = $this->db->get_where('game_unit_stats', array('game_id' => $game_id, 'unit_id' => $unit_data->id))->row();
-			$game_data = $this->db->get_where('game', array('id' => $game_id))->row();
+			$unit_data->stats = $this->db->get_where('game_unit_stats', array('game_id' => $game->id, 'unit_id' => $unit_data->id))->row();
 			$unit_data->current_morale_state = $unit_data->stats->morale_state;
 			$unit_data->current_fatigue = $unit_data->stats->fatigue;
 			$unit_data->current_disorder = $unit_data->stats->disorder;
-			$hour = $game_data->start_hour + $game_data->turn_number -1;
+			$hour = $game->start_hour + $game->turn_number -1;
 			$unit_data->hrs = sprintf("%02d:00hrs", $hour);
-			$unit_data->start_hour = $game_data->start_hour;
+			$unit_data->start_hour = $game->start_hour;
 
 			// get the unit's current orders for this game turn
-			$query = $this->db->query("select turn_number,activate_turn,player_name,order_type,objective,comments from game_order where game_id=$game_id and unit_id=$id and activate_turn > 0 order by activate_turn desc");
+			$query = $this->db->query("select turn_number,activate_turn,player_name,order_type,objective,comments from game_order where game_id=".$game->id." and unit_id=$id and activate_turn > 0 order by activate_turn desc");
 			$unit_data->orders = array();
 			foreach ($query->result() as $row) {
 				$unit_data->orders[] = $row;
-				if ($row->activate_turn <= $game_data->turn_number) {
+				if ($row->activate_turn <= $game->turn_number) {
 					$unit_data->current_order = $row;
-					$unit_data->current_order_type = $this->db->get_where('order_types',array('id'=>$row->order_type))->row()->name;
+					$unit_data->current_order_type = $game->get_order_type($row->order_type);
 				}
 			}
 
 		} else {
 			$unit_data->stats = null;
-			$game_data = null;
 			$unit_data->current_morale_state = 1;
 			$unit_data->current_fatigue = 0;
 			$unit_data->current_disorder = 0;
@@ -106,10 +120,18 @@ Class Unit_model extends CI_Model {
 
 		// decode some elements
 		if ($unit_data->unit_type >= TYPE_BATTALION) {
-			$unit_data->morale_grade_descr = $this->db->get_where('morale_grade',array('id'=>$unit_data->morale_grade))->row()->name;
-			$unit_data->small_arms_descr = $this->db->get_where('morale_grade',array('id'=>$unit_data->small_arms))->row()->name;
+			if ($game) {
+				$unit_data->morale_grade_descr = $game->get_morale_grade($unit_data->morale_grade)->name;
+				$unit_data->small_arms_descr = $game->get_morale_grade($unit_data->small_arms)->name;
+			} else {
+				$unit_data->morale_grade_descr = $this->db->get_where('morale_grade',array('id'=>$unit_data->morale_grade))->row()->name;
+				$unit_data->small_arms_descr = $this->db->get_where('morale_grade',array('id'=>$unit_data->small_arms))->row()->name;
+			}
 		}
-		$msd = $this->db->get_where('morale_states',array('id'=>$unit_data->current_morale_state))->row()->name;
+		$msd = '';
+		if ($game) {
+			$msd = $game->get_morale_state($unit_data->current_morale_state)->name;
+		}
 		switch($unit_data->current_morale_state) {
 		case 1: $unit_data->morale_state_descr = "<font color=".COLOR_1.">$msd</font>"; break;
 		case 2: $unit_data->morale_state_descr = "<font color=".COLOR_3.">$msd</font>"; break;
@@ -148,11 +170,22 @@ Class Unit_model extends CI_Model {
 
 		// Get the game scale, and work out number of figures / bases
 		$unit_data->scale = 60;
-		if ($game_data) {
-			$unit_data->scale = (int) $game_data->figure_scale;
+		$figs_per_inf_base = 3;
+		$figs_per_cav_base = 2;
+		if ($game) {
+			$unit_data->scale = (int) $game->figure_scale;
 			if ($unit_data->scale < 2) {
 				$unit_data->scale = 60;
 			}
+			$figs_per_inf_base = (int)$game->infantry_base;
+			$figs_per_cav_base = (int)$game->cavalry_base;
+		}
+		// ensure no DIV0
+		if (!$figs_per_inf_base) {
+			$figs_per_inf_base = 3;
+		}
+		if (!$figs_per_cav_base) {
+			$figs_per_cav_base = 2;
 		}
 
 		// Work out the original number of bases depending on the game scale in use
@@ -160,11 +193,11 @@ Class Unit_model extends CI_Model {
 		switch($unit_data->unit_type) {
 		case TYPE_BATTALION:
 			$unit_data->initial_num_figures = (int) ($unit_data->strength / $unit_data->scale);
-			$unit_data->initial_num_bases = (int) (($unit_data->initial_num_figures + 2) / 3);
+			$unit_data->initial_num_bases = (int) (($unit_data->initial_num_figures + $figs_per_inf_base - 1) / $figs_per_inf_base);
 			break;
 		case TYPE_SQUADRON:
 			$unit_data->initial_num_figures = (int) ($unit_data->strength / $unit_data->scale);
-			$unit_data->initial_num_bases = (int) (($unit_data->initial_num_figures + 1) / 2);
+			$unit_data->initial_num_bases = (int) (($unit_data->initial_num_figures + $figs_per_cav_base - 1) / $figs_per_cav_base);
 			break;
 		case TYPE_BATTERY:
 			$unit_data->initial_num_figures = (int) $unit_data->battery->gun_models;
@@ -176,15 +209,15 @@ Class Unit_model extends CI_Model {
 
 
 		// Get the game scale, and work out number of figures / bases
-		if ($game_data) {
+		if ($game) {
 			switch($unit_data->unit_type) {
 			case TYPE_BATTALION:
 				$unit_data->num_figures = (int) ($unit_data->current_strength / $unit_data->scale);
-				$unit_data->num_bases = (int) (($unit_data->num_figures + 2) / 3);
+				$unit_data->num_bases = (int) (($unit_data->num_figures + $figs_per_inf_base - 1) / $figs_per_inf_base);
 				break;
 			case TYPE_SQUADRON:
 				$unit_data->num_figures = (int) ($unit_data->current_strength / $unit_data->scale);
-				$unit_data->num_bases = (int) (($unit_data->num_figures + 1) / 2);
+				$unit_data->num_bases = (int) (($unit_data->num_figures + $figs_per_cav_base - 1) / $figs_per_cav_base);
 				break;
 			case TYPE_BATTERY:
 				$crew = $unit_data->battery->crew_figures;
@@ -251,7 +284,7 @@ Class Unit_model extends CI_Model {
 	function add_casualties ($unit,$game_id,$turn_number,$kills,$fatigue,$disorder,$morale,$flee) {
 	}
 
-	function is_shaken ($game_id,$turn_number,$unit) {
+	function is_shaken ($game,$unit) {
 		if (is_object($unit) && isset($unit->id)) {
 			// Just add a fatigue point, and add a random amount of disorder to the unit
 			// between 10-60% disorder 
@@ -265,17 +298,17 @@ Class Unit_model extends CI_Model {
 				// between 0 and 2% of initial strength runs away
 				$percent = rand(0,2);
 				if ($percent) {
-					$c = (int)(($percent * $unit->stats->initial_strength)/100);
+					$c = (int)(($percent * $unit->initial_strength)/100);
 					$extra = ' Dozens of men have fled the ranks in fear';
 				}
 				break;
 			}
-			$this->db->query("update game_unit_stats set fatigue=fatigue+1,disorder=disorder+$d,morale_state=2,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
-			$this->cap_max($game_id,$unit->id);
+			$this->db->query("update game_unit_stats set fatigue=fatigue+1,disorder=disorder+$d,morale_state=2,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game->id." and unit_id=".$unit->id);
+			$this->cap_max($game,$unit->id);
 			
 			// Create a change of morale event
 			$data = new stdClass;
-				$data->game_id = $game_id;
+				$data->game_id = $game->id;
 				$data->turn_number = $turn_number;
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
@@ -286,7 +319,7 @@ Class Unit_model extends CI_Model {
 		}
 	}
 
-	function is_retreating ($game_id,$turn_number,$unit) {
+	function is_retreating ($game,$unit) {
 		if (is_object($unit) && isset($unit->id)) {
 			// Just add 2 fatigue points, and add a random amount of disorder to the unit
 			// between 30-90% disorder 
@@ -300,7 +333,7 @@ Class Unit_model extends CI_Model {
 				// between 0 and 10% of initial strength runs away
 				$percent = rand(0,10);
 				if ($percent) {
-					$c = (int)(($percent * $unit->stats->initial_strength)/100);
+					$c = (int)(($percent * $unit->initial_strength)/100);
 					$extra = ' Scores of cowards have left the ranks in disgrace';
 				} else {
 					$extra = ' Discipline remains excellent';
@@ -308,12 +341,12 @@ Class Unit_model extends CI_Model {
 				break;
 			}
 
-			$this->db->query("update game_unit_stats set fatigue=fatigue+2,disorder=disorder+$d,morale_state=3,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
-			$this->cap_max($game_id,$unit->id);
+			$this->db->query("update game_unit_stats set fatigue=fatigue+2,disorder=disorder+$d,morale_state=3,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game->id." and unit_id=".$unit->id);
+			$this->cap_max($game,$unit->id);
 			
 			// Create a change of morale event
 			$data = new stdClass;
-				$data->game_id = $game_id;
+				$data->game_id = $game->id;
 				$data->turn_number = $turn_number;
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
@@ -329,7 +362,7 @@ Class Unit_model extends CI_Model {
 		}
 	}
 
-	function is_broken ($game_id,$turn_number,$unit) {
+	function is_broken ($game,$unit) {
 		if (is_object($unit) && isset($unit->id)) {
 			// Just add 6 fatigue points, and add a random amount of disorder to the unit
 			// between 50-100% disorder 
@@ -343,20 +376,20 @@ Class Unit_model extends CI_Model {
 				// between 0 and 25% of initial strength runs away
 				$percent = rand(0,25);
 				if ($percent) {
-					$c = (int)(($percent * $unit->stats->initial_strength)/100);
+					$c = (int)(($percent * $unit->initial_strength)/100);
 					$extra = ' Great droves of the scoundrels have deserted the colours in utter disgrace';
 				}
 				break;
 			}
 
-			$this->db->query("update game_unit_stats set fatigue=fatigue+6,disorder=disorder+$d,morale_state=4,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game_id." and unit_id=".$unit->id);
+			$this->db->query("update game_unit_stats set fatigue=fatigue+6,disorder=disorder+$d,morale_state=4,casualties=casualties+$c,casualties_this_hour=casualties_this_hour+$c,fled=fled+$c where game_id=".$game->id." and unit_id=".$unit->id);
 			// Any unlimbered artillery in this unit abandon their guns - the utter cowards !
-			$this->db->query("update game_unit_stats set guns_abandoned='T' where is_limbered='F' and game_id=".$game_id." and unit_id=".$unit->id);
-			$this->cap_max($game_id,$unit->id);
+			$this->db->query("update game_unit_stats set guns_abandoned='T' where is_limbered='F' and game_id=".$game->id." and unit_id=".$unit->id);
+			$this->cap_max($game,$unit->id);
 	
 			// Create a change of morale event
 			$data = new stdClass;
-				$data->game_id = $game_id;
+				$data->game_id = $game->id;
 				$data->turn_number = $turn_number;
 				$data->unit_id = $unit->id;
 				$data->event_type = 23;
@@ -373,12 +406,12 @@ Class Unit_model extends CI_Model {
 		}
 	}
 
-	function cap_max($game_id,$unit_id) {
-		$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game_id." and unit_id=".$unit_id." and casualties > initial_strength");
-		$this->db->query("update game_unit_stats set casualties_this_hour=initial_strength where game_id=".$game_id." and unit_id=".$unit_id." and casualties_this_hour > initial_strength");
-		$this->db->query("update game_unit_stats set fatigue=breakpoint where game_id=".$game_id." and unit_id=".$unit_id." and fatigue > breakpoint");
-		$this->db->query("update game_unit_stats set fled=initial_strength where game_id=".$game_id." and unit_id=".$unit_id." and fled > initial_strength");
-		$this->db->query("update game_unit_stats set disorder=100 where game_id=".$game_id." and unit_id=".$unit_id." and disorder > 100");
+	function cap_max($game,$unit_id) {
+		$this->db->query("update game_unit_stats set casualties=initial_strength where game_id=".$game->id." and unit_id=".$unit_id." and casualties > initial_strength");
+		$this->db->query("update game_unit_stats set casualties_this_hour=initial_strength where game_id=".$game->id." and unit_id=".$unit_id." and casualties_this_hour > initial_strength");
+		$this->db->query("update game_unit_stats set fatigue=breakpoint where game_id=".$game->id." and unit_id=".$unit_id." and fatigue > breakpoint");
+		$this->db->query("update game_unit_stats set fled=initial_strength where game_id=".$game->id." and unit_id=".$unit_id." and fled > initial_strength");
+		$this->db->query("update game_unit_stats set disorder=100 where game_id=".$game->id." and unit_id=".$unit_id." and disorder > 100");
 	}
 
 

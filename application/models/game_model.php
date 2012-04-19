@@ -54,6 +54,367 @@ function ace_adjust($start_ace,$add) {
 }
 
 class Game_model extends CI_Model {
+	
+	function __construct() {
+		parent::__construct();
+
+		// Get various lookup data
+		$query = $this->db->get('order_types');
+		$this->order_types = array();
+		foreach ($query->result() as $row) {
+			$this->order_types[] = $row;
+		}
+		$query = $this->db->get('professional_skill');
+		$this->professional_skill = array();
+		foreach ($query->result() as $row) {
+			$this->professional_skill[] = $row;
+		}
+		$query = $this->db->get('doctrine');
+		$this->doctrine = array();
+		foreach ($query->result() as $row) {
+			$this->doctrine[] = $row;
+		}
+		$query = $this->db->get('inspiration');
+		$this->inspiration = array();
+		foreach ($query->result() as $row) {
+			$this->inspiration[] = $row;
+		}
+		$query = $this->db->get('drill_type');
+		$this->drill = array();
+		foreach ($query->result() as $row) {
+			$this->drill[] = $row;
+		}
+		$query = $this->db->get('morale_states');
+		$this->morale_state = array();
+		foreach ($query->result() as $row) {
+			$this->morale_state[] = $row;
+		}
+		$query = $this->db->get('morale_grade');
+		$this->morale_grade = array();
+		foreach ($query->result() as $row) {
+			$this->morale_grade[] = $row;
+		}
+
+		$this->unit_cache = array();
+	}
+
+	function cache_all_units() {
+
+		// Create a cache of units already
+		$this->db->select('*');
+		$this->db->from('game_unit_stats');
+		$this->db->where('game_id',$this->id);
+		$this->db->join('unit','unit.id=game_unit_stats.unit_id','left');
+		$query = $this->db->get();
+		foreach ($query->result() as $row)
+		{
+			$row->expanded = false;
+			$this->unit_cache[] = $row;
+		}
+	}
+
+	function cache_player_units($player_id) {
+
+		// Create a cache of units already
+		$this->db->select('*');
+		$this->db->from('game_unit_stats');
+		$this->db->where('game_id',$this->id);
+		$this->db->where('player_id',$player_id);
+		$this->db->join('unit','unit.id=game_unit_stats.unit_id','left');
+		$query = $this->db->get();
+		foreach ($query->result() as $row)
+		{
+			$row->expanded = false;
+			$this->unit_cache[] = $row;
+		}
+	}
+
+
+	function get_unit_cache($id) {
+
+		foreach ($this->unit_cache as $_) {
+			if ($_->id == $id) {
+				//echo "$id is cached, expanded = ".$_->expanded."<br>\n";
+				return $_;
+			}
+		}
+		//echo "$id is not cached<br>\n";
+		return null;
+	}
+
+	function get_unit($id) {
+
+		$unit_data = $this->get_unit_cache($id);
+		if (!$unit_data) {
+			// Dont have this unit in the cache yet, so grab it from the database
+			$this->db->select('*');
+			$this->db->from('unit');
+			$this->db->where('unit.id',$id);
+			// CI backquoteing work-around !
+			$this->db->join('game_unit_stats','game_unit_stats.game_id in('.$this->id.') and game_unit_stats.unit_id=unit.id','left');
+			$unit_data = $this->db->get()->row();
+			$unit_data->expanded = false;
+
+			// Add it to the cache now, as an non-expanded record
+			$this->unit_cache[] = $unit_data;
+		}
+
+
+		if (!$unit_data) {
+			return null;
+		}
+		// If we have already gone through and expanded the unit details out, then return now, save us
+		// doing a pile more lookups
+		if ($unit_data->expanded) {
+			return $unit_data;
+		}
+		$unit_data->game_id = $this->id;
+
+		$unit_data->inspiration_descr = '<font color='.COLOR_3.'>Lacking appropriate class.</font>';
+		$unit_data->skill_descr = '<font color='.COLOR_3.'>Not quite staff material.</font>';
+		$unit_data->doctrine_descr = '<font color='.COLOR_3.'>As instructed by Commander.</font>';
+		$unit_data->drill_descr = '<font color='.COLOR_3.'>As instructed by Commander.</font>';
+		switch($unit_data->unit_type) {
+		case TYPE_ARMY:
+			$unit_data->army = $this->db->get_where('unit_army', array('id' => $unit_data->type_id))->row();
+			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->army->inspiration)->name;
+			$unit_data->skill_descr = $this->get_professional_skill($unit_data->army->professional_skill)->name;
+			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->army->doctrine)->name;
+			break;
+		case TYPE_CORPS:
+		case TYPE_WING:
+			$unit_data->corps = $this->db->get_where('unit_corps', array('id' => $unit_data->type_id))->row();
+			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->corps->inspiration)->name;
+			$unit_data->skill_descr = $this->get_professional_skill($unit_data->corps->professional_skill)->name;
+			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->corps->doctrine)->name;
+			break;
+		case TYPE_DIVISION:
+			$unit_data->division = $this->db->get_where('unit_division', array('id' => $unit_data->type_id))->row();
+			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->division->inspiration)->name;
+			$unit_data->skill_descr = $this->get_professional_skill($unit_data->division->professional_skill)->name;
+			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->division->doctrine)->name;
+			break;
+		case TYPE_BRIGADE:
+			$unit_data->brigade = $this->db->get_where('unit_brigade', array('id' => $unit_data->type_id))->row();
+			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->brigade->inspiration)->name;
+			$unit_data->drill_descr = $this->get_drill($unit_data->brigade->drill)->name;
+			break;
+		case TYPE_CAV_BRIGADE:
+			$unit_data->cavbrigade = $this->db->get_where('unit_cavbrigade', array('id' => $unit_data->type_id))->row();
+			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->cavbrigade->inspiration)->name;
+			break;
+		case TYPE_BATTALION:
+			$unit_data->battalion = $this->db->get_where('unit_battalion', array('id' => $unit_data->type_id))->row();
+			break;
+		case TYPE_SQUADRON:
+			$unit_data->squadron = $this->db->get_where('unit_squadron', array('id' => $unit_data->type_id))->row();
+			break;
+		case TYPE_BATTERY:
+			$unit_data->battery = $this->db->get_where('unit_battery', array('id' => $unit_data->type_id))->row();
+			break;
+		}
+
+		$unit_data->current_morale_state = $unit_data->morale_state;
+		$unit_data->current_fatigue = $unit_data->fatigue;
+		$unit_data->current_disorder = $unit_data->disorder;
+		
+		// Dig deeper into the data to get the current status
+		// of the unit for the current game turn
+		//$unit_data = $this->db->get_where('game_unit_stats', array('game_id' => $this->id, 'unit_id' => $unit_data->id))->row();
+		$unit_data->current_morale_state = $unit_data->morale_state;
+		$unit_data->current_fatigue = $unit_data->fatigue;
+		$unit_data->current_disorder = $unit_data->disorder;
+
+		// get the unit's current orders for this game turn
+		$query = $this->db->query("select turn_number,activate_turn,player_name,order_type,objective,comments from game_order where game_id=".$this->id." and unit_id=$id and activate_turn > 0 order by activate_turn desc");
+		$unit_data->orders = array();
+		foreach ($query->result() as $row) {
+			$unit_data->orders[] = $row;
+			if ($row->activate_turn <= $this->turn_number) {
+				$unit_data->current_order = $row;
+				$unit_data->current_order_type = $this->get_order_type($row->order_type);
+			}
+		}
+
+		// decode some elements
+		if ($unit_data->unit_type >= TYPE_BATTALION) {
+			$unit_data->morale_grade_descr = $this->get_morale_grade($unit_data->morale_grade)->name;
+			$unit_data->small_arms_descr = $this->get_morale_grade($unit_data->small_arms)->name;
+		}
+		$msd = $this->get_morale_state($unit_data->current_morale_state)->name;
+		switch($unit_data->current_morale_state) {
+		case 1: $unit_data->morale_state_descr = "<font color=".COLOR_1.">$msd</font>"; break;
+		case 2: $unit_data->morale_state_descr = "<font color=".COLOR_3.">$msd</font>"; break;
+		case 3: $unit_data->morale_state_descr = "<font color=".COLOR_5.">$msd</font>"; break;
+		case 4: $unit_data->morale_state_descr = "<font color=".COLOR_6."><b>$msd</b></font>"; break;
+		}
+
+		$fatigue = (int)$unit_data->current_fatigue;
+		if ($fatigue == 0) {
+			$unit_data->fatigue_descr = '<font color='.COLOR_1.'>The men are Fresh and full of Vigor.</font>';
+		} elseif ($fatigue < 3) {
+			$unit_data->fatigue_descr = '<font color='.COLOR_2.'>The men are Fit and ready for Battle.</font>';
+		} elseif ($fatigue < 5) {
+			$unit_data->fatigue_descr = '<font color='.COLOR_3.'>The men are Tiring.</font>';
+		} elseif ($fatigue < 8) {
+			$unit_data->fatigue_descr = '<font color='.COLOR_4.'>The men are nearing Exhaustion.</font>';
+		} elseif ($fatigue < 10) {
+			$unit_data->fatigue_descr = '<font color='.COLOR_5.'>The men Must Rest !.</font>';
+		} elseif ($fatigue < 20) {
+			$unit_data->fatigue_descr = '<font color='.COLOR_6.'>The men are Dead Tired, and no longer fit for battle.</font>';
+		} else {
+			$unit_data->fatigue_descr = '<font color='.COLOR_5.'><b>All is lost! the men are dropping from exhaustion.</b></font>';
+		}
+
+		// Pre calculate some derived values for convenience
+		$unit_data->percent_lost = 0;
+		$unit_data->percent_lost_this_hour = 0;
+		$unit_data->current_strength = $unit_data->strength;
+		if  ($unit_data->initial_strength > 0) {
+			$unit_data->percent_lost = (100.0 * $unit_data->casualties) / $unit_data->initial_strength;
+			$unit_data->percent_lost_this_hour = (100.0 * $unit_data->casualties_this_hour) / $unit_data->initial_strength;
+		}
+		$unit_data->current_strength = $unit_data->initial_strength - $unit_data->casualties;
+
+		// Get the game scale, and work out number of figures / bases
+		$unit_data->scale = 60;
+		$figs_per_inf_base = 3;
+		$figs_per_cav_base = 2;
+		$unit_data->scale = (int) $this->figure_scale;
+		if ($unit_data->scale < 2) {
+			$unit_data->scale = 60;
+		}
+		$figs_per_inf_base = (int)$this->infantry_base;
+		$figs_per_cav_base = (int)$this->cavalry_base;
+		
+		// ensure no DIV0
+		if (!$figs_per_inf_base) {
+			$figs_per_inf_base = 3;
+		}
+		if (!$figs_per_cav_base) {
+			$figs_per_cav_base = 2;
+		}
+
+		// Work out the original number of bases depending on the game scale in use
+		// If no game in in progress, use the default Empire scaling of 1:60
+		switch($unit_data->unit_type) {
+		case TYPE_BATTALION:
+			$unit_data->initial_num_figures = (int) ($unit_data->strength / $unit_data->scale);
+			$unit_data->initial_num_bases = (int) (($unit_data->initial_num_figures + $figs_per_inf_base - 1) / $figs_per_inf_base);
+			break;
+		case TYPE_SQUADRON:
+			$unit_data->initial_num_figures = (int) ($unit_data->strength / $unit_data->scale);
+			$unit_data->initial_num_bases = (int) (($unit_data->initial_num_figures + $figs_per_cav_base - 1) / $figs_per_cav_base);
+			break;
+		case TYPE_BATTERY:
+			$unit_data->initial_num_figures = (int) $unit_data->battery->gun_models;
+			$unit_data->initial_num_bases = $unit_data->initial_num_figures;
+			break;
+		default:
+			$unit_data->initial_num_bases = $unit_data->initial_num_figures = 1;
+		}
+
+
+		// Get the game scale, and work out number of figures / bases
+		switch($unit_data->unit_type) {
+		case TYPE_BATTALION:
+			$unit_data->num_figures = (int) ($unit_data->current_strength / $unit_data->scale);
+			$unit_data->num_bases = (int) (($unit_data->num_figures + $figs_per_inf_base - 1) / $figs_per_inf_base);
+			break;
+		case TYPE_SQUADRON:
+			$unit_data->num_figures = (int) ($unit_data->current_strength / $unit_data->scale);
+			$unit_data->num_bases = (int) (($unit_data->num_figures + $figs_per_cav_base - 1) / $figs_per_cav_base);
+			break;
+		case TYPE_BATTERY:
+			$crew = $unit_data->battery->crew_figures;
+			if (!$crew) { $crew = 3; }
+			$unit_data->num_figures = (int) $unit_data->current_strength;
+			$unit_data->num_bases = $unit_data->num_figures / $crew;
+			break;
+		default:
+			$unit_data->num_bases = $unit_data->num_figures = 1;
+		}
+
+		$unit_data->expanded = true;
+		return $unit_data;
+	}
+
+
+	// Add a few helper functions to use lookup cached lookup tables for database queries on static
+	// lookup data, rather than hammering the mysql server with endless little queries !
+	function get_order_type ($order_type) {
+
+		foreach ($this->order_types as $_) {
+			if ($_->id == $order_type) return $_;
+		}
+		$_ = new stdClass;
+		$_->name = "Unknown Order $order_type";
+		return $_;
+	}
+
+	function get_professional_skill ($skill) {
+
+		foreach ($this->professional_skill as $_) {
+			if ($_->id == $skill) return $_;
+		}
+		$_ = new stdClass;
+		$_->name = "Unknown Skill $skill";
+		return $_;
+	}
+
+	function get_doctrine ($doctrine) {
+
+		foreach ($this->doctrine as $_) {
+			if ($_->id == $doctrine) return $_;
+		}
+		$_ = new stdClass;
+		$_->name = "Unknown Doctrine $doctrine";
+		return $_;
+	}
+
+	function get_inspiration ($inspiration) {
+
+		foreach ($this->inspiration as $_) {
+			if ($_->id == $inspiration) return $_;
+		}
+		$_ = new stdClass;
+		$_->name = "Unknown Inspiration $inspiration";
+		return $_;
+	}
+
+	function get_drill ($drill) {
+
+		foreach ($this->drill as $_) {
+			if ($_->id == $drill) return $_;
+		}
+		$_ = new stdClass;
+		$_->name = "Unknown Drill $drill";
+		return $_;
+	}
+
+	function get_morale_state ($ms) {
+
+		foreach ($this->morale_state as $_) {
+			if ($_->id == $ms) return $_;
+		}
+		$_ = new stdClass;
+		$_->name = "Unknown Morale State $ms";
+		return $_;
+	}
+
+	function get_morale_grade ($mg) {
+
+		foreach ($this->morale_grade as $_) {
+			if ($_->id == $mg) return $_;
+		}
+		$_ = new stdClass;
+		$_->name = "Unknown Morale Grade $mg";
+		return $_;
+	}
+
+
+
+
 
 	function start_game($scenario_id) {
 		$this->db->query("insert into game (scenario_id,start_hour,current_hour) values ($scenario_id,5,5)");
@@ -166,15 +527,19 @@ class Game_model extends CI_Model {
 		}
 
 		// We have a game, so accumulate some details into the return value
+		// accumulate the ME list, as well as the commanders list
 		if ($this->user->commander_id) {
 			$this->unit_id_range = $this->get_unit_id_range($this->user->commander_id);
 			$this->unit_where_range = "(unit.id >= ".$this->unit_id_range->start_id." and unit.id <= ".$this->unit_id_range->end_id.")";
 			// Get a list of the top level commands, and their current orders
-			$this->me = $this->get_me_list($game_id,$this->unit_id_range->start_id,$this->unit_id_range->end_id);
+			$this->me = $this->get_me_list($this->unit_id_range->start_id,$this->unit_id_range->end_id);
+			$this->commanders = $this->get_commander_list($this->unit_id_range->start_id,$this->unit_id_range->end_id);
 		} else {
 			$this->unit_id_range = new stdClass;
 			$this->unit_id_range->start_id = $this->unit_id_range->end_id = 0;
 			$this->unit_where_range = '';
+			$this->me = array();
+			$this->commanders = array();
 		}
 
 		// Get the weather details in a nice format
@@ -252,18 +617,87 @@ class Game_model extends CI_Model {
 		$retval->end_id =  $last_id;
 		return $retval;
 	}
+	
+	// Across a given range of unit IDs, return an array of units that are commanders (which can be attached to other units)
+	// Note that each unit in the array will include an array of subunits that the commander can attach to.
+	// This function will also calulate the total strength, casualties and avg morale
+	// grade for each top level commander
+	function get_commander_list ($start_unit, $end_unit) {
+
+		$retval = array();
+		$query = $this->db->query("select id from unit where id >= $start_unit and id <= $end_unit and is_command='T' order by id");
+		foreach ($query->result() as $row) {
+			$unit = $this->get_unit($row->id);
+			$this->get_commander_subunits($unit);
+			$retval[] = $unit;
+		}
+		return $retval;
+	}
+
+	// For a given unit (which is known to be a commander), attach an array of subunits to the commander
+	// and calculate the total strength, casualties and avg morale grade for the commander
+	function get_commander_subunits ($commander) {
+
+		$range = $this->get_unit_id_range($commander->id);
+		$query = $this->db->query("select id from unit where id > ".$range->start_id." and id <= ".$range->end_id);
+		$commander->initial_strength = 0;
+		$commander->casualties = 0;
+	       	$commander->did_close_combat = 0;
+		$commander->won_close_combat = 0;
+		$commander->casualties_this_hour = 0;
+		$commander->num_subunits = 0;
+		$commander->avg_morale = 0;
+		$commander->me_subunit = array();
+		foreach ($query->result() as $row) {
+			$unit = $this->get_unit($row->id);
+			$commander->commander_subunit[] = $unit;
+			$commander->initial_strength += $unit->initial_strength;
+			$commander->casualties += $unit->casualties;
+			$commander->did_close_combat += $unit->did_close_combat;
+			$commander->won_close_combat += $unit->won_close_combat;
+			$commander->casualties_this_hour += $unit->casualties_this_hour;
+			// For sub-units that drop to below 100 men in effective strength, then dont
+			// bother counting them in the calculating average morale anymore.
+			// If all the dross in the ME have run away, leaving a couple of elite
+			// units, then the whole (remaining) ME is now elite.
+			if ($unit->unit_type == 12 || ($unit->initial_strength - $unit->casualties) > 100) {
+				$commander->num_subunits ++;
+				$commander->avg_morale += $unit->morale_grade;
+			}
+		}
+
+		// Based on the totals, calculate the average morale
+		if ($commander->num_subunits) {
+			$commander->avg_morale = (int)($commander->avg_morale / $commander->num_subunits);
+			$commander->avg_morale_name = $this->get_morale_grade($commander->avg_morale)->name;
+		} else {
+			$commander->avg_morale_name = '';
+			$commander->avg_morale = 7;
+			echo "<hr><font color=red>WARNING: ME Unit ".$commander->id." - ".$commander->name." has no subunits .. that wont work very well.<p>You really should fix the ORBAT file for this unit, or turn off the 'is ME' flag for this unit.</font><p>First deselect the current game from the <a href=".site_url()."game target=_blank>Game List</a>, and then Click <a href=".site_url()."units/index/edit/".$commander->id.">HERE</a> to fix this unit.<p>In the meantime, I am going to have to treat this unit as Conscript morale grade for Average ME morale. So the ME wont last long on the battlefield until the data is fixed :)<hr>";
+		}
+		
+		// Pre calculate some derived values (on the top level ME) for convenience
+		$commander->percent_lost = 0;
+		if  ($commander->initial_strength > 0) {
+			$commander->percent_lost = (int)((100.0 * $commander->casualties) / $commander->initial_strength);
+			$commander->percent_lost_this_hour = (int)((100.0 * $commander->casualties_this_hour) / $commander->initial_strength);
+		}
+		$commander->current_strength = $commander->initial_strength - $commander->casualties;
+	}
+
+
 
 	// Across a given range of unit IDs, return an array of units that are MEs
 	// Note that each unit in the array will include an array of subunits.
 	// This function will also calulate the total strength, casualties and avg morale
 	// grade for each top level ME
-	function get_me_list ($game_id,$start_unit, $end_unit) {
+	function get_me_list ($start_unit, $end_unit) {
 
 		$retval = array();
 		$query = $this->db->query("select id from unit where id >= $start_unit and id <= $end_unit and is_me='T' order by id");
 		foreach ($query->result() as $row) {
-			$unit = $this->unit_model->get($row->id,$game_id);
-			$this->get_me_subunits($game_id,$unit);
+			$unit = $this->get_unit($row->id);
+			$this->get_me_subunits($unit);
 			$retval[] = $unit;
 		}
 		return $retval;
@@ -271,32 +705,31 @@ class Game_model extends CI_Model {
 
 	// For a given unit (which is known to be an ME), attach an array of subunits to the ME
 	// and calculate the total strength, casualties and avg morale grade for the ME
-	function get_me_subunits ($game_id,$me_unit) {
+	function get_me_subunits ($me_unit) {
 
-		$this->load->model('unit_model');
 		$me_id = $me_unit->id;
 		$query = $this->db->query("select id from unit where parent_me = $me_id order by id");
-		$me_unit->stats->initial_strength = 0;
-		$me_unit->stats->casualties = 0;
-	       	$me_unit->stats->did_close_combat = 0;
-		$me_unit->stats->won_close_combat = 0;
-		$me_unit->stats->casualties_this_hour = 0;
+		$me_unit->initial_strength = 0;
+		$me_unit->casualties = 0;
+	       	$me_unit->did_close_combat = 0;
+		$me_unit->won_close_combat = 0;
+		$me_unit->casualties_this_hour = 0;
 		$me_unit->num_subunits = 0;
 		$me_unit->avg_morale = 0;
 		$me_unit->me_subunit = array();
 		foreach ($query->result() as $row) {
-			$unit = $this->unit_model->get($row->id,$game_id);
+			$unit = $this->get_unit($row->id);
 			$me_unit->me_subunit[] = $unit;
-			$me_unit->stats->initial_strength += $unit->stats->initial_strength;
-			$me_unit->stats->casualties += $unit->stats->casualties;
-			$me_unit->stats->did_close_combat += $unit->stats->did_close_combat;
-			$me_unit->stats->won_close_combat += $unit->stats->won_close_combat;
-			$me_unit->stats->casualties_this_hour += $unit->stats->casualties_this_hour;
+			$me_unit->initial_strength += $unit->initial_strength;
+			$me_unit->casualties += $unit->casualties;
+			$me_unit->did_close_combat += $unit->did_close_combat;
+			$me_unit->won_close_combat += $unit->won_close_combat;
+			$me_unit->casualties_this_hour += $unit->casualties_this_hour;
 			// For sub-units that drop to below 100 men in effective strength, then dont
 			// bother counting them in the calculating average morale anymore.
 			// If all the dross in the ME have run away, leaving a couple of elite
 			// units, then the whole (remaining) ME is now elite.
-			if ($unit->unit_type == 12 || ($unit->stats->initial_strength - $unit->stats->casualties) > 100) {
+			if ($unit->unit_type == 12 || ($unit->initial_strength - $unit->casualties) > 100) {
 				$me_unit->num_subunits ++;
 				$me_unit->avg_morale += $unit->morale_grade;
 			}
@@ -306,12 +739,7 @@ class Game_model extends CI_Model {
 		if ($me_unit->num_subunits) {
 			//{ echo "id = ".$me_unit->id." am = ".$me_unit->avg_morale." ns = ".$me_unit->num_subunits; }
 			$me_unit->avg_morale = (int)($me_unit->avg_morale / $me_unit->num_subunits);
-			//{ echo " calced am = ".$me_unit->avg_morale."<br>"; }
-			$query = $this->db->get_where('morale_grade',array('id'=>$me_unit->avg_morale));
-			$me_unit->avg_morale_name = '';
-			if ($row = $query->row()) {
-				$me_unit->avg_morale_name = $row->name;
-			}
+			$me_unit->avg_morale_name = $this->get_morale_grade($me_unit->avg_morale)->name;
 		} else {
 			$me_unit->avg_morale_name = '';
 			$me_unit->avg_morale = 7;
@@ -320,11 +748,11 @@ class Game_model extends CI_Model {
 		
 		// Pre calculate some derived values (on the top level ME) for convenience
 		$me_unit->percent_lost = 0;
-		if  ($me_unit->stats->initial_strength > 0) {
-			$me_unit->percent_lost = (int)((100.0 * $me_unit->stats->casualties) / $me_unit->stats->initial_strength);
-			$me_unit->percent_lost_this_hour = (int)((100.0 * $me_unit->stats->casualties_this_hour) / $me_unit->stats->initial_strength);
+		if  ($me_unit->initial_strength > 0) {
+			$me_unit->percent_lost = (int)((100.0 * $me_unit->casualties) / $me_unit->initial_strength);
+			$me_unit->percent_lost_this_hour = (int)((100.0 * $me_unit->casualties_this_hour) / $me_unit->initial_strength);
 		}
-		$me_unit->current_strength = $me_unit->stats->initial_strength - $me_unit->stats->casualties;
+		$me_unit->current_strength = $me_unit->initial_strength - $me_unit->casualties;
 	}
 
 	function get_orders () {
@@ -410,7 +838,7 @@ class Game_model extends CI_Model {
 		foreach ($query->result() as $row) {
 			echo "<br><b><u>Commander ".$row->username."</u></b><br>";
 			$unit_range = $this->get_unit_id_range($row->commander_id);
-			$me_list = $this->get_me_list($game_id,$unit_range->start_id,$unit_range->end_id);
+			$me_list = $this->get_me_list($unit_range->start_id,$unit_range->end_id);
 			// we now have a list of the MEs for this user
 			foreach ($me_list as $unit) {
 				//echo "  Unit : [".$unit->id."] - ".$unit->name." : ";
@@ -419,20 +847,20 @@ class Game_model extends CI_Model {
 				} else {
 					// Is an infantry brigade - so jump into the ME determination test
 					echo "<ul>";
-					if ($unit->stats->morale_state >= 4) {
+					if ($unit->morale_state >= 4) {
 						echo "<li><font color=#880000>Unit : [".$unit->id."] - ".$unit->name." is already BROKEN</font>";
 						$distance = $this->yards_to_inches(640);
 						echo "<ul><b><font color=#880000>Unit must fall back 640 yds ($distance inches)</font></b></ul>";
 					} elseif ($unit->percent_lost >= 20) {
 						echo "<li>Unit : [".$unit->id."] - ".$unit->name." has ".$unit->percent_lost."% losses - starting ME test";
 						echo "<font color=blue><ul>";
-						if ($unit->stats->did_close_combat) {
-							echo "<li>".$unit->stats->did_close_combat." Close combat(s) in the last hour, so they need to test";
+						if ($unit->did_close_combat) {
+							echo "<li>".$unit->did_close_combat." Close combat(s) in the last hour, so they need to test";
 							echo "<li>Avg morale grade for the ME is currently ".$unit->avg_morale_name;
 							$diemod = -1*($unit->percent_lost - 20);
 							echo "<li>Total losses for the ME = ".$unit->percent_lost."% so thats a $diemod modifier";
-							if ($unit->stats->won_close_combat) {
-								echo "<li>+10 since they won close combat in the last hour (".$unit->stats->won_close_combat." wins)";
+							if ($unit->won_close_combat) {
+								echo "<li>+10 since they won close combat in the last hour (".$unit->won_close_combat." wins)";
 								$diemod += 10;
 							}
 							if ($unit->percent_lost_this_hour >= 20) {
@@ -518,12 +946,12 @@ class Game_model extends CI_Model {
 								$delay=3;
 							}
 							// make sure the same message is not repeated over and over again each turn
-							$query = $this->db->query("select count(*) as count from game_message where game_id=$game_id and player_id=".$unit->stats->player_id." and message='$message'")->row();
+							$query = $this->db->query("select count(*) as count from game_message where game_id=$game_id and player_id=".$unit->player_id." and message='$message'")->row();
 							if ($query->count == 0) {
 								$data = new stdClass;
 									$data->game_id = $game_id;
 									$data->turn_number = $game->turn_number + 1;
-									$data->player_id = $unit->stats->player_id;
+									$data->player_id = $unit->player_id;
 									$data->unit_id = $unit->id;
 									$data->sent_turn = $game->turn_number;
 									$data->message = $message;
@@ -564,9 +992,9 @@ class Game_model extends CI_Model {
 				break;
 			case 2:
 				// they are shaken - set all units in the ME to shaken
-				$unit = $this->unit_model->get($row->unit_id,$game_id);
+				$unit = $this->get_unit($row->unit_id);
 				$this->unit_model->is_shaken($game_id,$this->turn_number,$unit);
-				$this->get_me_subunits($game_id,$unit);
+				$this->get_me_subunits($unit);
 				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
 					$this->unit_model->is_shaken($game_id,$this->turn_number,$subunit);
@@ -590,9 +1018,9 @@ class Game_model extends CI_Model {
 				break;
 			case 3:
 				// they are in retreat - set all units in the ME to retreat
-				$unit = $this->unit_model->get($row->unit_id,$game_id);
+				$unit = $this->get_unit($row->unit_id);
 				$this->unit_model->is_retreating($game_id,$this->turn_number,$unit);
-				$this->get_me_subunits($game_id,$unit);
+				$this->get_me_subunits($unit);
 				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
 					$this->unit_model->is_retreating($game_id,$this->turn_number,$unit);
@@ -618,9 +1046,9 @@ class Game_model extends CI_Model {
 				break;
 			case 4:
 				// they are broken - set all units in the ME to retreat
-				$unit = $this->unit_model->get($row->unit_id,$game_id);
+				$unit = $this->get_unit($row->unit_id);
 				$this->unit_model->is_broken($game_id,$this->turn_number,$unit);
-				$this->get_me_subunits($game_id,$unit);
+				$this->get_me_subunits($unit);
 				if ($unit->me_subunit) {
 				foreach ($unit->me_subunit as $subunit) {
 					$this->unit_model->is_broken($game_id,$this->turn_number,$unit);
@@ -688,9 +1116,9 @@ class Game_model extends CI_Model {
 				echo "<tr><td colspan=8><b>Player $row->username in command of unit [".$row->commander_id."]</td></tr>";
 				echo "<tr><td>ID</td><td>ME Name</td><td>Orders</td><td>Tests</td><td>Grade</td><td>Current State</td><td>Losses<br>(This Hour)</td></tr>";
 				$range = $this->get_unit_id_range($row->commander_id);
-				$me_list = $this->get_me_list($game_id,$range->start_id,$range->end_id);
+				$me_list = $this->get_me_list($range->start_id,$range->end_id);
 				foreach ($me_list as $me_unit) {
-				if ($me_unit->stats->player_id == $row->id) { // not all MEs under this commander belong to the same player
+				if ($me_unit->player_id == $row->id) { // not all MEs under this commander belong to the same player
 
 					$exempt = false;
 					$highlight = '';
@@ -701,16 +1129,16 @@ class Game_model extends CI_Model {
 						$highlight = ' bgcolor=#ff8888';
 					}
 					// If they are already broken, they dont need to test
-					if ($me_unit->stats->morale_state >= 4) {
+					if ($me_unit->morale_state >= 4) {
 						$exempt = true;
 					}
 
 					echo "<tr$highlight><td>".$me_unit->id."</td><td>".$me_unit->name."</td>";
 					if ($me_unit->current_order->order_type == 9) {
 						$exempt = true;
-						echo "<td><font color=red>".$me_unit->current_order_type."</font></td>";
+						echo "<td><font color=red>".$me_unit->current_order_type->name."</font></td>";
 					} else {
-						echo "<td>".$me_unit->current_order_type."</td>";
+						echo "<td>".$me_unit->current_order_type->name."</td>";
 					}
 					// Add test checkboxen - unless they were affected by an ME det failure
 					echo "<td>";
@@ -766,17 +1194,16 @@ class Game_model extends CI_Model {
 			die ("No need to check Morale on turn 1 - that would be a terrible thing if troops failed before the game starts");
 		} 
 
-		$this->load->model('unit_model');
 		$i = 0;
 		foreach ($units as $unit_id) {
-			$unit = $this->unit_model->get($unit_id,$game_id);
+			$unit = $this->get_unit($unit_id);
 			if ($unit->is_me == 'T') {
 				if ($i) {
 					echo "<hr>";
 				}
 				$i++;
 
-				$this->get_me_subunits($game_id,$unit);
+				$this->get_me_subunits($unit);
 				// Morale breaks for ME morale test - pp 47 of EmpireV rulebook
 				switch ($unit->avg_morale) {
 				case 1: // OldGuard
@@ -828,7 +1255,7 @@ class Game_model extends CI_Model {
 					$data = new stdClass;
 						$data->game_id = $game_id;
 						$data->turn_number = $game->turn_number + 1;
-						$data->player_id = $unit->stats->player_id;
+						$data->player_id = $unit->player_id;
 						$data->unit_id = $unit->id;
 						$data->sent_turn = $game->turn_number;
 						$data->message = $message;
@@ -858,7 +1285,7 @@ class Game_model extends CI_Model {
 					$data = new stdClass;
 						$data->game_id = $game_id;
 						$data->turn_number = $game->turn_number + 1;
-						$data->player_id = $unit->stats->player_id;
+						$data->player_id = $unit->player_id;
 						$data->unit_id = $unit->id;
 						$data->sent_turn = $game->turn_number;
 						$data->message = $message;
@@ -897,6 +1324,9 @@ class Game_model extends CI_Model {
 
 		// All good, bump the game to the next phase
 		$this->db->query("update game set phase=4 where id=".$this->id);
+
+		// And clear the leader attach array
+		$this->db->query("delete from game_attach_done where game_id=".$this->id);
 	}
 
 	function leader_attach_done() {
@@ -913,6 +1343,7 @@ class Game_model extends CI_Model {
 
 		// all good, bump the game to the next phase
 		$this->db->query("update game set phase=5 where id=".$this->id);
+		echo $this->db->last_query();
 	}
 
 	function declare_orders_done() {
@@ -1190,7 +1621,112 @@ class Game_model extends CI_Model {
 
 	}
 
+	function leader_attach_form () {
+
+		$player_id = 0;
+		switch($this->session->userdata('role')) {
+		case 'A':
+		case 'U':
+			$this->cache_all_units();
+			break;
+		case 'P':
+			$player_id = $this->session->userdata('user_id');
+			$this->cache_player_units($player_id);
+			break;
+		}
+
+
+		echo "<table border=1>";
+
+		if (!$player_id) {
+			// do a set for all players
+			$query = $this->db->query("select id,commander_id,username from user where commander_id != 0 and current_game=".$this->id);
+			foreach ($query->result() as $commanding_user) {
+				$range = $this->get_unit_id_range($commanding_user->commander_id);
+				$commanders = $this->get_commander_list($range->start_id,$range->end_id);
+				echo "<tr><td colspan=2><h2>".$commanding_user->username."</h2></td></tr>\n";
+				$this->leader_attach_form_set($commanders, $commanding_user->id);
+			}
+		} else {
+			// do a set for 1 player
+			$this->leader_attach_form_set($this->commanders, $player_id);
+		}
+
+		echo "</table>";
+		// Now dump some script to handle selecting an item
+
+?>
+<script>
+$("#leader_attach_form select").change(function() {
+	var commander = $(this).attr('name');
+	var unit = $(this).find("option:selected").text();
+	$('<div></div>').load('leader_attach',{'leader': commander,'unit': unit});
+    	// alert('Commander '+$(this).attr('name')+' is now attached to '+$(this).find("option:selected").text());
+});
+$.getScript("leader_attach/get_status");
+
+$(function() { 
+	clearInterval (attach_status_interval);
+	attach_status_interval = setInterval(function() {
+		$.getScript("leader_attach/get_status");
+	}, 3000);
+
+});
+
+</script>
+<?
+	}
+
+
+	function leader_attach_form_set ($commanders, $player_id) {
+
+		foreach ($commanders as $commander) {
+
+			// check that we own this Commander first - it could be under a subcommander !
+			if ($commander->player_id == $player_id) {
+				echo "<tr><td><i>[".$commander->id."] - <b>".$commander->name."</b><br>";
+				if (file_exists('unit-pictures/'.$commander->id.'.jpg')) {
+					echo '<img id=unit-picture-'.$commander->id.' src=unit-pictures/'.$commander->id.'.jpg height=128><br>';
+				}
+				switch ($commander->unit_type) {
+				case TYPE_ARMY:
+					echo $commander->army->commander;
+					break;
+				case TYPE_CORPS:
+				case TYPE_WING:
+					echo $commander->corps->commander;
+					break;
+				case TYPE_DIVISION:
+					echo $commander->division->commander;
+					break;
+				case TYPE_BRIGADE:
+					echo $commander->brigade->commander;
+					break;
+				}
+				echo "</td><td valign=top>\n";
+				// Find out who this commander is currently attached to
+				$query = $this->db->query('select * from game_attach where game_id='.$this->id.' and commander_id='.$commander->id);
+				$attached_to = 0;
+				foreach ($query->result() as $row) {
+					$attached_to = (int)$row->unit_id;
+					break;	// Got the most recent one, that will do
+				}
+				// Create a drop down list of sub-units for this commander
+				$subcommands = array();
+				$subcommands['0'] = '-- Select Unit to Attach To --';
+				foreach ($commander->commander_subunit as $subunit) {
+					$pad = '';
+					for ($i = 0; $i < $subunit->unit_type; $i++) {
+						$pad .= '&nbsp;';
+					}
+					$subcommands[$subunit->id] = $subunit->id.' -'.$pad.$subunit->name;
+				}
+				echo form_dropdown($commander->id, $subcommands,$attached_to );
+				echo "</td></tr>\n";
+			} // if the current player owns the unit
+		} // for each commander in the set
+	}
 
 }
 
-
+?>

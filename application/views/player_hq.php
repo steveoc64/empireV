@@ -24,8 +24,9 @@ echo "var start_of_turn = ".$start_of_turn.";\n";
 ?>
 
 $.ajaxSetup ({  cache: false  });  
-  
+var attach_status_interval;
 $(function() { 
+	clearInterval (attach_status_interval);
 	$("#menu").hide();
 	//$('#main').animate({ left: "20px", top: "0px"}, 1000 );
 	$("#console").load('player_console/refresh');

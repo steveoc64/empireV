@@ -38,7 +38,7 @@ if (isset($game)) {
 
 		foreach ($game->me as $me) {
 			// check that we own this ME first - it could be under a subcommander !
-			if ($me->stats->player_id == $this->session->userdata('user_id')) {
+			if ($me->player_id == $this->session->userdata('user_id')) {
 			if ($me->parent_id != $last_parent) {
 				if ($last_parent > -1) { echo "</div>"; }
 				$parent_name = '';
@@ -48,13 +48,13 @@ if (isset($game)) {
 				echo "<div id=corps><font font-family=serif color='#51301f'><font size=12px>".$me->parent_id."</font><p>".$parent_name."</font>";
 			}
 			$last_parent = $me->parent_id;
-			$x =(int)$me->stats->x;
-			$y = (int)$me->stats->y;
+			$x =(int)$me->x;
+			$y = (int)$me->y;
 			$style='';
 			if ($x && $y) {
 				$style = sprintf("style=\"left: %dpx; top: %dpx; position: absolute;\"",$x,$y);
 			}
-			echo "<div id=me unitid=".$me->id." unittype=".$me->unit_type." $style class=ui-widget-content>[".$me->id."]<br> ".$me->name."<br> (<font color=blue>".$me->current_order_type." ".$me->current_order->objective."</font>)</div>\n";
+			echo "<div id=me unitid=".$me->id." unittype=".$me->unit_type." $style class=ui-widget-content>[".$me->id."]<br> ".$me->name."<br> (<font color=blue>".$me->current_order_type->name." ".$me->current_order->objective."</font>)</div>\n";
 			}
 		}
 		if ($last_parent > -1) {
@@ -86,7 +86,13 @@ if (isset($game)) {
 	case PHASE_LEADER_ATTACH:
 		echo "<h2>Leader Attach Phase ~ ".$game->hrs."</h2>\n";
 		echo "<center><div id=clock>$t</div></center>";
-		echo "<button id=refresh_page>Refresh Page</button>";
+		echo "<button id=leader_attach_done>DONE</button>";
+		echo "<button id=leader_attach_not_done>Not Done</button>";
+		$distance = $game->yards_to_inches(800);
+		echo "<div id=leader_attach_form></div>";
+		echo "<table border=1>";
+		echo "</div>";
+		echo "<br><br><i>Leaders may move up to 800 yards ($distance inches) to attach to any unit. Move the leader figures on the table, and update the lists on this screen when you are done. It is important for the computer to know which units leaders are attached to, as this provides a number of bonuses for both combat and morale.</i>";
 		break;
 	case PHASE_DECLARE_ORDERS:
 		echo "<h2>Declare Orders Phase ~ ".$game->hrs."</h2>\n";
@@ -168,6 +174,8 @@ if (isset($game)) {
 $.ajaxSetup ({  cache: false  });  
   
 $(function() { 
+
+	clearInterval(attach_status_interval);
 	$("#orders div").draggable({ stack: "#corps div", revert: true });
 
 	$("#corps").tabs();
@@ -205,14 +213,19 @@ $(function() {
 		}
 	});
 
-	// If the reloader is defined, then re-load the page every 10 seconds
-	//setInterval(function() {
-		//if ($("#reloader").length != 0) {
-			//$('#console').fadeOut(4000);
-			//location.reload();
-		//}
-	//}, 10000);
+	// Phase 4 - kick off the leader attachment display
+	$("#leader_attach_done").fadeIn(5000).click(function() {
+		$("#leader_attach_done").hide();
+		$.ajax({ type: 'GET', url: 'leader_attach/player_done' });
+		$("#leader_attach_not_done").fadeIn(1000);
+	});
+	$("#leader_attach_not_done").hide().click(function() {
+		$("#leader_attach_not_done").hide();
+		$.ajax({ type: 'GET', url: 'leader_attach/player_not_done' });
+		$("#leader_attach_done").fadeIn(1000);
+	});
 
+	$("#leader_attach_form").load("player_console/leader_attach_form");
 });  
 $("#hq").click(function () { 
 	$("#console").hide(1000); 

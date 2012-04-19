@@ -15,6 +15,9 @@ if (isset($game)) {
 	echo "<br>";
 	$t = '<font size=+2><b>0:00</b></font>';
 
+	echo "Phase ".$game->phase;
+	//var_dump($game);
+	//die();
 	switch ($game->phase) {
 	case PHASE_ORDERS:
 		echo "<h2>Orders Phase ~ ".$game->hrs."</h2>";
@@ -55,7 +58,10 @@ if (isset($game)) {
 		echo "<center><div id=clock>$t</div></center>";
 		echo "<table border=0 width=90%><tr><td align=left><button id=rewind>&lt; ME Morale</button></td>";
 		echo "<td align=right><button id=leader_attach_done>Declare Orders &gt;</button></td></tr></table>";
+		echo "<div id=leader_attach_form></div>";
 		echo "<div id=results></div>";
+		$distance = $game->yards_to_inches(800);
+		echo "<br><br><i>Leaders may move up to 800 yards ($distance inches) to attach to any unit. Move the leader figures on the table, and update the lists on this screen when you are done. It is important for the computer to know which units leaders are attached to, as this provides a number of bonuses for both combat and morale.</i>";
 		break;
 	case PHASE_DECLARE_ORDERS:
 		echo "<h2>Declare Orders Phase ~ ".$game->hrs."</h2>\n";
@@ -183,6 +189,8 @@ if (isset($game)) {
 <script>
 // On load - setup all the buttons
 $(function() { 
+
+	clearInterval(attach_status_interval);
 	$("#menu").hide();
 	$('#main').animate({ left: "20px", top: "0px"}, 10 );
 	$("#console").fadeIn(100);
@@ -206,22 +214,10 @@ $(function() {
 		$("#morale_test_done").fadeIn(4000);
 	});
 
-
-	/*
-	// Kick off the clock
-	var seconds = 0;
-	setInterval(function() {
-		if (seconds < 60) {
-			color='green';
-		} else if (seconds < 120) {
-			color='blue';
-		} else {
-			color='red';
-		}
-		$('#clock').html('<font size=+2 color='+color+'><b>'+seconds+'s elapsed</b></font>');
-		seconds ++;
-	}, 1000);
-	 */
+	// Phase 4 - kick off the leader attachment display
+	$("#leader_attach_form").load("umpire_console/leader_attach_form",function(){
+		$("#leader_attach_done").fadeIn(4000);
+	});
 });
 
 // Return to HQ

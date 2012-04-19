@@ -14,7 +14,7 @@ class Update_unit_order extends MY_Controller {
 			$objective = mysql_escape_string($this->input->post('objective'));
 
 			// check that we own this unit
-			$unit = $this->unit_model->get($unitid,$this->game->id);
+			$unit = $this->game->get_unit($unitid);
 			if (!$unit) {
 				die ("No such unit $unitid");
 			}

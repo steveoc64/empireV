@@ -14,29 +14,19 @@ foreach ($query->result() as $row) {
 }
 echo "var start_of_turn = ".$start_of_turn.";\n";
 ?>
+
+var attach_status_interval;
 $(function() { 
 	$("#menu").hide();
 	$('#main').animate({ left: "20px", top: "0px"}, 2000 );
 	$("#console").load('umpire_console/refresh');
+
+	clearInterval(attach_status_interval);
 	
 	// Kick off the order refresh - every 10 seconds, it fades out, reloads and fades back in
 	setInterval(function() {
 		$("#orders").fadeOut(100).load('umpire_console/refresh_orders').fadeIn(3000);
 	}, 10000);
-
-	// Phase 2 buttons init and kick off tests
-	$("#accept_me_determination").hide();
-	$("#me_morale").hide();
-	$("#me_determination_results").load("umpire_console/me_determination");
-	$("#accept_me_determination").fadeIn(5000);
-
-	// Phase 3 buttons init and kick off tests
-	$("#morale_test_done").hide();
-	$("#morale_test").fadeIn(3000);
-	$("#morale_test_form").load("umpire_console/morale_test_form",function(){ 
-		$("#morale_test_done").fadeIn(4000);
-	});
-
 
 	// Kick off the clock
 	setInterval(function() {
