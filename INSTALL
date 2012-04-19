@@ -38,7 +38,7 @@ In the production release, the program will include all the tools needed to purg
 missing data which is required for the system to run. Until then - proceed with caution !!!
 
 
-1) CodeIgniter Setup
+2) CodeIgniter Setup
 
 Like any CodeIgniter application, you need to setup a few configuration params to suit your environment.
 
@@ -59,3 +59,17 @@ the full URI names.  Should be fine as a test machine.
 If you want to run this as a hosted server though, its unlikely you would want to run the whole thing from a Windows box anyway ..
 I would recommend using a real web server for hosting.
 
+
+3) .htaccess setup
+
+Locate the file called .htaccess in the root directory of the installation.
+
+Edit this, and set the re-write rule at the end to whatever is appropriate for your server.
+
+ie - If the application is stored in a sub-directory called 'empire', then you want this section as is :
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ empire/index.php?/$1 [L]
+
+If the application is NOT in a directory called empire, then edit the re-write rule above as needed.
