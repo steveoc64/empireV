@@ -180,6 +180,7 @@ class Game_model extends CI_Model {
 			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->army->inspiration)->name;
 			$unit_data->skill_descr = $this->get_professional_skill($unit_data->army->professional_skill)->name;
 			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->army->doctrine)->name;
+			$unit_data->inspiration = $this->get_inspiration($unit_data->army->inspiration);
 			break;
 		case TYPE_CORPS:
 		case TYPE_WING:
@@ -187,21 +188,25 @@ class Game_model extends CI_Model {
 			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->corps->inspiration)->name;
 			$unit_data->skill_descr = $this->get_professional_skill($unit_data->corps->professional_skill)->name;
 			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->corps->doctrine)->name;
+			$unit_data->inspiration = $this->get_inspiration($unit_data->corps->inspiration);
 			break;
 		case TYPE_DIVISION:
 			$unit_data->division = $this->db->get_where('unit_division', array('id' => $unit_data->type_id))->row();
 			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->division->inspiration)->name;
 			$unit_data->skill_descr = $this->get_professional_skill($unit_data->division->professional_skill)->name;
 			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->division->doctrine)->name;
+			$unit_data->inspiration = $this->get_inspiration($unit_data->division->inspiration);
 			break;
 		case TYPE_BRIGADE:
 			$unit_data->brigade = $this->db->get_where('unit_brigade', array('id' => $unit_data->type_id))->row();
 			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->brigade->inspiration)->name;
 			$unit_data->drill_descr = $this->get_drill($unit_data->brigade->drill)->name;
+			$unit_data->inspiration = $this->get_inspiration($unit_data->brigade->inspiration);
 			break;
 		case TYPE_CAV_BRIGADE:
 			$unit_data->cavbrigade = $this->db->get_where('unit_cavbrigade', array('id' => $unit_data->type_id))->row();
 			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->cavbrigade->inspiration)->name;
+			$unit_data->inspiration = $this->get_inspiration($unit_data->cavbrigade->inspiration);
 			break;
 		case TYPE_BATTALION:
 			$unit_data->battalion = $this->db->get_where('unit_battalion', array('id' => $unit_data->type_id))->row();
@@ -348,7 +353,7 @@ class Game_model extends CI_Model {
 			if ($_->id == $order_type) return $_;
 		}
 		$_ = new stdClass;
-		$_->name = "Unknown Order $order_type";
+		$_->name = "Unknown Order ".$order_type;
 		return $_;
 	}
 
@@ -358,7 +363,7 @@ class Game_model extends CI_Model {
 			if ($_->id == $skill) return $_;
 		}
 		$_ = new stdClass;
-		$_->name = "Unknown Skill $skill";
+		$_->name = "Unknown Skill ".$skill;
 		return $_;
 	}
 
@@ -368,7 +373,7 @@ class Game_model extends CI_Model {
 			if ($_->id == $doctrine) return $_;
 		}
 		$_ = new stdClass;
-		$_->name = "Unknown Doctrine $doctrine";
+		$_->name = "Unknown Doctrine ".$doctrine;
 		return $_;
 	}
 
@@ -378,7 +383,7 @@ class Game_model extends CI_Model {
 			if ($_->id == $inspiration) return $_;
 		}
 		$_ = new stdClass;
-		$_->name = "Unknown Inspiration $inspiration";
+		$_->name = "Unknown Inspiration ".$inspiration;
 		return $_;
 	}
 
@@ -388,7 +393,7 @@ class Game_model extends CI_Model {
 			if ($_->id == $drill) return $_;
 		}
 		$_ = new stdClass;
-		$_->name = "Unknown Drill $drill";
+		$_->name = "Unknown Drill ".$drill;
 		return $_;
 	}
 
@@ -398,7 +403,7 @@ class Game_model extends CI_Model {
 			if ($_->id == $ms) return $_;
 		}
 		$_ = new stdClass;
-		$_->name = "Unknown Morale State $ms";
+		$_->name = "Unknown Morale State ".$ms;
 		return $_;
 	}
 
@@ -408,7 +413,7 @@ class Game_model extends CI_Model {
 			if ($_->id == $mg) return $_;
 		}
 		$_ = new stdClass;
-		$_->name = "Unknown Morale Grade $mg";
+		$_->name = "Unknown Morale Grade ".$mg;
 		return $_;
 	}
 
@@ -870,13 +875,13 @@ class Game_model extends CI_Model {
 								echo "<li>Total losses for the ME in the last hour  ".$unit->percent_lost_this_hour."% so thats another $diemod2 modifer";
 								$diemod += $diemod2;
 							}
-							$query = $this->db->query("select commander_id from game_attach where game_id=".$this->id." and unit_it=".$unit->id);
+							$query = $this->db->query("select commander_id from game_attach where game_id=".$this->id." and unit_id=".$unit->id);
 							foreach ($query->result() as $row) {
 								// We have an attached commander, look them up
 								if ($attached_commander = $this->get_unit($row->commander_id)) {
-								if ($inspiration = $this->get_inspiration($attached_commander->inspiration)) {
+								if ($inspiration = $this->get_inspiration($attached_commander->inspiration->id)) {
 									echo "<li>[".$attached_commander->id."] - ".$attached_commander->name;
-									echo " is attached.<br>Inspiration Bonus = ".$inspiration->me_det_bonus);
+									echo " is attached. Inspiration Bonus = ".$inspiration->me_det_bonus.'%';
 									$diemod += (int)$inspiration->me_det_bonus;
 								}}
 
@@ -900,13 +905,13 @@ class Game_model extends CI_Model {
 							echo "<li>On a D100, Break <= $b, Retreat <= $r, Shaken <= $s";
 							$dieroll = d100();
 							echo "<li><i>rolls dice</i> ... $dieroll";
+							$distance = $this->yards_to_inches(640);
 							if ($dieroll <= $b) {
 								echo "<li>The whole ME is BROKEN";
 								echo "<ul><font color=#880000>All units in this ME fall back 640 yds ($distance inches)</font></ul>";
 								$result = 4;
 							} elseif ($dieroll <= $r) {
 								echo "<li>The whole ME is in RETREAT";
-								$distance = $this->yards_to_inches(640);
 								echo "<ul><font color=#880000>All units in this ME fall back 640 yds ($distance inches)</font>";
 								echo "<li>Formed enemy cavalry within engagement range may choose to pin the unit in place.";
 								$result = 3;
