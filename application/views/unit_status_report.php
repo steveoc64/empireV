@@ -220,20 +220,20 @@ if ($unit) {
 		}
 		
 	} else {
-		// Is command - display the 
+		
 	}
 	echo "<br><br><br>";
-	echo "<br><img src=/empire/images/fancy-2.png><br>";
+	echo "<br><img src=../images/fancy-2.png><br>";
 	echo "<br><br><br>";
 	echo "<br><br><br>";
-	echo "</div>"; // <div id=reportimg><img src=/empire/images/french-legere.jpg width=400>";
+	echo "</div>"; 
 } else {
 	echo "<br>";
 	echo "<br>";
 	echo "<br><img src=../images/fancy-1.png><br>";
 	echo "<br>You currently do not have a game selected,<br>so I dont know which status reports to fetch ...<br>\n";
 	echo "<br><br><br>";
-	echo "<br><img src=/empire/images/fancy-2.png><br>";
+	echo "<br><img src=images/fancy-2.png><br>";
 	echo "<br><br><br>";
 }
 
@@ -282,7 +282,7 @@ case TYPE_BATTERY:
 
 
 ?>
-<img src=/empire/images/fancy-1.png><br>
+<img src=../images/fancy-1.png><br>
 
 <b>A true and complete record of events.</b><br>
 <?
@@ -316,7 +316,7 @@ foreach ($query->result() as $row) {
 	$turn = (int)$row->turn_number;
 	$hour = (int)$game->start_hour + (int)$row->turn_number -1;
 	if ($turn != $last_turn) {
-		if ($i) { echo "<img src=".site_url()."images/fancy-pants3.png><br>\n"; }
+		if ($i) { echo "<img src=".site_url()."../images/fancy-pants3.png><br>\n"; }
 		echo "<b> Time: $hour:00hrs</b> (Turn ".$row->turn_number.")<br>";
 	}
 
@@ -330,15 +330,15 @@ foreach ($query->result() as $row) {
 } else {
 	echo "<br>";
 	echo "<br>";
-	echo "<br><img src=".site_url()."images/fancy-1.png><br>";
+	echo "<br><img src=".site_url()."../images/fancy-1.png><br>";
 	echo "<br>You currently do not have a game selected,<br>so I dont know which journal to fetch ...<br>\n";
 	echo "<br><br><br>";
-	echo "<br><img src=".site_url()."images/fancy-2.png><br>";
+	echo "<br><img src=".site_url()."../images/fancy-2.png><br>";
 	echo "<br><br><br>";
 }
 ?>
 
 
-<img src=/empire/images/fancy-2.png>
+<img src=../images/fancy-2.png>
 </center>
 

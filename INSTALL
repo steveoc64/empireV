@@ -8,6 +8,7 @@ Also note that this being a development jig, which is rapidly changing, there is
 
 Having said that, here are some handy hints on getting it running :
 
+---------------------------------------------------------------------------------------------------------
 1) Database Setup
 
 Lets get the database setup first. Create a database under mysql called 'empire' :
@@ -38,6 +39,7 @@ In the production release, the program will include all the tools needed to purg
 missing data which is required for the system to run. Until then - proceed with caution !!!
 
 
+---------------------------------------------------------------------------------------------------------
 2) CodeIgniter Setup
 
 Like any CodeIgniter application, you need to setup a few configuration params to suit your environment.
@@ -60,6 +62,7 @@ If you want to run this as a hosted server though, its unlikely you would want t
 I would recommend using a real web server for hosting.
 
 
+---------------------------------------------------------------------------------------------------------
 3) .htaccess setup
 
 Locate the file called .htaccess in the root directory of the installation.
@@ -73,3 +76,12 @@ ie - If the application is stored in a sub-directory called 'empire', then you w
     RewriteRule ^(.*)$ empire/index.php?/$1 [L]
 
 If the application is NOT in a directory called empire, then edit the re-write rule above as needed.
+
+
+Details on how this works with codeigniter is best described here :
+http://codeigniter.com/wiki/mod_rewrite
+
+For more info on writing your own rewrite rules to suit your site, you can refer to the apache docs 
+here :
+http://httpd.apache.org/docs/current/rewrite/
+---------------------------------------------------------------------------------------------------------

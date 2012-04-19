@@ -825,6 +825,8 @@ class Game_model extends CI_Model {
 		// Clear out the current results
 		$this->db->query("delete from game_me_det where game_id=$game_id and turn_number=".$game->turn_number);
 
+		$this->cache_all_units();
+
 		echo "Entering ME determination check phase<br>";
 				// For each player
 		//   for each ME under their command
@@ -868,7 +870,18 @@ class Game_model extends CI_Model {
 								echo "<li>Total losses for the ME in the last hour  ".$unit->percent_lost_this_hour."% so thats another $diemod2 modifer";
 								$diemod += $diemod2;
 							}
-							echo "<li>TODO: +/- bonus for any number of leaders attached to the ME at the command level only";
+							$query = $this->db->query("select commander_id from game_attach where game_id=".$this->id." and unit_it=".$unit->id);
+							foreach ($query->result() as $row) {
+								// We have an attached commander, look them up
+								if ($attached_commander = $this->get_unit($row->commander_id)) {
+								if ($inspiration = $this->get_inspiration($attached_commander->inspiration)) {
+									echo "<li>[".$attached_commander->id."] - ".$attached_commander->name;
+									echo " is attached.<br>Inspiration Bonus = ".$inspiration->me_det_bonus);
+									$diemod += (int)$inspiration->me_det_bonus;
+								}}
+
+							}
+
 							switch($unit->avg_morale) {
 							case 1: $b = -60; $r = -44; $s = -27; break;
 							case 2: $b = -60; $r = -44; $s = -27; break;
@@ -1193,6 +1206,8 @@ class Game_model extends CI_Model {
 		if ($game->turn_number == 1) {
 			die ("No need to check Morale on turn 1 - that would be a terrible thing if troops failed before the game starts");
 		} 
+
+		$this->cache_all_units();
 
 		$i = 0;
 		foreach ($units as $unit_id) {
