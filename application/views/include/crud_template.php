@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Empire V - Electro Mechanical Apparatus for Combat Simulation</title>
-	<link rel="stylesheet" href="http://15mm-madness.com/empire/css/style.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 
 <?php foreach($css_files as $file): ?>
 	<link type="text/css" rel="stylesheet" href="<?php echo $file; ?>" />
@@ -26,14 +26,6 @@
 <div id="menu">
 <ul class="vmenu">
 <?php
-$menu = array('Order of Battle' => 'orbat','Scenarios' => 'scenarios','Nations' => 'nations','Units' => 'units','Cards' => 'cards','Charts' => 'charts', 'Rules' => 'rules');
-foreach ($menu as $k => $v) {
-	echo "<li><a href=\"/empire/site/$v\" ";
-	if ($v == $this->uri->segment(2)) {
-		echo "class=\"active\" ";
-	}
-	echo "<span>$k</span></a></li>\n";
-}
 ?>
 </ul>
 </div>
