@@ -110,7 +110,7 @@ class Units extends MY_Controller
 		$form->display_as('parent_id','ParentID');
 		$form->set_relation('orbat_id','orbat','filename');
 		$form->set_relation('morale_grade','morale_grade','name');
-		$form->set_relation('morale_state','morale_states','name');
+		//$form->set_relation('morale_state','morale_states','name');
 		$form->order_by('id');
 	
 		$this->render($form->render(),$title);

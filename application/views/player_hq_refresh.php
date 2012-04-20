@@ -98,6 +98,7 @@ if (isset($game)) {
 		echo "<h2>Declare Orders Phase ~ ".$game->hrs."</h2>\n";
 		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
+		echo "<div id=declare_orders_form><div>";
 		break;
 	case PHASE_ACTIVATE_ORDERS:
 		echo "<h2>Activate Orders Phase ~ ".$game->hrs."</h2>\n";
@@ -226,6 +227,7 @@ $(function() {
 	});
 
 	$("#leader_attach_form").load("player_console/leader_attach_form");
+	$("#declare_orders_form").load("player_console/declare_orders_form");
 });  
 $("#hq").click(function () { 
 	$("#console").hide(1000); 

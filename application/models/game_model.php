@@ -174,39 +174,42 @@ class Game_model extends CI_Model {
 		$unit_data->skill_descr = '<font color='.COLOR_3.'>Not quite staff material.</font>';
 		$unit_data->doctrine_descr = '<font color='.COLOR_3.'>As instructed by Commander.</font>';
 		$unit_data->drill_descr = '<font color='.COLOR_3.'>As instructed by Commander.</font>';
+		$unit_data->skill = null;
+		$unit_data->doctrine = null;
+		$unit_data->commander = null;
+
 		switch($unit_data->unit_type) {
 		case TYPE_ARMY:
 			$unit_data->army = $this->db->get_where('unit_army', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->army->inspiration)->name;
-			$unit_data->skill_descr = $this->get_professional_skill($unit_data->army->professional_skill)->name;
-			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->army->doctrine)->name;
 			$unit_data->inspiration = $this->get_inspiration($unit_data->army->inspiration);
+			$unit_data->skill = $this->get_professional_skill($unit_data->army->professional_skill);
+			$unit_data->doctrine = $this->get_doctrine($unit_data->army->doctrine);
+			$unit_data->commander = $unit_data->army->commander;
 			break;
 		case TYPE_CORPS:
 		case TYPE_WING:
 			$unit_data->corps = $this->db->get_where('unit_corps', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->corps->inspiration)->name;
-			$unit_data->skill_descr = $this->get_professional_skill($unit_data->corps->professional_skill)->name;
-			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->corps->doctrine)->name;
 			$unit_data->inspiration = $this->get_inspiration($unit_data->corps->inspiration);
+			$unit_data->skill = $this->get_professional_skill($unit_data->corps->professional_skill);
+			$unit_data->doctrine = $this->get_doctrine($unit_data->corps->doctrine);
+			$unit_data->commander = $unit_data->corps->commander;
 			break;
 		case TYPE_DIVISION:
 			$unit_data->division = $this->db->get_where('unit_division', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->division->inspiration)->name;
-			$unit_data->skill_descr = $this->get_professional_skill($unit_data->division->professional_skill)->name;
-			$unit_data->doctrine_descr = $this->get_doctrine($unit_data->division->doctrine)->name;
 			$unit_data->inspiration = $this->get_inspiration($unit_data->division->inspiration);
+			$unit_data->skill = $this->get_professional_skill($unit_data->division->professional_skill);
+			$unit_data->doctrine = $this->get_doctrine($unit_data->division->doctrine);
+			$unit_data->commander = $unit_data->division->commander;
 			break;
 		case TYPE_BRIGADE:
 			$unit_data->brigade = $this->db->get_where('unit_brigade', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->brigade->inspiration)->name;
-			$unit_data->drill_descr = $this->get_drill($unit_data->brigade->drill)->name;
 			$unit_data->inspiration = $this->get_inspiration($unit_data->brigade->inspiration);
+			$unit_data->commander = $unit_data->brigade->commander;
 			break;
 		case TYPE_CAV_BRIGADE:
 			$unit_data->cavbrigade = $this->db->get_where('unit_cavbrigade', array('id' => $unit_data->type_id))->row();
-			$unit_data->inspiration_descr = $this->get_inspiration($unit_data->cavbrigade->inspiration)->name;
 			$unit_data->inspiration = $this->get_inspiration($unit_data->cavbrigade->inspiration);
+			$unit_data->commander = $unit_data->cavbrigade->commander;
 			break;
 		case TYPE_BATTALION:
 			$unit_data->battalion = $this->db->get_where('unit_battalion', array('id' => $unit_data->type_id))->row();
@@ -233,11 +236,13 @@ class Game_model extends CI_Model {
 		// get the unit's current orders for this game turn
 		$query = $this->db->query("select turn_number,activate_turn,player_name,order_type,objective,comments from game_order where game_id=".$this->id." and unit_id=$id and activate_turn > 0 order by activate_turn desc");
 		$unit_data->orders = array();
+		$got_current = false;
 		foreach ($query->result() as $row) {
 			$unit_data->orders[] = $row;
-			if ($row->activate_turn <= $this->turn_number) {
+			if (!$got_current && ($row->activate_turn <= $this->turn_number)) {
 				$unit_data->current_order = $row;
 				$unit_data->current_order_type = $this->get_order_type($row->order_type);
+				$got_current = true;
 			}
 		}
 
@@ -1380,8 +1385,13 @@ class Game_model extends CI_Model {
 
 		// all good, bump the game to the next phase
 		$this->db->query("update game set phase=6 where id=".$this->id);
-	}
 
+		// Now calculate whether orders are activated
+		$query = $this->db->get_where('game_order',array('game_id'=>$this->id,'activate_turn'=>0));
+		foreach ($query->result() as $row) {
+			echo "Order for unit ".$row->unit_id." has a chance of ".$row->activation_chance."<br>";
+		}
+	}
 
 	function activate_orders_done() {
 		if (!$this->id) {
@@ -1680,7 +1690,7 @@ class Game_model extends CI_Model {
 $("#leader_attach_form select").change(function() {
 	var commander = $(this).attr('name');
 	var unit = $(this).find("option:selected").text();
-	$('<div></div>').load('leader_attach',{'leader': commander,'unit': unit});
+	$.post('leader_attach',{'leader': commander,'unit': unit});
     	// alert('Commander '+$(this).attr('name')+' is now attached to '+$(this).find("option:selected").text());
 });
 $.getScript("leader_attach/get_status");
@@ -1696,7 +1706,6 @@ $(function() {
 </script>
 <?
 	}
-
 
 	function leader_attach_form_set ($commanders, $player_id) {
 
@@ -1746,6 +1755,253 @@ $(function() {
 			} // if the current player owns the unit
 		} // for each commander in the set
 	}
+
+	function activate_orders_form() {
+		$this->declare_orders_form(true);
+	}
+
+	function declare_orders_form($calculate = false) {
+
+		$player_id = 0;
+		switch($this->session->userdata('role')) {
+		case 'A':
+		case 'U':
+			$this->cache_all_units();
+			break;
+		case 'P':
+			$player_id = $this->session->userdata('user_id');
+			$this->cache_player_units($player_id);
+			break;
+		}
+
+
+		echo "<table border=1 width=90%>";
+
+		$god_mode = false;
+		if (!$player_id) {
+			$god_mode = true;
+			// do a set for all players
+			$query = $this->db->query("select id,commander_id,username from user where commander_id != 0 and current_game=".$this->id);
+			foreach ($query->result() as $commanding_user) {
+				$range = $this->get_unit_id_range($commanding_user->commander_id);
+				$me_list = $this->get_me_list($range->start_id,$range->end_id);
+				echo "<tr bgcolor=#ffffee><td colspan=4><h2>".$commanding_user->username."</h2></td></tr>\n";
+				$this->declare_orders_form_set($me_list, $commanding_user->id,$god_mode,$calculate);
+			}
+		} else {
+			// do a set for 1 player
+			$this->declare_orders_form_set($this->me, $player_id,$god_mode,false);
+		}
+
+		echo "</table>";
+		// Add some script to handle the buttons
+		if ($god_mode) {
+?>
+<script>
+$("#declare_orders_form button").click(function() {
+	var action = $(this).attr('action');
+	var unit_id = $(this).attr('unit_id');
+	if (confirm("Do you want to "+action+" for unit "+unit_id+" immediately ?")) {
+		$(this).fadeOut(2000);
+		$.post('umpire_console/'+action,{'unit_id': unit_id}, function() {
+			$("#declare_orders_form").load("umpire_console/declare_orders_form",function(){
+				$("#activate_orders").fadeIn(4000);
+			});
+		});
+	}
+});
+</script>
+
+<?
+		}
+	}
+
+	function declare_orders_form_set ($me_list, $player_id,$god_mode,$calculate) {
+
+		$last_parent_id = 0;
+	
+		foreach ($me_list as $me_unit) {
+
+			// check that we own this ME Unit first - it could be under a subcommander !
+			if ($me_unit->player_id == $player_id) {
+
+				if ($me_unit->parent_id != $last_parent_id) {
+					// Get the parent unit for this ME, to work out the activation chance based
+					// on the professional skill of the immediate superior
+					$parent_unit = $this->get_unit($me_unit->parent_id);
+					$skill = null;
+					$attached_unit = 0;
+					if ($parent_unit && $parent_unit->skill) {
+						$skill = $parent_unit->skill;
+					}
+					if ($parent_unit) {
+						echo '<tr bgcolor=#eeeecc><td colspan=4>Leader: ['.$parent_unit->id.'] - '.$parent_unit->commander;
+
+						if (file_exists('unit-pictures/'.$parent_unit->id.'.jpg')) {
+							echo '<br><img id=unit-picture-'.$parent_unit->id.' src=unit-pictures/'.$parent_unit->id.'.jpg height=128>';
+						}
+	
+						// Who is the parent commander attached to ?
+						if ($attachment = $this->db->get_where('game_attach',array('game_id'=>$this->id,'commander_id'=>$parent_unit->id))->row()) {
+							$attached_unit = $attachment->unit_id;
+							echo ' ~ Attached to ['.$attached_unit.']';
+						} else {
+							echo ' ~ Not Attached';
+						}
+					echo '</td></tr>';
+						echo "<tr bgcolor=#ddddcc><td>Name of ME</td><td>Current Orders</td><td>New Orders</td><td>% Activate</td></tr>";
+					}
+					$last_parent_id = $parent_unit->id;
+				}
+
+				echo "<tr><td><i>[".$me_unit->id."] - <b>".$me_unit->name."</b><br>";
+				if (file_exists('unit-pictures/'.$me_unit->id.'.jpg')) {
+					echo '<img id=unit-picture-'.$me_unit->id.' src=unit-pictures/'.$me_unit->id.'.jpg height=64><br>';
+				}
+				switch ($me_unit->unit_type) {
+				case TYPE_ARMY:
+					echo $me_unit->army->commander;
+					break;
+				case TYPE_CORPS:
+				case TYPE_WING:
+					echo $me_unit->corps->commander;
+					break;
+				case TYPE_DIVISION:
+					echo $me_unit->division->commander;
+					break;
+				case TYPE_BRIGADE:
+					echo $me_unit->brigade->commander;
+					break;
+				}
+				echo '<hr>Morale State: '.$me_unit->morale_state_descr;
+
+				echo "</td><td valign=top>\n";
+				if ($me_unit->current_order) {
+					echo $me_unit->current_order_type->name.' '.$me_unit->current_order->objective;
+				}
+				echo "</td><td valign=top>";
+				// Now get the latest unactivated order
+				$query = $this->db->query("select * from game_order where game_id=".$this->id." and activate_turn=0 and unit_id=".$me_unit->id);
+				foreach ($query->result() as $row) {
+					$order_type = $this->get_order_type($row->order_type);
+					echo $order_type->name.' '.$row->objective;
+
+					// Umpire and Admin get God-Mode, which allows them to force the acceptance
+					// of an order in the game, or to reject an order outright, for whatever reason.
+					// This can be due to the order being invalid, or some other event on the tabletop
+					// which is not modelled in the computer.
+					if ($god_mode && !$calculate) {
+						echo '<hr><button action=cancel_order unit_id='.$me_unit->id.'>Delete Order</button>';
+						echo '<button action=accept_order unit_id='.$me_unit->id.'>Accept Order</button>';
+					}
+					echo "</td><td>";
+					// Base activation chance
+					$activation_chance = 0;
+					if ($skill) {
+						if ($attached_unit == $me_unit->id) {
+							echo 'Leader Attached ';
+							$activation_chance = 100;
+						} elseif ($attached_unit == 0) {
+							echo "Base ";
+							$activation_chance = $skill->base_activation;
+						} else {
+							echo "Leader Elsewhere ";
+							$activation_chance = $skill->attached_elsewhere;
+						}
+						echo $activation_chance.'%';
+					} else {
+						echo "Unknown Parent / Commander";
+					}
+	
+					switch ($order_type->id) {
+					case 8: // Breakoff
+						$activation_chance -= 20;
+						echo '<hr>-20% for Breakoff';
+						break;
+					case 5: // Redeploy
+					case 6: // Rest and Rally
+						$activation_chance = 100;
+						echo '<hr>Automatic Activation for ReDeploy / Rally';
+						break;
+					case 2: // Attack
+						// If DUB Cavalry, then -20% to activate
+						if ($me_unit->unit_type == TYPE_CAV_BRIGADE) {
+							foreach ($me_unit->me_subunit as $sqn) {
+								if ($sqn->unit_type == TYPE_SQUADRON) {
+									if ($sqn->undistinguished) {
+										echo 'Cav Brigade includes DUB Cavalry -20%';
+										$activation_chance -= 20;
+										break;
+									}
+								}
+							}
+						}
+						break;
+					}
+					echo '<hr><font color=blue>Final Chance = '.$activation_chance.'%</font>';
+					if ($calculate) {
+						$dice = d100();
+						echo "<hr><i>Rolling .... $dice</i> ";
+						if ($dice <= $activation_chance) {
+							echo "<hr><font color=green size=+1><b>PASS</b></font>";
+							$this->accept_order($me_unit->id);
+						} else {
+							echo "<hr><font color=red size=+1><b>FAIL</b></font>";
+							$this->cancel_order($me_unit->id);
+						}
+						
+					} else {
+						if ($god_mode) {
+							// we now need to stamp the calculated chance of activating the order against the order
+							$this->db->query("update game_order set activation_chance=".$activation_chance." where game_id=".$this->id." and unit_id=".$me_unit->id." and activate_turn=0");
+						}
+					}
+
+					break;
+				} // for each order
+
+				echo "</td></tr>\n";
+			} // if the current player owns the unit
+		} // for each commander in the set
+	}
+
+	function accept_order($unit_id) {
+
+		// Get the order
+		$query = $this->db->query("select * from game_order where game_id=".$this->id." and unit_id=".$unit_id." and activate_turn=0");
+		$order = null;
+		foreach ($query->result() as $order) {
+			break;
+		}
+		if (!$order) {
+			return;
+		}
+		$order_type = $this->get_order_type($order->order_type);
+
+
+		$this->db->query("update game_order set activate_turn=".$this->turn_number." where game_id=".$this->id." and unit_id=".$unit_id." and activate_turn=0");
+		//echo "Orders for unit ".$unit_id." have been accepted for this turn";
+
+		// Send a message from the commander of this ME, acknowledging the new order
+		$unit = $this->get_unit($unit_id);
+		$message = "From: ".$unit->commander."<br>[".$unit_id."] - ".$unit->name." will ".$order_type->name." ".$order->objective;
+		$data = new stdClass;
+			$data->game_id = $this->id;
+			$data->turn_number = $this->turn_number;
+			$data->player_id = $unit->player_id;
+			$data->unit_id = $unit->id;
+			$data->sent_turn = $this->turn_number;
+			$data->message = $message;
+			$data->letter_icon = rand(1,6);
+		$this->db->insert('game_message',$data);
+	}
+
+	function cancel_order($unit_id) {
+
+		$this->db->query("delete from game_order where game_id=".$this->id." and unit_id=".$unit_id." and activate_turn=0");
+		//echo "Orders for unit ".$unit_id." have been cancelled for this turn";
+	}
+
 
 }
 

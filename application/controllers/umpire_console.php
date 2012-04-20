@@ -72,9 +72,35 @@ class Umpire_Console extends MY_Controller
 		}
 	}
 
+	function declare_orders_form() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->declare_orders_form();
+		}
+	}
+
+	function cancel_order() {
+		if ($this->check_role(array('A','U'))) {
+			$unit = $this->input->post('unit_id');
+			$this->game->cancel_order($unit);
+		}
+	}
+
+	function accept_order() {
+		if ($this->check_role(array('A','U'))) {
+			$unit = $this->input->post('unit_id');
+			$this->game->accept_order($unit);
+		}
+	}
+
 	function declare_orders_done() {
 		if ($this->check_role(array('A','U'))) {
 			$this->game->declare_orders_done();
+		}
+	}
+
+	function activate_orders_form() {
+		if ($this->check_role(array('A','U'))) {
+			$this->game->activate_orders_form();
 		}
 	}
 

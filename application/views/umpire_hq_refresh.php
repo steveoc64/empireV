@@ -15,7 +15,7 @@ if (isset($game)) {
 	echo "<br>";
 	$t = '<font size=+2><b>0:00</b></font>';
 
-	echo "Phase ".$game->phase;
+	//echo "Phase ".$game->phase;
 	//var_dump($game);
 	//die();
 	switch ($game->phase) {
@@ -71,6 +71,7 @@ if (isset($game)) {
 		echo "</td><td align=right>";
 		echo "<button id=declare_orders_done>Activate Orders &gt;</button>";
 		echo "</td></tr></table>";
+		echo "<div id=declare_orders_form></div>";
 		echo "<div id=results></div>";
 		break;
 	case PHASE_ACTIVATE_ORDERS:
@@ -81,6 +82,7 @@ if (isset($game)) {
 		echo "</td><td align=right>";
 		echo "<button id=activate_orders_done>BreakOff Movement &gt;</button>";
 		echo "</td></tr></table>";
+		echo "<div id=activate_orders_form></div>";
 		echo "<div id=results></div>";
 		break;
 	case PHASE_BREAKOFF:
@@ -104,7 +106,7 @@ if (isset($game)) {
 		echo "<div id=results></div>";
 		break;
 	case PHASE_DETERMINE_BOMBARDMENT:
-		echo "<h2>Deetermine Bombardment Phase ~ ".$game->hrs."</h2>\n";
+		echo "<h2>Determine Bombardment Phase ~ ".$game->hrs."</h2>\n";
 		echo "<center><div id=clock>$t</div></center>";
 		echo "<table border=0 width=90%><tr><td align=left>";
 		echo "<button id=rewind>&lt; Grand Tactical</button>";
@@ -218,6 +220,18 @@ $(function() {
 	$("#leader_attach_form").load("umpire_console/leader_attach_form",function(){
 		$("#leader_attach_done").fadeIn(4000);
 	});
+
+	// Phase 5 - kick off orders display
+	$("#declare_orders_form").load("umpire_console/declare_orders_form",function(){
+		$("#declare_orders_done").fadeIn(4000);
+	});
+
+	// Phase 6 - kick off activation of orders
+	$("#activate_orders_form").load("umpire_console/activate_orders_form",function(){
+		$("#activate_orders_done").fadeIn(4000);
+	});
+
+
 });
 
 // Return to HQ
@@ -318,6 +332,7 @@ $("#end_of_hour_done").click(function() { $("<div></div>").load('umpire_console/
 	start_of_turn = now;
 	$("#console").load('umpire_console/refresh')
 })});
+
 
 $("#rewind").click(function() { $("<div></div>").load('umpire_console/rewind',function() { $("#console").load('umpire_console/refresh')})});
 

@@ -38,8 +38,8 @@ class Messages extends MY_Controller
 			echo "<button id=mark_as_read>Mark all Messages as Read</button>";
 			echo "<button id=mark_as_unread>Unmark Messages from this Turn</button>";
 			$addscript = '<script>';
-			$addscript .= '("#mark_as_read").click(function() { $().get("messages/mark_as_read"); location.reload(); });';
-			$addscript .= '$("#mark_as_unread").click(function() { $().get("messages/mark_as_unread"); location.reload(); });';
+			$addscript .= '$("#mark_as_read").click(function() { $.get("messages/mark_as_read", function() { location.reload(); })});';
+			$addscript .= '$("#mark_as_unread").click(function() { $.get("messages/mark_as_unread", function() { location.reload(); })});';
 			$addscript .= '</script>';
 			$this->render($form->render(),"<h2>Messages Received from the Staff Officers</h2>$extras",$addscript);
 		} else {
@@ -72,9 +72,10 @@ class Messages extends MY_Controller
 	function mark_as_unread () {
 
 		$turn = (int)$this->game->turn_number;
-		$last_turn = (int)$this->game->turn_number;
+		$last_turn = (int)$this->game->turn_number - 1;
 		if ($this->game) {
-			$this->db->query("update game_message set is_read='F' where game_id=".$this->game->id." and player_id=".$this->game->user->id." and turn_number in (".$turn.',',$last_turn.')');
+			$this->db->query("update game_message set is_read='F' where game_id=".$this->game->id." and player_id=".$this->game->user->id." and turn_number in (".$turn.','.$last_turn.')');
+			echo $this->db->last_query();
 		}
 	}
 

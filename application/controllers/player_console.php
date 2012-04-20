@@ -18,4 +18,8 @@ class Player_console extends MY_Controller
 	function leader_attach_form() {
 		$this->game->leader_attach_form();
 	}
+
+	function declare_orders_form() {
+		$this->game->declare_orders_form();
+	}
 }

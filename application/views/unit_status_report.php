@@ -77,7 +77,7 @@ if ($unit) {
 
 	echo "<br>";
 	echo "<br>";
-	echo "<br><img src=../images/fancy-1.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-1.png><br>";
 
 	/*
 	 * Color Test !!
@@ -96,9 +96,13 @@ if ($unit) {
 
 	echo "<b><u><font size=+1>Status Report as of ".$game->hrs." in game ".$unit->game_id."</font></u></b><br><br>\n";
 	if ($cmd) {
-		echo "This officer has a well deserved reputation as a truly $unit->inspiration_descr leader.<br><br>\n";
-		echo "The professional competence of the staff could best be described as $unit->skill_descr<br><br>\n";
-		echo "Command Doctrine system is : $unit->doctrine_descr<br>\n";
+		echo "This officer has a well deserved reputation as a truly ".$unit->inspiration->name." leader.<br><br>\n";
+		if ($unit->skill) {
+			echo "The professional competence of the staff could best be described as ".$unit->skill->name."<br><br>\n";
+		}
+		if ($unit->doctrine) {
+			echo "Command Doctrine system is : $unit->doctrine_descr<br>\n";
+		}
 	} else {
 		echo "Rating: This unit is made up of ".$unit->morale_grade_descr." troops.<br>and they are ".$unit->small_arms_descr." shots with their firearms.<br>\n";
 		switch($unit->unit_type) {
@@ -129,7 +133,7 @@ if ($unit) {
 
 	}
 
-	echo "<img src=../images/fancy-pants3.png><br>";
+	echo "<img src=".site_url()."images/fancy-pants3.png><br>";
 	echo "The morale of the men is ".$unit->morale_state_descr."<br>\n";
 	echo $unit->fatigue_descr."<br><br>\n";
 
@@ -165,7 +169,7 @@ if ($unit) {
 			// Give detailed view of casualties
 			echo "Casualties: $l1 Men and $l2 Officers lost<br>\n";
 			printf ("Losses = %2d", $unit->percent_lost); echo "%<br>\n";
-			echo "<img src=../images/fancy-pants3.png><br>";
+			echo "<img src=".site_url()."images/fancy-pants3.png><br>";
 			echo "<b>Remaining Strength: $unit->current_strength effectives</b><br>\n";
 
 			switch ($unit->unit_type) {
@@ -215,7 +219,7 @@ if ($unit) {
 				echo "<br><i>Which equates to $unit->num_bases Gun Models with $crew Crew Figures each.</i><br>\n";
 				break;
 			}
-			echo "<img src=../images/fancy-pants3.png><br>";
+			echo "<img src=".site_url()."images/fancy-pants3.png><br>";
 			break;
 		}
 		
@@ -223,17 +227,17 @@ if ($unit) {
 		
 	}
 	echo "<br><br><br>";
-	echo "<br><img src=../images/fancy-2.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-2.png><br>";
 	echo "<br><br><br>";
 	echo "<br><br><br>";
 	echo "</div>"; 
 } else {
 	echo "<br>";
 	echo "<br>";
-	echo "<br><img src=../images/fancy-1.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-1.png><br>";
 	echo "<br>You currently do not have a game selected,<br>so I dont know which status reports to fetch ...<br>\n";
 	echo "<br><br><br>";
-	echo "<br><img src=images/fancy-2.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-2.png><br>";
 	echo "<br><br><br>";
 }
 
@@ -282,7 +286,7 @@ case TYPE_BATTERY:
 
 
 ?>
-<img src=../images/fancy-1.png><br>
+	<img src=<?=site_url()?>images/fancy-1.png><br>
 
 <b>A true and complete record of events.</b><br>
 <?
@@ -316,7 +320,7 @@ foreach ($query->result() as $row) {
 	$turn = (int)$row->turn_number;
 	$hour = (int)$game->start_hour + (int)$row->turn_number -1;
 	if ($turn != $last_turn) {
-		if ($i) { echo "<img src=".site_url()."../images/fancy-pants3.png><br>\n"; }
+		if ($i) { echo "<img src=".site_url()."images/fancy-pants3.png><br>\n"; }
 		echo "<b> Time: $hour:00hrs</b> (Turn ".$row->turn_number.")<br>";
 	}
 
@@ -330,15 +334,15 @@ foreach ($query->result() as $row) {
 } else {
 	echo "<br>";
 	echo "<br>";
-	echo "<br><img src=".site_url()."../images/fancy-1.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-1.png><br>";
 	echo "<br>You currently do not have a game selected,<br>so I dont know which journal to fetch ...<br>\n";
 	echo "<br><br><br>";
-	echo "<br><img src=".site_url()."../images/fancy-2.png><br>";
+	echo "<br><img src=".site_url()."images/fancy-2.png><br>";
 	echo "<br><br><br>";
 }
 ?>
 
 
-<img src=../images/fancy-2.png>
+	<img src=<?=site_url()?>images/fancy-2.png>
 </center>
 
