@@ -10,13 +10,22 @@ class Units extends MY_Controller
 		$form->unset_add();
 		$form->unset_delete();
 	
-		$form->columns('parent_id','id','name','unit_type','is_me','strength','ace');
+		$form->columns('parent_id','id','name','unit_type','is_me','strength','formation','ace');
 		$form->display_as('is_me','ME');
 		$form->callback_column('is_me',array($this,'convert_me'));
+		$form->callback_column('formation',array($this,'get_formation'));
 
 		// Apply restrictions
 		$title = '<h1>Units</h1>';
-		
+
+		if ($this->game) {
+			if ($this->session->userdata('role') == 'P') {
+				$player_id = $this->session->userdata('user_id');
+				$this->game->cache_player_units($player_id);
+			} else {
+				$this->game->cache_all_units();		
+			}
+		}
 		switch($this->session->userdata('role')) {
 		case 'A':
 
@@ -36,7 +45,8 @@ class Units extends MY_Controller
 				$form->callback_column('player_id',array($this,'get_player'));
 				$form->callback_after_update(array($this,'cascade_me'));
 				if ($this->game) {
-					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace');
+					$form->set_theme('datatables');
+					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','formation','casualties','last_hour','morale_grade','ace');
 					$form->callback_column('casualties',array($this,'get_casualties'));
 					$form->callback_column('last_hour',array($this,'last_hour'));
 					$form->add_action('Status', '', '','ui-icon-clipboard',array($this,'status_report'));
@@ -44,12 +54,13 @@ class Units extends MY_Controller
 				}
 			} else {
 				if ($this->game) {
+					$form->set_theme('datatables');
 					$form->where('unit.orbat_id',$this->game->orbat_attacker);
 					$form->or_where('unit.orbat_id',$this->game->orbat_defender);
 					$title .= "Only showing attacker and defender forces for current game (#".$this->game->id." - ".$this->game->name.")";
 					// Add some buttons - dont show them if there is no game selected for admin
 					//$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','orbat_id','player_id');
-					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','player_id');
+					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','formation','casualties','last_hour','morale_grade','ace'); //,'player_id');
 					$form->callback_column('casualties',array($this,'get_casualties'));
 					$form->callback_column('last_hour',array($this,'last_hour'));
 					$form->callback_column('player_id',array($this,'get_player'));
@@ -107,7 +118,8 @@ class Units extends MY_Controller
 
 		$form->callback_column('unit_type',array($this,'convert_unit_type'));
 		$form->display_as('id','UnitID');
-		$form->display_as('parent_id','ParentID');
+		$form->display_as('parent_id','^^');
+		$form->display_as('parent_me','^ME');
 		$form->set_relation('orbat_id','orbat','filename');
 		$form->set_relation('morale_grade','morale_grade','name');
 		//$form->set_relation('morale_state','morale_states','name');
@@ -281,10 +293,11 @@ class Units extends MY_Controller
 
 	function get_casualties($primary_key,$row) {
 		if ($this->game) {
-			$query = $this->db->get_where('game_unit_stats',array('game_id'=>$this->game->id,'unit_id'=>$row->id));
-			if ($row = $query->row()) {
-				$initial_strength = (int)$row->initial_strength;
-				$casualties = (int)$row->casualties;
+			$unit = $this->game->get_unit($row->id);
+			//$query = $this->db->get_where('game_unit_stats',array('game_id'=>$this->game->id,'unit_id'=>$row->id));
+			if ($unit) {
+				$initial_strength = (int)$unit->initial_strength;
+				$casualties = (int)$unit->casualties;
 				if ($initial_strength && $casualties) {
 					$percent_loss = (int)(100 * $casualties / $initial_strength);
 					return sprintf("%d <font color=red>%d%%</font>",$casualties,$percent_loss);
@@ -296,14 +309,82 @@ class Units extends MY_Controller
 		return '?';
 	}
 
+	function get_formation($primary_key,$row) {
+		if ($this->game) {
+			$unit = $this->game->get_unit($row->id);
+			if ($unit) {
+				switch ($unit->num_bases) {
+				case 0:
+					return "<img src=".site_url()."images/formation/0.jpg>"; break;
+				case 1:
+					return "<img src=".site_url()."images/formation/1.jpg>"; break;
+				case 2:
+					switch ($unit->formation) {
+					case 'CL':
+					case 'CC':
+						return "<img src=".site_url()."images/formation/2C.jpg>";
+						break;
+					case 'LN':
+					case 'SQ':
+					case 'HS':
+						return "<img src=".site_url()."images/formation/2L.jpg>";
+						break;
+					case 'OO':
+						return "2x <img src=".site_url()."images/formation/SS.jpg>";
+						break;
+					}
+					break;
+
+				case 3:
+					switch ($unit->formation) {
+					case 'CL':
+					case 'CC':
+						return "<img src=".site_url()."images/formation/3C.jpg>";
+						break;
+					case 'LN':
+					case 'SQ':
+					case 'HS':
+						return "<img src=".site_url()."images/formation/3L.jpg>";
+						break;
+					case 'OO':
+						return "3x <img src=".site_url()."images/formation/SS.jpg>";
+						break;
+					}
+					break;
+
+				default:	// 4 or more !
+					switch ($unit->formation) {
+					case 'CL':
+						return $unit->num_bases."x <img src=".site_url()."images/formation/4C.jpg>";
+						break;
+					case 'CC':
+						return $unit->num_bases."x <img src=".site_url()."images/formation/4CC.jpg>";
+						break;
+					case 'LN':
+					case 'SQ':
+					case 'HS':
+						return $unit->num_bases."x <img src=".site_url()."images/formation/4L.jpg>";
+						break;
+					case 'OO':
+						return $unit->num_bases."x <img src=".site_url()."images/formation/SS.jpg>";
+						break;
+					}
+					break;
+				}
+			}
+		}
+		return '?';
+	}
+
+
 	function last_hour($primary_key,$row) {
 		if ($this->game) {
-			$query = $this->db->get_where('game_unit_stats',array('game_id'=>$this->game->id,'unit_id'=>$row->id));
-			if ($row = $query->row()) {
-				$cas = $row->casualties_this_hour;
-				$did_close_combat = $row->did_close_combat;
-				$won_close_combat = $row->won_close_combat;
-				$initial_strength = (int)$row->initial_strength;
+			$unit = $this->game->get_unit($row->id);
+			if ($unit) {
+				$cas = $unit->casualties_this_hour;
+				$did_close_combat = $unit->did_close_combat;
+				$won_close_combat = $unit->won_close_combat;
+				$initial_strength = (int)$unit->initial_strength;
 				$_ = '';
 				if ($initial_strength && $cas) {
 					$percent_loss = (int)(100 * $cas / $initial_strength);
@@ -325,9 +406,9 @@ class Units extends MY_Controller
 
 	function get_player($primary_key,$row) {
 		if ($this->game) {
-			$query = $this->db->get_where('game_unit_stats',array('game_id'=>$this->game->id,'unit_id'=>$row->id));
-			if ($row = $query->row()) {
-				$player_id = $row->player_id;
+			$unit = $this->game->get_unit($row->id);
+			if ($unit) {
+				$player_id = $unit->player_id;
 				$query = $this->db->get_where('user',array('id'=>$player_id));
 				if ($row = $query->row()) {
 					return $row->username;

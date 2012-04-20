@@ -51,7 +51,6 @@ if (isset($game)) {
 		echo "<button id=morale_test_done>Leader Attach &gt;</button>";
 		echo "</td></tr></table>";
 		echo "<div id=morale_test_form></div>";
-		echo "<div id=results></div>";
 		break;
 	case PHASE_LEADER_ATTACH:
 		echo "<h2>Leader Attach Phase ~ ".$game->hrs."</h2>\n";
@@ -59,7 +58,6 @@ if (isset($game)) {
 		echo "<table border=0 width=90%><tr><td align=left><button id=rewind>&lt; ME Morale</button></td>";
 		echo "<td align=right><button id=leader_attach_done>Declare Orders &gt;</button></td></tr></table>";
 		echo "<div id=leader_attach_form></div>";
-		echo "<div id=results></div>";
 		$distance = $game->yards_to_inches(800);
 		echo "<br><br><i>Leaders may move up to 800 yards ($distance inches) to attach to any unit. Move the leader figures on the table, and update the lists on this screen when you are done. It is important for the computer to know which units leaders are attached to, as this provides a number of bonuses for both combat and morale.</i>";
 		break;
@@ -72,7 +70,6 @@ if (isset($game)) {
 		echo "<button id=declare_orders_done>Activate Orders &gt;</button>";
 		echo "</td></tr></table>";
 		echo "<div id=declare_orders_form></div>";
-		echo "<div id=results></div>";
 		break;
 	case PHASE_ACTIVATE_ORDERS:
 		echo "<h2>Activate Orders Phase ~ ".$game->hrs."</h2>\n";
@@ -83,7 +80,6 @@ if (isset($game)) {
 		echo "<button id=activate_orders_done>BreakOff Movement &gt;</button>";
 		echo "</td></tr></table>";
 		echo "<div id=activate_orders_form></div>";
-		echo "<div id=results></div>";
 		break;
 	case PHASE_BREAKOFF:
 		echo "<h2>Units on BreakOff Orders Disengage ~ ".$game->hrs."</h2>\n";
@@ -93,7 +89,7 @@ if (isset($game)) {
 		echo "</td><td align=right>";
 		echo "<button id=breakoff_done>Grand Tactical Movement &gt;</button>";
 		echo "</td></tr></table>";
-		echo "<div id=results></div>";
+		echo "<div id=breakoff_form></div>";
 		break;
 	case PHASE_GT:
 		echo "<h2>Grand Tactical Movement Phase ~ ".$game->hrs."</h2>\n";
@@ -230,6 +226,12 @@ $(function() {
 	$("#activate_orders_form").load("umpire_console/activate_orders_form",function(){
 		$("#activate_orders_done").fadeIn(4000);
 	});
+	
+	// Phase 6 - kick off breakoff movement display
+	$("#breakoff_form").load("umpire_console/breakoff_form",function(){
+		$("#breakoff_done").fadeIn(4000);
+	});
+
 
 
 });

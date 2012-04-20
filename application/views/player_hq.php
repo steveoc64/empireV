@@ -85,6 +85,9 @@ $(function() {
 		var seconds = now - start_of_turn;
 		var min = parseInt(seconds / 60);
 		var sec = seconds % 60;
+		var hours = parseInt(min / 60);
+		min = min % 60;
+
 		if (seconds < 60) {
 			color='green';
 		} else if (seconds < 120) {
@@ -99,7 +102,7 @@ $(function() {
 	
 		if (sec < 10) { sec = '0'+sec; }
 		if (min < 10) { min = '0'+min; }
-		$('#clock').html('<font size=+2 color='+color+'><b>'+min+':'+sec+'</b></font>');
+		$('#clock').html('<font size=+2 color='+color+'><b>'+hours+':'+min+':'+sec+'</b></font>');
 		seconds ++;
 	}, 1000);
 

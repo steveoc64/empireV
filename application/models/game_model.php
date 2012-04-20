@@ -2002,6 +2002,10 @@ $("#declare_orders_form button").click(function() {
 		//echo "Orders for unit ".$unit_id." have been cancelled for this turn";
 	}
 
+	function breakoff_form() {
+		echo "Breakoff Form";
+	}
+
 
 }
 
