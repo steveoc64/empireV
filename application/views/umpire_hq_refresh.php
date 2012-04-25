@@ -1,12 +1,6 @@
 <button id="hq">Return to HQ</button></td>
 <?
 
-// Calculate 400yds in inches, based on the current game scale
-if ($game->ground_scale != 0) {
-	$distance400 = sprintf("400yds (%d inches)",(int)(400/$game->ground_scale));;
-} else {
-	$distance400 = "400yds (10 inches)";
-}
 // Show game stats
 
 if (isset($game)) {
@@ -99,7 +93,7 @@ if (isset($game)) {
 		echo "</td><td align=right>";
 		echo "<button id=gt_done>Determine Bombardment &gt;</button>";
 		echo "</td></tr></table>";
-		echo "<div id=results></div>";
+		echo "<div id=grand_tactical_form></div>";
 		break;
 	case PHASE_DETERMINE_BOMBARDMENT:
 		echo "<h2>Determine Bombardment Phase ~ ".$game->hrs."</h2>\n";
@@ -227,10 +221,16 @@ $(function() {
 		$("#activate_orders_done").fadeIn(4000);
 	});
 	
-	// Phase 6 - kick off breakoff movement display
+	// Phase 7 - kick off breakoff movement display
 	$("#breakoff_form").load("umpire_console/breakoff_form",function(){
 		$("#breakoff_done").fadeIn(4000);
 	});
+	
+	// Phase 8 - kick off GrandTactical movement
+	$("#grand_tactical_form").load("umpire_console/grand_tactical_form",function(){
+		$("#gt_done").fadeIn(4000);
+	});
+
 
 
 
@@ -289,7 +289,7 @@ $("#morale_test").click(function() {
 	if (units.length == 0) {
 		alert("No units selected ... :(");
 	} else {
-		if (confirm("Do you want to run a morale check for "+units+"\n\nYou are sure that these units are within <?=$distance400?> of an ME which failed in some way,\nand these units are not 2 or more morale grades above them ?")) {
+		if (confirm("Do you want to run a morale check for "+units+"\n\nYou are sure that these units are within <?=$game->engagement_range_inches();?> of an ME which failed in some way,\nand these units are not 2 or more morale grades above them ?")) {
 			$('<div></div>').load('umpire_console/morale_test',{'units[]': units}).dialog({modal:true, width:900, height:600});
 			$("#morale_test_form").load("umpire_console/morale_test_form",function(){ $("#morale_test_done").fadeIn(2000);});
 			//$(':checkbox').map(function() {

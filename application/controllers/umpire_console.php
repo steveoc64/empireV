@@ -12,7 +12,11 @@ class Umpire_Console extends MY_Controller
 	}
 
 	function index() {
-		$this->render($this->load->view('umpire_hq',array('game'=>$this->game),true));
+		if ($this->game) {
+			$this->render($this->load->view('umpire_hq',array('game'=>$this->game),true));
+		} else {
+			$this->oops('You need to select a game first in order to umpire it ..');
+		}
 	}
 
 	function refresh() {
@@ -90,6 +94,10 @@ class Umpire_Console extends MY_Controller
 		$this->game->breakoff_done();
 	}
 
+	function grand_tactical_form() {
+		$this->game->grand_tactical_form();
+	}
+
 	function gt_done() {
 		$this->game->gt_done();
 	}
@@ -120,6 +128,14 @@ class Umpire_Console extends MY_Controller
 
 	function rewind() {
 		$this->game->rewind();
+	}
+
+	function update_unit_formation() {
+		$unit_id = $this->input->post('unit');
+		$formation = $this->input->post('formation');
+		if ($unit = $this->game->get_unit($unit_id)) {
+			$this->game->update_unit_formation($unit,$formation);
+		}
 	}
 
 }

@@ -36,7 +36,7 @@ icon="bullet_3">
 <Name type="Text" ref="y">Müffling Infantry Regiment # 49, two battalions</Name>
 <FacingColours type="Text"></FacingColours>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
-<Strength type="Number" format="####" init="720">1600</Strength>
+<Strength type="Number" format="####" init="720">1200</Strength>
 <NumBases type="Text"></NumBases>
 <Ranks type="Choice" format="3/2/OpenOrder" init="3">3</Ranks>
 <Officers type="Number" format="##" init="10">10</Officers>
@@ -55,7 +55,7 @@ icon="bullet_3">
 <Battalion item="y">
 <Name>Prince Clemens Saxon Infantry Regiment, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -72,7 +72,7 @@ icon="bullet_3">
 <Battalion item="y">
 <Name>Kürfurst Saxon Infantry Regiment, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -109,7 +109,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Rabenau Fusilier Battalion # 13</Name>
 <MoraleState>Good</MoraleState>
-<Strength>800</Strength>
+<Strength>600</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -127,7 +127,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Pelet Fusilier Battalion # 14</Name>
 <MoraleState>Good</MoraleState>
-<Strength>800</Strength>
+<Strength>600</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -145,7 +145,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Rühle Fusilier Battalion # 15</Name>
 <MoraleState>Good</MoraleState>
-<Strength>800</Strength>
+<Strength>600</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -271,7 +271,7 @@ icon="bullet_2">
 <Battalion item="y">
 <Name>Hahn Grenadier battalion (29/32)</Name>
 <MoraleState>Good</MoraleState>
-<Strength>800</Strength>
+<Strength>600</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -288,7 +288,7 @@ icon="bullet_2">
 <Battalion item="y">
 <Name>Hohenlohe Infantry Regiment # 32, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -305,7 +305,7 @@ icon="bullet_2">
 <Battalion item="y">
 <Name>Sanitz Infantry Regiment # 50, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -339,7 +339,7 @@ icon="bullet_2">
 <Battalion item="y">
 <Name>Sack Grenadier battalion (33/42)</Name>
 <MoraleState>Good</MoraleState>
-<Strength>720</Strength>
+<Strength>600</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -356,7 +356,7 @@ icon="bullet_2">
 <Battalion item="y">
 <Name>Grawert Infantry Regiment # 37, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -373,7 +373,7 @@ icon="bullet_2">
 <Battalion item="y">
 <Name>Zastrow Infantry Regiment # 39, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -473,7 +473,7 @@ icon="bullet_2">
 <Battalion item="y">
 <Name>Erichsen Fusilier battalion # 10</Name>
 <MoraleState>Good</MoraleState>
-<Strength>720</Strength>
+<Strength>600</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>

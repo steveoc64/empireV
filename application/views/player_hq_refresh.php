@@ -108,12 +108,14 @@ if (isset($game)) {
 	case PHASE_BREAKOFF:
 		echo "<h2>Units on BreakOff Orders Disengage ~ ".$game->hrs."</h2>\n";
 		echo "<center><div id=clock>$t</div></center>";
-		echo "</div><button id=refresh_page>Refresh Page</button>";
+		echo "<button id=refresh_page>Refresh Page</button>";
+		echo "<div id=breakoff_form><div>";
 		break;
 	case PHASE_GT:
 		echo "<h2>Grand Tactical Movement Phase ~ ".$game->hrs."</h2>\n";
 		echo "<center><div id=clock>$t</div></center>";
 		echo "<button id=refresh_page>Refresh Page</button>";
+		echo "<div id=grand_tactical_form><div>";
 		break;
 	case PHASE_DETERMINE_BOMBARDMENT:
 		echo "<h2>Determine Bombardment Phase ~ ".$game->hrs."</h2>\n";
@@ -225,6 +227,18 @@ $(function() {
 		$.ajax({ type: 'GET', url: 'leader_attach/player_not_done' });
 		$("#leader_attach_done").fadeIn(1000);
 	});
+
+	// Phase 7 - kick off breakoff movement display
+	$("#breakoff_form").load("player_console/breakoff_form",function(){
+		$("#breakoff_done").fadeIn(4000);
+	});
+	
+	// Phase 8 - kick off grand tactical movement display
+	$("#grand_tactical_form").load("player_console/grand_tactical_form",function(){
+		$("#gt_done").fadeIn(4000);
+	});
+
+
 
 	$("#leader_attach_form").load("player_console/leader_attach_form");
 	$("#declare_orders_form").load("player_console/declare_orders_form");

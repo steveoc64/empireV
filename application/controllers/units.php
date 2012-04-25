@@ -312,66 +312,7 @@ class Units extends MY_Controller
 	function get_formation($primary_key,$row) {
 		if ($this->game) {
 			$unit = $this->game->get_unit($row->id);
-			if ($unit) {
-				switch ($unit->num_bases) {
-				case 0:
-					return "<img src=".site_url()."images/formation/0.jpg>"; break;
-				case 1:
-					return "<img src=".site_url()."images/formation/1.jpg>"; break;
-				case 2:
-					switch ($unit->formation) {
-					case 'CL':
-					case 'CC':
-						return "<img src=".site_url()."images/formation/2C.jpg>";
-						break;
-					case 'LN':
-					case 'SQ':
-					case 'HS':
-						return "<img src=".site_url()."images/formation/2L.jpg>";
-						break;
-					case 'OO':
-						return "2x <img src=".site_url()."images/formation/SS.jpg>";
-						break;
-					}
-					break;
-
-				case 3:
-					switch ($unit->formation) {
-					case 'CL':
-					case 'CC':
-						return "<img src=".site_url()."images/formation/3C.jpg>";
-						break;
-					case 'LN':
-					case 'SQ':
-					case 'HS':
-						return "<img src=".site_url()."images/formation/3L.jpg>";
-						break;
-					case 'OO':
-						return "3x <img src=".site_url()."images/formation/SS.jpg>";
-						break;
-					}
-					break;
-
-				default:	// 4 or more !
-					switch ($unit->formation) {
-					case 'CL':
-						return $unit->num_bases."x <img src=".site_url()."images/formation/4C.jpg>";
-						break;
-					case 'CC':
-						return $unit->num_bases."x <img src=".site_url()."images/formation/4CC.jpg>";
-						break;
-					case 'LN':
-					case 'SQ':
-					case 'HS':
-						return $unit->num_bases."x <img src=".site_url()."images/formation/4L.jpg>";
-						break;
-					case 'OO':
-						return $unit->num_bases."x <img src=".site_url()."images/formation/SS.jpg>";
-						break;
-					}
-					break;
-				}
-			}
+			return $this->game->get_formation_graphic($unit);
 		}
 		return '?';
 	}

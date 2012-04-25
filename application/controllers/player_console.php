@@ -22,4 +22,20 @@ class Player_console extends MY_Controller
 	function declare_orders_form() {
 		$this->game->declare_orders_form();
 	}
+
+	function breakoff_form() {
+		$this->game->breakoff_form();
+	}
+
+	function update_unit_formation() {
+		$unit_id = $this->input->post('unit');
+		$formation = $this->input->post('formation');
+		if ($unit = $this->game->get_unit($unit_id)) {
+			$this->game->update_unit_formation($unit,$formation);
+		}
+	}
+
+	function grand_tactical_form() {
+		$this->game->grand_tactical_form();
+	}
 }

@@ -77,6 +77,7 @@ case 'A':
 		'Units' => 'units',
 		'Scenario' => 'scenarios',
 		'Game' => 'games',
+		'Engines' => 'engines',
 		'Order of Battle' => 'orbat',
 		'User Accounts' => 'user_account',
 		'Engagements' => 'engagements',

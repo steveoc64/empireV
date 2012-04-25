@@ -37,6 +37,7 @@ $(function() {
 		var sec = seconds % 60;
 		var hours = parseInt(min / 60);
 		min = min % 60;
+
 		if (seconds < 60) {
 			color='green';
 		} else if (seconds < 120) {

@@ -47,8 +47,8 @@ body {
 	left: 0px;
 	right: 0px;
 	position: absolute;
-	background: url(../images/parchment_scroll_bgnd.png) no-repeat;
-	background-size: cover;
+	background: url(../images/parchment_scroll_bgnd.png) repeat-y;
+	background-size: 100%;
 	opacity:1;
 	border: 0px solid white;
 	padding: 20px 15%;

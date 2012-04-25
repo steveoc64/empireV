@@ -413,7 +413,4 @@ Class Unit_model extends CI_Model {
 		$this->db->query("update game_unit_stats set fled=initial_strength where game_id=".$game->id." and unit_id=".$unit_id." and fled > initial_strength");
 		$this->db->query("update game_unit_stats set disorder=100 where game_id=".$game->id." and unit_id=".$unit_id." and disorder > 100");
 	}
-
-
-
 }

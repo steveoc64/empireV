@@ -15,6 +15,13 @@ define ('PHASE_RALLY',12);
 define ('PHASE_REST',13);
 define ('PHASE_END_OF_HOUR',14);
 
+define ('OPEN_GROUND','#EDFFC0');
+define ('LIGHT_WOODS','#C4FFC2');
+define ('HEAVY_WOODS','#A8FF85');
+define ('TOWNS','#D0B280');
+define ('SWAMP','#5DD0B3');
+
+
 function d100 () {
 	return rand(1,100);
 }
@@ -531,6 +538,18 @@ class Game_model extends CI_Model {
 		} else {
 			$this->national_theme = null;
 		}
+		
+		// Now load the various code engines associated with this game
+		$this->code_engine = $this->db->get_where('code_engine',array('id' => $game->code_engine_id))->row();
+		if (!$this->code_engine) {
+			die ("Cannot find Code Engine for ID ".$this->game->code_engine_id);
+		}
+		$this->load->model($this->code_engine->command,'command_model');
+		$this->load->model($this->code_engine->movement,'movement_model'); $this->movement_model->init($this);
+		$this->load->model($this->code_engine->morale,'morale_model');
+		$this->load->model($this->code_engine->firepower,'firepower_model');
+		$this->load->model($this->code_engine->melee,'melee_model');
+
 
 		if (!$full_details) {
 			return $game;
@@ -1126,7 +1145,7 @@ class Game_model extends CI_Model {
 			die ("No need to check Morale on turn 1 - that would be a terrible thing if troops failed before the game starts");
 		} 
 
-		$distance = $this->yards_to_inches(400);
+		$distance = $this->yards_to_inches(320);
 		echo "<i>NOTE: Testing Proximity = $distance inches at 1\"=".$game->ground_scale."yds current game scale</i><p>";
 
 		echo "<b><u>Players and their units</u></b>";
@@ -1854,7 +1873,7 @@ $("#declare_orders_form button").click(function() {
 					$last_parent_id = $parent_unit->id;
 				}
 
-				echo "<tr><td><i>[".$me_unit->id."] - <b>".$me_unit->name."</b><br>";
+				echo "<tr><td><b>[".$me_unit->id."] - <b>".$me_unit->name."</b><br>";
 				if (file_exists('unit-pictures/'.$me_unit->id.'.jpg')) {
 					echo '<img id=unit-picture-'.$me_unit->id.' src=unit-pictures/'.$me_unit->id.'.jpg height=64><br>';
 				}
@@ -2003,7 +2022,509 @@ $("#declare_orders_form button").click(function() {
 	}
 
 	function breakoff_form() {
-		echo "Breakoff Form";
+
+		// Check if there are any BreakOff orders to be exectued this turn
+		$query = $this->db->query("select * from game_order where game_id=".$this->id." and activate_turn=".$this->turn_number." and order_type=8");
+		$breakoffs = array();
+		foreach ($query->result() as $row) {
+			$breakoffs[] = $row;
+		}
+
+		$filter_user = 0;
+		$got_some = false;
+		if ($this->session->userdata('role') == 'P') {
+			$filter_user = $this->user->id;
+		}
+
+		if (count($breakoffs)) {
+			foreach ($breakoffs as $order) {
+				$unit = $this->get_unit($order->unit_id);
+				if (!$filter_user || ($unit->player_id == $filter_user)) {
+
+				if (!$got_some) {
+					echo "<center><b><u>The following units can now perform Break Off moves to extract themselves from engagements :</b></u><p>";
+					echo "<table border=1 width=80% cellpadding=2>";
+					$got_some = true;
+				}
+
+				echo "<tr><td><i>[".$unit->id."]</i> - <b>".$unit->name."</b><br>";
+				if (file_exists('unit-pictures/'.$unit->id.'.jpg')) {
+					echo '<img id=unit-picture-'.$unit->id.' src=unit-pictures/'.$unit->id.'.jpg height=64><br>';
+				}
+				$distance = $this->yards_to_inches(320);
+				echo "Objective of Break Off Order : ".$order->objective;
+				echo "<br>Unit retires from Engagement, the outer limit of Engagement Range (320 yd ~ $distance inches)<br>";
+				if (!$filter_user) {
+					// Only umpire can declare this
+					echo "<button unit_id=".$unit->id." action=end_engagement>Click Here if this ends the Engagement</button>";
+				}
+
+				// Now draw up a table of units in this ME and how far they can move
+				$move = $this->movement_model->grand_tactical_move($unit);
+				echo "<table border=2 width=100%>";
+				echo "<tr bgcolor=#C09E6E>";
+				echo "<th>Unit</th><th>Formation</th><th>Column</th><th>Line</th><th>Square</th><th>Light Woods</th><th>Heavy Woods</th><th>Town</th><th>Swamp</th>";
+				echo "</tr>\n";
+				echo "<tr><td><b>Leader</b></td>";
+				echo "<td></td>";
+				echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Column']['Open'])."</td>";
+				echo "<td></td><td></td>"; // Line and Square - does not apply
+				echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Column']['LightWoods'])."</td>";
+				echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Column']['HeavyWoods'])."</td>";
+				echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Column']['Town'])."</td>";
+				echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Column']['Swamp'])."</td></tr>\n";
+
+				// Repeat for all sub-units of the ME
+				$this->get_me_subunits($unit);
+				foreach ($unit->me_subunit as $subunit) {
+					echo "<tr><td>[".$subunit->id."]<br>".$subunit->name."</td>";
+					echo "<td align=center>".$this->get_formation_graphic($subunit);
+					// Add a selector for a new formation
+
+					echo "<br><select unit_id=".$subunit->id.">";
+					echo '<option value=LN';
+						if ($subunit->formation == 'LN') echo ' selected';
+					echo '>Line</option>';
+					echo '<option value=CL';
+						if ($subunit->formation == 'CL') echo ' selected';
+					echo '>Column</option>';
+					echo '<option value=CC';
+						if ($subunit->formation == 'CC') echo ' selected';
+					echo '>Closed Col</option>';
+					echo '<option value=RC';
+						if ($subunit->formation == 'RC') echo ' selected';
+					echo '>Road Col</option>';
+					echo '<option value=SQ';
+						if ($subunit->formation == 'SQ') echo ' selected';
+					echo '>Square</option>';
+					echo '<option value=HS';
+						if ($subunit->formation == 'HS') echo ' selected';
+					echo '>Hasty Square</option>';
+					echo '<option value=OO';
+						if ($subunit->formation == 'OO') echo ' selected';
+					echo '>Open Order</option>';
+					echo "</select>";
+					echo "</td>";
+
+					$move = $this->movement_model->grand_tactical_move($subunit);
+					if (array_key_exists('Prolong',$move)) {
+					echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Prolong']['Open'])."</b></td>";
+					echo "<td></td><td></td>";
+					echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Prolong']['LightWoods'])."</td>";
+					echo "<td></td>";
+					echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Prolong']['Town'])."</td>";
+					echo "<td></td>";
+					echo "</tr>\n";
+					} else {
+					switch ($subunit->formation) {
+					case 'CL':
+					case 'CC':
+					case 'RC':
+					case 'OO':
+						echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Column']['Open'])."</b></td>";
+						echo "<td></td><td></td>"; // line and square
+						echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Column']['LightWoods'])."</td>";
+						echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Column']['HeavyWoods'])."</td>";
+						echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Column']['Town'])."</td>";
+						echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Column']['Swamp'])."</td></tr>\n";
+						break;
+					case 'LN':
+						echo "<td></td>"; // Col
+						echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Line']['Open'])."</b></td>";
+						echo "<td></td>"; // square
+						echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Line']['LightWoods'])."</td>";
+						echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Line']['HeavyWoods'])."</td>";
+						echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Line']['Town'])."</td>";
+						echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Line']['Swamp'])."</td></tr>\n";
+						break;
+					case 'SQ':
+					case 'HS':
+					default:
+						echo "<td></td><td></td>"; // column and line
+						echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Square']['Open'])."</b></td>";
+						echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Square']['LightWoods'])."</td>";
+						echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Square']['HeavyWoods'])."</td>";
+						echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Square']['Town'])."</td>";
+						echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Square']['Swamp'])."</td></tr>\n";
+						break;
+					} // end switch
+					} // else !artillery
+				}
+
+				echo "</table>\n";
+
+				} // if user filter
+			} // foreach breakoff
+			if ($got_some) {
+				echo "</table></center>";
+			}
+		}   // count breakoff is 0
+		if ($got_some) {
+			if ($filter_user) {
+				$console = 'player_console';
+			} else {
+				$console = 'umpire_console';
+			}
+?>
+<script>
+$("#breakoff_form select").change(function() {
+	var unit_id = $(this).attr('unit_id');
+	var new_formation = $(this).val();
+	var data = {unit: unit_id, formation: new_formation};
+		$.ajax({ type: 'POST',
+			url: '<?=$console?>/update_unit_formation',
+  			data: data,
+		}).done(function(msg) { 
+			$("#breakoff_form").load("<?=$console?>/breakoff_form",function(){ $("#breakoff_done").fadeIn(4000); });
+		})
+});
+</script>
+<?
+		} else {
+			echo "No BreakOff orders to be executed this turn ...";
+		}
+	}
+
+	function get_formation_graphic ($unit) {
+		switch ($unit->num_bases) {
+		case 0:
+			return "<img src=".site_url()."images/formation/0.jpg>"; break;
+		case 1:
+			return "<img src=".site_url()."images/formation/1.jpg>"; break;
+		case 2:
+			switch ($unit->formation) {
+			case 'CL':
+			case 'CC':
+				return "<img src=".site_url()."images/formation/2C.jpg>";
+				break;
+			case 'RC':
+				return "<img src=".site_url()."images/formation/2C.jpg>RC";
+				break;
+			case 'LN':
+			case 'SQ':
+			case 'HS':
+				return "<img src=".site_url()."images/formation/2L.jpg>";
+				break;
+			case 'OO':
+				return "2x <img src=".site_url()."images/formation/SS.jpg>";
+				break;
+			}
+			break;
+
+		case 3:
+			switch ($unit->formation) {
+			case 'CL':
+			case 'CC':
+				return "<img src=".site_url()."images/formation/3C.jpg>";
+				break;
+			case 'RC':
+				return "<img src=".site_url()."images/formation/3C.jpg>RC";
+				break;
+			case 'LN':
+			case 'SQ':
+			case 'HS':
+				return "<img src=".site_url()."images/formation/3L.jpg>";
+				break;
+			case 'OO':
+				return "3x <img src=".site_url()."images/formation/SS.jpg>";
+				break;
+			}
+			break;
+
+		default:	// 4 or more !
+			switch ($unit->formation) {
+			case 'CL':
+				return $unit->num_bases."x <img src=".site_url()."images/formation/4C.jpg>";
+				break;
+			case 'RC':
+				return $unit->num_bases."x <img src=".site_url()."images/formation/4C.jpg>RC";
+				break;
+			case 'CC':
+			case 'SQ':
+			case 'HS':
+				return $unit->num_bases."x <img src=".site_url()."images/formation/4CC.jpg>";
+				break;
+			case 'LN':
+				return $unit->num_bases."x <img src=".site_url()."images/formation/4L.jpg>";
+				break;
+			case 'OO':
+				return $unit->num_bases."x <img src=".site_url()."images/formation/SS.jpg>";
+				break;
+			}
+			break;
+		}
+		return '?';
+	}
+
+	function update_unit_formation ($unit, $formation) {
+
+		switch ($formation) {
+		case 'CL':
+		case 'CC':
+		case 'LN':
+		case 'RC':
+		case 'SQ':
+		case 'HS':
+		case 'OO':
+			break;
+		default:
+			die("Invalid formation ".$formation." for unit ".$unit->id);
+		}
+
+		$this->db->query("update game_unit_stats set formation='$formation' where game_id=".$this->id." and unit_id=".$unit->id);
+
+		// Create an audit record for the unit
+		$data = new stdClass;
+			$data->game_id = $this->id;
+			$data->turn_number = $this->turn_number;
+			$data->unit_id = $unit->id;
+			$data->event_type = 8;
+			$data->descr = 'Formation change from '.$unit->formation.' to '.$formation;
+		$this->db->insert('game_event',$data);
+
+		// Now update the unit passed by reference
+		$unit->formation = $formation;
+
+	}
+
+	function grand_tactical_form() {
+
+		echo "<b><u>The following units may now perform Grand Tactical Movement :</b></u><p>";
+
+		$player_id = 0;
+		switch($this->session->userdata('role')) {
+		case 'A':
+		case 'U':
+			$this->cache_all_units();
+			break;
+		case 'P':
+			$player_id = $this->session->userdata('user_id');
+			$this->cache_player_units($player_id);
+			break;
+		}
+
+
+		echo "<div id=gt_players style=\"width:90%;\">";
+		$god_mode = false;
+		if ($this->session->userdata('role') == 'P') {
+			$this->grand_tactical_form_set($this->me, $player_id,$god_mode);
+		} else {
+			// Do a form for all players
+			$god_mode = true;
+			$query = $this->db->query("select id,commander_id,username from user where commander_id != 0 and current_game=".$this->id);
+			foreach ($query->result() as $commanding_user) {
+				echo "<h1>".$commanding_user->username."</h1>";
+				$range = $this->get_unit_id_range($commanding_user->commander_id);
+				$me_list = $this->get_me_list($range->start_id,$range->end_id);
+				$this->grand_tactical_form_set($me_list, $commanding_user->id,$god_mode);
+			}
+		}
+		echo "</div>";
+?>
+<script> 
+$(function() {
+	$("#gt_players").accordion({collapsible: true, active: false, autoHeight: false });
+});
+</script>
+<?
+	}
+
+	function grand_tactical_form_set($me_list, $player_id,$god_mode) {
+
+		echo "<div id=gt_player_".$player_id." style=\"width:95%; background:rgba(255,255,255,0.1);\">";
+
+		foreach ($me_list as $unit) {
+
+			// Check that this player owns the ME
+			if ($unit->player_id == $player_id) {
+
+			echo "<h2>[".$unit->id."] - ".$unit->name."<br>";
+			// Include current orders in the header
+			echo "Current Orders : ".$unit->current_order_type->name;
+			echo "</h2>";
+
+			echo "<div style=\"width:100%; background:rgba(255,255,255,0.1);\">";
+			if (file_exists('unit-pictures/'.$unit->id.'.jpg')) {
+				echo '<img id=unit-picture-'.$unit->id.' src=unit-pictures/'.$unit->id.'.jpg height=64><br>';
+			}
+
+			$can_move = false;
+			switch ($unit->current_order_type->name) {
+			case 'Attack':
+			case 'Withdraw':
+			case 'Support':
+				echo "This unit is to <font color=red>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
+				$this->movement_model->multiplier = 1.0;
+				$can_move = true;
+				break;
+			case 'March':
+				echo "This unit is to <font color=blue>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
+				echo "<br>Movement rates below apply to units that are greater than ".$this->yards_to_inches(1600)."inches from the enemy, otherwise move at half this rate.";
+				$this->movement_model->multiplier = 1.5;
+				$can_move = true;
+				break;
+				break;
+			case 'Defend':
+			case 'Garrison':
+				echo "This unit is to remain in a <font color=green>Defensive Posture</font> at the current objective of ".$unit->current_order->objective;
+				break;
+			case 'Redeploy':
+				echo "This unit is to <font color=green>Re-Deploy</font> ".$unit->current_order->objective;
+				break;
+			case 'Rest and Rally':
+				echo "This unit is to <font color=yellow>Rest and Rally</font> ".$unit->current_order->objective;
+				break;
+			case 'Break Off':
+				echo "This unit has already moved, breaking off from contact ".$unit->current_order->objective;
+				break;
+			case 'Sauve qui peut':
+				echo "This unit is to <font color=red size=+1><b><u>Sauve Qui Peut !</u></b></font>";
+				break;
+			}
+
+			if ($can_move) {
+			// Now draw up a table of units in this ME and how far they can move
+			$move = $this->movement_model->grand_tactical_move($unit);
+			echo "<table border=1>";
+			echo "<tr bgcolor=#C09E6E>";
+			echo "<th>Unit</th><th>Formation</th><th>Open</th><th>LtWoods</th><th>HvWoods</th><th>Town</th><th>Swamp</th>";
+			echo "</tr>\n";
+			echo "<tr><td><b>Leader</b></td>";
+			echo "<td></td>";
+			echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Column']['Open'])."</td>";
+			echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Column']['LightWoods'])."</td>";
+			echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Column']['HeavyWoods'])."</td>";
+			echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Column']['Town'])."</td>";
+			echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Column']['Swamp'])."</td></tr>\n";
+
+			// Repeat for all sub-units of the ME
+			$this->get_me_subunits($unit);
+			foreach ($unit->me_subunit as $subunit) {
+				echo "<tr><td><a target=unit-".$subunit->id." href=".site_url()."units/status?id=".$subunit->id."><small>[".$subunit->id."]<br>".$subunit->name."</small></a></td>";
+				echo "<td align=center>".$this->get_formation_graphic($subunit);
+				// Add a selector for a new formation
+
+				echo "<br><select unit_id=".$subunit->id.">";
+				echo '<option value=LN';
+					if ($subunit->formation == 'LN') echo ' selected';
+				echo '>Line</option>';
+				echo '<option value=CL';
+					if ($subunit->formation == 'CL') echo ' selected';
+				echo '>Column</option>';
+				echo '<option value=CC';
+					if ($subunit->formation == 'CC') echo ' selected';
+				echo '>Closed Col</option>';
+				echo '<option value=RC';
+					if ($subunit->formation == 'RC') echo ' selected';
+				echo '>Road Col</option>';
+				echo '<option value=SQ';
+					if ($subunit->formation == 'SQ') echo ' selected';
+				echo '>Square</option>';
+				echo '<option value=HS';
+					if ($subunit->formation == 'HS') echo ' selected';
+				echo '>Hasty Square</option>';
+				echo '<option value=OO';
+					if ($subunit->formation == 'OO') echo ' selected';
+				echo '>Open Order</option>';
+				echo "</select>";
+				echo "</td>";
+
+				$move = $this->movement_model->grand_tactical_move($subunit);
+				if (array_key_exists('Prolong',$move)) {
+				echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Prolong']['Open'])."</b></td>";
+				echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Prolong']['LightWoods'])."</td>";
+				echo "<td></td>";
+				echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Prolong']['Town'])."</td>";
+				echo "<td></td>";
+				echo "</tr>\n";
+				} else {
+				switch ($subunit->formation) {
+				case 'CL':
+				case 'CC':
+				case 'RC':
+				case 'OO':
+					echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Column']['Open'])."</b></td>";
+					echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Column']['LightWoods'])."</td>";
+					echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Column']['HeavyWoods'])."</td>";
+					echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Column']['Town'])."</td>";
+					echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Column']['Swamp'])."</td></tr>\n";
+					break;
+				case 'LN':
+					echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Line']['Open'])."</b></td>";
+					echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Line']['LightWoods'])."</td>";
+					echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Line']['HeavyWoods'])."</td>";
+					echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Line']['Town'])."</td>";
+					echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Line']['Swamp'])."</td></tr>\n";
+					break;
+				case 'SQ':
+				case 'HS':
+				default:
+					echo "<td align=center bgcolor=".OPEN_GROUND."><b>".$this->yards_to_inches($move['Square']['Open'])."</b></td>";
+					echo "<td align=center bgcolor=".LIGHT_WOODS.">".$this->yards_to_inches($move['Square']['LightWoods'])."</td>";
+					echo "<td align=center bgcolor=".HEAVY_WOODS.">".$this->yards_to_inches($move['Square']['HeavyWoods'])."</td>";
+					echo "<td align=center bgcolor=".TOWNS.">".$this->yards_to_inches($move['Square']['Town'])."</td>";
+					echo "<td align=center bgcolor=".SWAMP.">".$this->yards_to_inches($move['Square']['Swamp'])."</td></tr>\n";
+					break;
+				} // end switch
+				} // else !artillery
+			}
+
+			echo "</table>\n";
+			} // can move
+			echo "</div>";
+			} // Player owns this ME
+		} // Foreach ME unit
+		echo "</div>";
+
+		if ($god_mode) {
+			$console = 'umpire_console';
+		} else {
+			$console = 'player_console';
+		}
+?>
+<script> 
+$.fn.togglepanels = function(){
+  return this.each(function(){
+    $(this).addClass("ui-accordion ui-accordion-icons ui-widget ui-helper-reset")
+  .find("h2")
+    .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
+    .hover(function() { $(this).toggleClass("ui-state-hover"); })
+    .prepend('<span class="ui-icon ui-icon-triangle-1-e"></span>')
+    .click(function() {
+      $(this)
+        .toggleClass("ui-accordion-header-active ui-state-active ui-state-default ui-corner-bottom")
+        .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s").end()
+        .next().slideToggle();
+      return false;
+    })
+    .next()
+      .addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom")
+      .hide();
+  });
+};
+$(function() {
+	$("#gt_player_<?=$player_id?>").togglepanels();
+//({collapsible: true, active: false, autoHeight: false});
+});
+
+$("#grand_tactical_form select").change(function() {
+	var unit_id = $(this).attr('unit_id');
+	var new_formation = $(this).val();
+	var data = {unit: unit_id, formation: new_formation};
+		$.ajax({ type: 'POST',
+			url: '<?=$console?>/update_unit_formation',
+  			data: data,
+		}).done(function(msg) { 
+			//$("#grand_tactical_form").load("<?=$console?>/grand_tactical_form",function(){ $("#gt_done").fadeIn(4000); });
+		})
+});
+</script>
+<?
+
+	}
+
+	function engagement_range_inches () {
+		return $this->yards_to_inches(320);
 	}
 
 
