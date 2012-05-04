@@ -184,6 +184,7 @@ class Game_model extends CI_Model {
 		$unit_data->skill = null;
 		$unit_data->doctrine = null;
 		$unit_data->commander = null;
+		$unit_data->undistinguished = false;
 
 		switch($unit_data->unit_type) {
 		case TYPE_ARMY:
@@ -223,6 +224,9 @@ class Game_model extends CI_Model {
 			break;
 		case TYPE_SQUADRON:
 			$unit_data->squadron = $this->db->get_where('unit_squadron', array('id' => $unit_data->type_id))->row();
+			if ($unit_data->squadron->undistinguished == 'T') {
+				$unit_data->undistinguished = true;
+			}
 			break;
 		case TYPE_BATTERY:
 			$unit_data->battery = $this->db->get_where('unit_battery', array('id' => $unit_data->type_id))->row();
@@ -350,6 +354,15 @@ class Game_model extends CI_Model {
 			break;
 		default:
 			$unit_data->num_bases = $unit_data->num_figures = 1;
+		}
+
+		// Are we part of an engagement ?
+		$unit_data->engagement = 0;
+		$query = $this->db->get_where('game_engagement_unit',array('game_id'=>$this->id,'unit_id'=>$unit_data->id));
+		foreach ($query->result() as $row) {
+			$unit_data->engagement = $row->engagement_id;
+			$engagement = $this->db->get_where('game_engagement',array('game_id'=>$this->id,'id'=>$row->engagement_id))->row();
+			$unit_data->engagement_name = $engagement->descr;
 		}
 
 		$unit_data->expanded = true;
@@ -2342,11 +2355,47 @@ $("#breakoff_form select").change(function() {
 			}
 		}
 		echo "</div>";
+		if ($god_mode) {
+			$console = 'umpire_console';
+		} else {
+			$console = 'player_console';
+		}
 ?>
 <script> 
 $(function() {
 	$("#gt_players").accordion({collapsible: true, active: false, autoHeight: false });
 });
+$("#grand_tactical_form select").change(function() {
+	var unit_id = $(this).attr('unit_id');
+	var new_formation = $(this).val();
+	var data = {unit: unit_id, formation: new_formation};
+		$.ajax({ type: 'POST',
+			url: '<?=$console?>/update_unit_formation',
+  			data: data,
+		}).done(function(msg) { 
+			$("#grand_tactical_form").load("<?=$console?>/grand_tactical_form",function(){ $("#gt_done").fadeIn(4000); });
+		})
+});
+
+$("#grand_tactical_form button").click(function() {
+	var unit_id = $(this).attr('unit_id');
+	var action = $(this).attr('action');
+	//if (confirm('Attempt intercept with unit '+unit_id+' ?')) {
+	if (action == 'attempt_intercept') {
+		$.ajax({type: 'POST',
+			url: '<?=$console?>/attempt_intercept',
+			data: {unit: unit_id},
+		}).done(function(msg) {
+			$('<div id=intercept_result></div>').html(msg).dialog({modal:true, width:800, height:400});
+			$("#grand_tactical_form").load("<?=$console?>/grand_tactical_form",function(){ $("#gt_done").fadeIn(4000); });
+		});
+	}
+	if (action == 'create_engagement') {
+		$('<div id=create_engagement></div>').load('<?=$console?>/create_engagement_form',{'unit': unit_id}).dialog({modal:true, width:800, height:600 });
+	};
+	
+});
+
 </script>
 <?
 	}
@@ -2372,38 +2421,80 @@ $(function() {
 
 			$can_move = false;
 			switch ($unit->current_order_type->name) {
-			case 'Attack':
 			case 'Withdraw':
 				echo "This unit is to <font color=red>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
 				$this->movement_model->multiplier = 1.0;
 				$can_move = true;
+				if ($god_mode && $unit->engagement) {
+					echo '<br><button action=withdraw_engagement unit_id='.$unit->id.'>Withdraws from engagement</button>';
+				}
+				if ($unit->engagement) {
+					echo '<br>This unit is currently engaged at '.$unit->engagement_name;
+				}
+				break;
+			case 'Attack':
+				echo "This unit is to <font color=red>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
+				$this->movement_model->multiplier = 1.0;
+				if ($unit->engagement) {
+					echo '<br>This unit is already engaged at '.$unit->engagement_name;
+				} else {
+					$can_move = true;
+					if ($god_mode) {
+						$distance_i = $this->yards_to_inches(320);
+						$distance_c = $this->yards_to_inches(480);
+						echo '<br><button action=create_engagement unit_id='.$unit->id.'>Attack creates a NEW engagement (320yds / '.$distance_i.' inches)</button>';
+					}
+				}
 				break;
 			case 'Support':
 				echo "This unit is to <font color=red>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
 				$this->movement_model->multiplier = 1.0;
-				$can_move = true;
-				$distance = $this->yards_to_inches(800);
-				echo '<button unit_id='.$unit->id.'>Attempt intercept of enemy within 800yds ('.$distance.' inches) to this units front</button>';
+				if ($unit->engagement) {
+					echo '<br>This unit is already engaged at '.$unit->engagement_name;
+				} else {
+					$can_move = true;
+					$distance = $this->yards_to_inches(800);
+					echo '<br><button action=attempt_intercept unit_id='.$unit->id.'>Attempt intercept of enemy within 800yds ('.$distance.' inches) to this units front</button>';
+				}
 				break;
 			case 'March':
 				echo "This unit is to <font color=blue>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
 				echo "<br>Movement rates below apply to units that are greater than ".$this->yards_to_inches(1600)."inches from the enemy, otherwise move at half this rate.";
 				$this->movement_model->multiplier = 1.5;
-				$can_move = true;
-				break;
+				if ($unit->engagement) {
+					echo '<br>This unit is already engaged at '.$unit->engagement_name;
+				} else {
+					$can_move = true;
+					if ($god_mode && !$unit->engagement) {
+						$distance = $this->yards_to_inches(320);
+						echo '<br><button action=create_engagement unit_id='.$unit->id.'>Marches into a NEW engagement (320yds / '.$distance.' inches)</button>';
+					}
+				}
 				break;
 			case 'Defend':
 			case 'Garrison':
 				echo "This unit is to remain in a <font color=green>Defensive Posture</font> at the current objective of ".$unit->current_order->objective;
+				if ($unit->engagement) {
+					echo '<br>This unit is engaged at '.$unit->engagement_name;
+				}
 				break;
 			case 'Redeploy':
 				echo "This unit is to <font color=green>Re-Deploy</font> ".$unit->current_order->objective;
+				if ($unit->engagement) {
+					echo '<br>This unit is engaged at '.$unit->engagement_name;
+				}
 				break;
 			case 'Rest and Rally':
 				echo "This unit is to <font color=yellow>Rest and Rally</font> ".$unit->current_order->objective;
+				if ($unit->engagement) {
+					echo '<br>This unit is engaged at '.$unit->engagement_name;
+				}
 				break;
 			case 'Break Off':
 				echo "This unit has already moved, breaking off from contact ".$unit->current_order->objective;
+				if ($unit->engagement) {
+					echo '<br>This unit is still engaged at '.$unit->engagement_name;
+				}
 				break;
 			case 'Sauve qui peut':
 				echo "This unit is to <font color=red size=+1><b><u>Sauve Qui Peut !</u></b></font>";
@@ -2504,11 +2595,6 @@ $(function() {
 		} // Foreach ME unit
 		echo "</div>";
 
-		if ($god_mode) {
-			$console = 'umpire_console';
-		} else {
-			$console = 'player_console';
-		}
 ?>
 <script> 
 $.fn.togglepanels = function(){
@@ -2534,27 +2620,140 @@ $(function() {
 	$("#gt_player_<?=$player_id?>").togglepanels();
 //({collapsible: true, active: false, autoHeight: false});
 });
-
-$("#grand_tactical_form select").change(function() {
-	var unit_id = $(this).attr('unit_id');
-	var new_formation = $(this).val();
-	var data = {unit: unit_id, formation: new_formation};
-		$.ajax({ type: 'POST',
-			url: '<?=$console?>/update_unit_formation',
-  			data: data,
-		}).done(function(msg) { 
-			//$("#grand_tactical_form").load("<?=$console?>/grand_tactical_form",function(){ $("#gt_done").fadeIn(4000); });
-		})
-});
-
-$("#grand_tactical_form button").click(function() {
-	var unit_id = $(this).attr('unit_id');
-	alert('Do you want to attempt intercept with unit '+unit_id+' ?');
-	
-});
 </script>
 <?
+	}
 
+	function attempt_intercept ($unit) {
+		
+		if ($unit->parent_id) {
+			// Get the parent unit for this ME, to work out the activation chance based
+			// on the professional skill of the immediate superior
+			$parent_unit = $this->get_unit($unit->parent_id);
+			$skill = null;
+			$attached_unit = 0;
+			if ($parent_unit && $parent_unit->skill) {
+				$skill = $parent_unit->skill;
+			}
+			if ($parent_unit) {
+				echo 'Leader: ['.$parent_unit->id.'] - '.$parent_unit->commander;
+
+				if (file_exists('unit-pictures/'.$parent_unit->id.'.jpg')) {
+					echo '<br><img id=unit-picture-'.$parent_unit->id.' src=unit-pictures/'.$parent_unit->id.'.jpg height=128>';
+				}
+
+				// Who is the parent commander attached to ?
+				if ($attachment = $this->db->get_where('game_attach',array('game_id'=>$this->id,'commander_id'=>$parent_unit->id))->row()) {
+					$attached_unit = $attachment->unit_id;
+					echo ' ~ Attached to ['.$attached_unit.']';
+				} else {
+					echo ' ~ Not Attached';
+				}
+			echo '<hr>';
+			}
+
+			echo "<b>[".$unit->id."] - <b>".$unit->name."</b><br>";
+			if (file_exists('unit-pictures/'.$unit->id.'.jpg')) {
+				echo '<img id=unit-picture-'.$unit->id.' src=unit-pictures/'.$unit->id.'.jpg height=64><br>';
+			}
+			switch ($unit->unit_type) {
+			case TYPE_ARMY:
+				echo $unit->army->commander;
+				break;
+			case TYPE_CORPS:
+			case TYPE_WING:
+				echo $unit->corps->commander;
+				break;
+			case TYPE_DIVISION:
+				echo $unit->division->commander;
+				break;
+			case TYPE_BRIGADE:
+				echo $unit->brigade->commander;
+				break;
+			}
+			echo '<hr>Morale State: '.$unit->morale_state_descr;
+
+			echo "<hr>\n";
+		} // if has a parent unit
+
+		// Base activation chance
+		$activation_chance = 0;
+		if ($skill) {
+			if ($attached_unit == $unit->id) {
+				echo 'Leader Attached ';
+				$activation_chance = 100;
+			} elseif ($attached_unit == 0) {
+				echo "Base ";
+				$activation_chance = $skill->base_activation;
+			} else {
+				echo "Leader Elsewhere ";
+				$activation_chance = $skill->attached_elsewhere;
+			}
+			echo $activation_chance.'%';
+		} else {
+			echo "Unknown Parent / Commander";
+		}
+
+		// If DUB Cavalry, then -20% to activate
+		if ($unit->unit_type == TYPE_CAV_BRIGADE) {
+			$this->get_me_subunits($unit);
+			foreach ($unit->me_subunit as $sqn) {
+				if ($sqn->unit_type == TYPE_SQUADRON) {
+					if ($sqn->undistinguished) {
+						echo 'Cav Brigade includes DUB Cavalry -20%';
+						$activation_chance -= 20;
+						break;
+					}
+				}
+			}
+		}
+		echo '<hr><font color=blue>Final Chance = '.$activation_chance.'%</font>';
+		$dice = d100();
+		echo "<hr><i>Rolling .... $dice</i> ";
+		if ($dice <= $activation_chance) {
+			echo "<hr><font color=green size=+1><b>PASS</b></font><br>";
+			echo "Intercept ! - the unit now Attacks the enemy to their front";
+			//$this->accept_order($unit->id);
+
+			// Delete current orders for this turn
+			// Create a new order for this turn to attack the enemy to the front
+			$this->db->query("delete from game_order where game_id=".$this->id." and activate_turn=".$this->turn_number." and unit_id=".$unit->id);
+			$data = new stdClass;
+				$data->game_id = $this->id;
+				$data->turn_number = $this->turn_number;
+				$data->activate_turn = $this->turn_number;
+				$data->unit_id =  $unit->id;
+				$data->player_name = $this->game->user->username;
+				$data->order_type = 2; // attack
+				$data->objective = 'Enemy to the front';
+				$data->activation_chance = $activation_chance;
+			$this->db->insert('game_order',$data);
+
+			// Create an event for the unit, and each subunit
+			$data = new stdClass;
+				$data->game_id = $this->id;
+				$data->turn_number = $this->turn_number;
+				$data->unit_id = $unit->id;
+				$data->event_type = 2;
+				$data->descr = 'Unit attacks enemy to their front under an intercept order';
+				$data->value = 2; // attack
+			$this->db->insert('game_event',$data);
+				foreach ($unit->me_subunit as $sqn) {
+					$data = new stdClass;
+						$data->game_id = $this->id;
+						$data->turn_number = $this->turn_number;
+						$data->unit_id = $sqn->id;
+						$data->event_type = 2;
+						$data->descr = 'Unit attacks enemy to their front under an intercept order';
+						$data->value = 2; // attack
+					$this->db->insert('game_event',$data);
+				}
+
+		} else {
+			echo "<hr><font color=red size=+1><b>FAIL</b></font><br>";
+			echo "Incompetence ! - the unit does not attack the enemy to their front";
+			//$this->cancel_order($unit->id);
+		}
 	}
 
 	function engagement_range_inches () {
@@ -2562,6 +2761,12 @@ $("#grand_tactical_form button").click(function() {
 	}
 
 	function convert_to_defend ($unit,$reason,$objective='') {
+		// get the current objective
+		if ($objective == '') {
+			$row = $this->db->get_where('game_order',array('game_id'=>$this->id,'activate_turn'=>$this->turn_number,'unit_id'=>$unit->id))->row();
+			$objective = $row->objective;
+		}
+
 		// Zap current order for this turn, and create a new order for defend.
 		$this->db->query("delete from game_order where game_id=".$this->id." and activate_turn=".$this->turn_number." and unit_id=".$unit->id);
 

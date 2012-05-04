@@ -1,4 +1,5 @@
 <button id="hq">Return to HQ</button></td>
+<button id="photo">Add Photo</button>
 <?
 
 // Show game stats
@@ -243,6 +244,11 @@ $("#hq").click(function () {
 	$("#main").hide(800);
 	$("#menu").fadeIn(1000); 
 });
+// Add photo
+$("#photo").click(function() {
+	$('<div id=photo_upload></div>').load('photo_upload').dialog({modal:true, width:800, height:400});
+
+});
 
 // Jump to order maintenance
 $('#view_orders').click(function(){ document.location.href='<?site_url()?>orders'; })
@@ -334,6 +340,7 @@ $("#end_of_hour_done").click(function() { $("<div></div>").load('umpire_console/
 	start_of_turn = now;
 	$("#console").load('umpire_console/refresh')
 })});
+
 
 
 $("#rewind").click(function() { $("<div></div>").load('umpire_console/rewind',function() { $("#console").load('umpire_console/refresh')})});

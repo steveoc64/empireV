@@ -58,7 +58,9 @@ class Messages extends MY_Controller
 	}
 
 	function message($primary_key,$row) {
-		return $row->message;
+		$_ = $row->message;
+		$_ = str_replace('<img src=','<img height=100 src=',$_);
+		return $_;
 	}
 
 	function mark_as_read () {

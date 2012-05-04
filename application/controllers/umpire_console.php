@@ -154,4 +154,78 @@ class Umpire_Console extends MY_Controller
 		}
 	}
 
+	function attempt_intercept() {
+		$unit_id = $this->input->post('unit');
+		if ($unit = $this->game->get_unit($unit_id)) {
+			$this->game->attempt_intercept($unit);
+		}
+	}
+
+	function create_engagement_form() {
+		$unit_id = $this->input->post('unit');
+		$this->load->helper('form');
+		echo form_open('umpire_console/create_engagement');
+		echo "Name for this engagement :";
+		$data = array(
+			'name'        => 'name',
+			'id'          => 'name',
+			'size'        => '40',
+			'style'       => 'width:50%',
+		);
+		echo form_input($data);
+		echo '<br>';
+		// Create a list of ME's that might be part of this engagement
+		echo "Units involved :<br>";
+		$query = $this->db->query("select username,commander_id from user where current_game=".$this->game->id." and commander_id != 0");
+		foreach ($query->result() as $row) {
+			echo form_fieldset($row->username,array('width'=>'100%'));
+			$unit_range = $this->game->get_unit_id_range($row->commander_id);
+			$me_list = $this->game->get_me_list($unit_range->start_id,$unit_range->end_id);
+			foreach ($me_list as $unit) {
+				if ($unit->id == $unit_id) {
+					$checked = true;
+				} else {
+					$checked = false;
+				}
+				echo  '['.$unit->id.']  ';
+				echo form_checkbox (array(
+					'name'=> 'unit-'.$unit->id,
+					'value'=> $unit->id,
+					'checked'=> $checked));
+				echo  $unit->name,'<br>';
+			}
+			echo form_fieldset_close();
+		}
+		//echo form_fieldset_close();
+		echo form_submit('submit','Add New Engagement');
+	}
+
+	function create_engagement() {
+		$name = $this->input->post('name');
+		$units = array();
+		foreach ($this->input->post(NULL, TRUE) as $k=>$v) {
+			if (!strncmp($k,'unit-',5)) {
+				$units[] = $v;
+			}
+		}
+
+		// Create the engagement record
+		$data = new stdClass;
+			$data->game_id = $this->game->id;
+			$data->turn_start = $this->game->turn_number;
+			$data->descr = $name;
+		$this->db->insert('game_engagement',$data);
+		$engagement_id = $this->db->insert_id();
+
+		// Create the unit links
+		foreach ($units as $_) {
+			$data = new stdClass;
+			$data->game_id = $this->game->id;
+			$data->engagement_id = $engagement_id;
+			$data->unit_id = $_;
+			$this->db->insert('game_engagement_unit',$data);
+		}
+		echo "<script>window.location.href = 'umpire_console';</script>";
+	}
+
 }

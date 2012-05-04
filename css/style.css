@@ -161,7 +161,17 @@ input[type=submit]:hover, form a:hover {
 }
 
 
-
+fieldset {
+border: 1px solid #CCA383;
+width: 90%;
+background: #FFE8EF;
+padding: 3px;
+}
+fieldset legend {
+background: #CCA383;
+padding: 6px;
+font-weight: bold;
+}
 
 /* Validation error messages */
 

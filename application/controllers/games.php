@@ -75,6 +75,8 @@ class Games extends MY_Controller {
 		$this->db->delete('game_turn',array('game_id'=>$primary_key));
 		$this->db->delete('game_unit_stats',array('game_id'=>$primary_key));
 		$this->db->delete('game_users',array('game_id'=>$primary_key));
+		$this->db->delete('game_photo',array('game_id'=>$primary_key));
+		$this->db->delete('game_engagment_unit',array('game_id'=>$primary_key));
 
 		$this->db->query("update user set current_game=0 where current_game=".$primary_key);
 		$this->db->query("delete from game where id=".$primary_key);
