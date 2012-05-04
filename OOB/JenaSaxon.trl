@@ -9,6 +9,16 @@ icon="book_1">
 <Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised">Inspirational</Inspiration>
 <ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable">Poor</ProfessionalSkill>
 <Doctrine type="Choice" format="Regimental/DivisionGroup/Corps">DivisionGroup</Doctrine>
+<Wing item="y"
+line0="{*Name*}"
+line1="{*Name*}"
+icon="person">
+<Name type="Text" ref="y">Southern Wing Command</Name>
+<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
+<Commander type="Text">Hohenlohe</Commander>
+<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised">Impersonal</Inspiration>
+<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good">Despicable</ProfessionalSkill>
+<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps" init="Corps">DivisionGroup</Doctrine>
 <Division item="y"
 line0="{*Name*}"
 line1="{*Name*}"
@@ -36,7 +46,7 @@ icon="bullet_3">
 <Name type="Text" ref="y">Müffling Infantry Regiment # 49, two battalions</Name>
 <FacingColours type="Text"></FacingColours>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
-<Strength type="Number" format="####" init="720">1200</Strength>
+<Strength type="Number" format="####" init="720">1280</Strength>
 <NumBases type="Text"></NumBases>
 <Ranks type="Choice" format="3/2/OpenOrder" init="3">3</Ranks>
 <Officers type="Number" format="##" init="10">10</Officers>
@@ -55,7 +65,7 @@ icon="bullet_3">
 <Battalion item="y">
 <Name>Prince Clemens Saxon Infantry Regiment, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1200</Strength>
+<Strength>1280</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -72,7 +82,7 @@ icon="bullet_3">
 <Battalion item="y">
 <Name>Kürfurst Saxon Infantry Regiment, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1200</Strength>
+<Strength>1280</Strength>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
 <ACE>10</ACE>
@@ -523,7 +533,254 @@ icon="bullet_2">
 <Inspiration>Impersonal</Inspiration>
 <ProfessionalSkill>Despicable</ProfessionalSkill>
 <Doctrine>DivisionGroup</Doctrine>
+<Brigade item="y">
+<Name>Brigade von Burgsdorff</Name>
+<Commander>General-Major von Burgsdorff</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Thümmel Saxon Infantry Regiment, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1280</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Prince Xavier Saxon Infantry Regiment, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1280</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>true</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Haussmar Saxon Foot Artillery battery, eight 12-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>12lb</Calibre>
+<Strength>8</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>4</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class II</Class>
+<MoraleGrade>Veteran</MoraleGrade>
+</Battery>
+<Battery item="y">
+<Name>Ernst Saxon Foot Artillery battery, eight 12-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>12lb</Calibre>
+<Strength>8</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>4</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class II</Class>
+<MoraleGrade>Veteran</MoraleGrade>
+</Battery>
+</Brigade>
+<Brigade item="y">
+<Name>Brigade von Dyherrn</Name>
+<Commander>General-Major von Dyherrn</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Low Saxon Infantry Regiment, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1280</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Niesemeuschel Saxon Infantry Regiment, two battalions</Name>
+<MoraleState>Good</MoraleState>
+<Strength>1280</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battalion item="y">
+<Name>Bevilaqua Saxon Infantry Regiment, 2nd battalion</Name>
+<MoraleState>Good</MoraleState>
+<Strength>640</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>false</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Battery item="y">
+<Name>Bonniot Saxon Foot Artillery battery # 8, ten 12-pound guns</Name>
+<Type>Foot</Type>
+<Calibre>12lb</Calibre>
+<Strength>10</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>4</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class II</Class>
+<MoraleGrade>Veteran</MoraleGrade>
+</Battery>
+</Brigade>
+<CavBrigade item="y">
+<Name>Cavalry Brigade: von Kochtitsky</Name>
+<BattleGroup>true</BattleGroup>
+<Commander>General-Leutnant Joachim Friedrich von Zeschwitz</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Doctrine>Linear</Doctrine>
+<Squadron item="y">
+<Name>Mounted Carabinier Saxon Regiment, four squadron</Name>
+<Type>Carabinier</Type>
+<MoraleState>Good</MoraleState>
+<Strength>480</Strength>
+<Officers>10</Officers>
+<ACE>27</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Kochtitsky Saxon Cuirassier Regiment, four squadrons</Name>
+<Type>Dragoon</Type>
+<MoraleState>Good</MoraleState>
+<Strength>480</Strength>
+<Officers>10</Officers>
+<ACE>27</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>true</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Heavy</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Squadron item="y">
+<Name>Prince Albert Saxon Chevau-léger Regiment, four squadrons</Name>
+<Type>ChevLeg</Type>
+<MoraleState>Good</MoraleState>
+<Strength>480</Strength>
+<Officers>10</Officers>
+<ACE>20</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>false</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Battery item="y">
+<Name>Grossman Saxon Horse Artillery battery, ten guns</Name>
+<Type>Horse</Type>
+<Calibre>6lb</Calibre>
+<Strength>10</Strength>
+<NumGuns>4</NumGuns>
+<CrewFigures>2</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class II</Class>
+<MoraleGrade>Veteran</MoraleGrade>
+</Battery>
+</CavBrigade>
+<Brigade item="y">
+<Name>Light Brigade von Polenz</Name>
+<Commander>Oberst Karl Anton Andreas von Boguslawsky</Commander>
+<Inspiration>Impersonal</Inspiration>
+<Drill>Prussian</Drill>
+<Battalion item="y">
+<Name>Boguslawsky Prussian Fusilier battalion # 22</Name>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<Ranks>3</Ranks>
+<Officers>10</Officers>
+<ACE>10</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<OpenOrder>true</OpenOrder>
+<Rifles>false</Rifles>
+<ClosedColumn>false</ClosedColumn>
+<ShockTroops>false</ShockTroops>
+<BattalionGuns>false</BattalionGuns>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Battalion>
+<Squadron item="y">
+<Name>Polenz Saxon Chevau-léger Regiment, four squadrons</Name>
+<Type>ChevLeg</Type>
+<MoraleState>Good</MoraleState>
+<Strength>720</Strength>
+<Officers>10</Officers>
+<ACE>20</ACE>
+<MoraleGrade>Veteran</MoraleGrade>
+<SmallArms>Veteran</SmallArms>
+<BattleCavalry>false</BattleCavalry>
+<Undistinguished>false</Undistinguished>
+<Skirmisher>0</Skirmisher>
+<MoveRate>Light</MoveRate>
+<Breakpoint>80</Breakpoint>
+<Fatigue>0</Fatigue>
+</Squadron>
+<Battery item="y">
+<Name>Studnitz Prussian Horse Artillery battery # 14 (-), five guns</Name>
+<Type>Horse</Type>
+<Calibre>4lb</Calibre>
+<Strength>5</Strength>
+<NumGuns>2</NumGuns>
+<CrewFigures>2</CrewFigures>
+<Howitzers>0</Howitzers>
+<Class>Class II</Class>
+<MoraleGrade>Veteran</MoraleGrade>
+</Battery>
+</Brigade>
 </Division>
+</Wing>
 <Division item="y">
 <Name>Reserve Division</Name>
 <Commander>General-Leutnant Wolfgang Moritz von Prittwitz</Commander>
@@ -556,15 +813,4 @@ line1="{*Name*}"
 childtype="DEFAULT">
 <Name type="Text" ref="y"></Name>
 </ROOT>
-<Wing item="n"
-line0="{*Name*}"
-line1="{*Name*}"
-icon="person">
-<Name type="Text" ref="y"></Name>
-<MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good"></MoraleState>
-<Commander type="Text"></Commander>
-<Inspiration type="Choice" format="Charismatic/Inspirational/Impersonal/Despised"></Inspiration>
-<ProfessionalSkill type="Choice" format="Superior/Excellent/Good/Mediocre/Poor/Despicable" init="Good"></ProfessionalSkill>
-<Doctrine type="Choice" format="Regimental/DivisionGroup/Corps" init="Corps"></Doctrine>
-</Wing>
 </Army>

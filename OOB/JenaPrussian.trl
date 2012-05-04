@@ -404,7 +404,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Hanstein Grenadier Battalion</Name>
 <MoraleState>Good</MoraleState>
-<Strength>830</Strength>
+<Strength>640</Strength>
 <NumBases>4</NumBases>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
@@ -422,7 +422,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Renouard Infantry Regiment # 3, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
 <Ranks>3</Ranks>
 <Officers>20</Officers>
@@ -440,7 +440,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Kleist Infantry Regiment # 5, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
 <Ranks>3</Ranks>
 <Officers>20</Officers>
@@ -474,7 +474,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Alt-Braun Grenadier Battalion</Name>
 <MoraleState>Good</MoraleState>
-<Strength>830</Strength>
+<Strength>640</Strength>
 <NumBases>4</NumBases>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
@@ -492,7 +492,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Prince Louis Infantry Regiment # 20, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
 <Ranks>3</Ranks>
 <Officers>20</Officers>
@@ -510,7 +510,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Brunswick Infantry Regiment # 21, two battalions</Name>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
 <Ranks>3</Ranks>
 <Officers>20</Officers>
@@ -579,8 +579,8 @@ icon="bullet_1">
 <Type>Horse</Type>
 <Calibre>4lb</Calibre>
 <Strength>6</Strength>
-<NumGuns>2</NumGuns>
-<CrewFigures>3</CrewFigures>
+<NumGuns>3</NumGuns>
+<CrewFigures>2</CrewFigures>
 <Class>Class I</Class>
 <MoraleGrade>Crack</MoraleGrade>
 </Battery>
