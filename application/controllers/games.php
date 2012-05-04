@@ -29,6 +29,7 @@ class Games extends MY_Controller {
 			// Add actions and callbacks
 			$form->add_action('PLAY', '', '','ui-icon-image',array($this,'select_game'));
 			$form->callback_after_insert(array($this,'create_new_game'));
+			$form->callback_delete(array($this,'delete_game'));
 			$form->callback_column('playing',array($this,'is_playing'));
 			$form->order_by('playing','desc');
 
@@ -59,6 +60,24 @@ class Games extends MY_Controller {
 		}
 		$this->db->query("update user set current_game=$id,role='A' where username='$username'");
 		redirect('games');
+	}
+
+	function delete_game ($primary_key) {
+		// Cascade deletion of related game records
+		$this->db->delete('game_attach',array('game_id'=>$primary_key));
+		$this->db->delete('game_attach_done',array('game_id'=>$primary_key));
+		$this->db->delete('game_engagement',array('game_id'=>$primary_key));
+		$this->db->delete('game_engagement_initiative',array('game_id'=>$primary_key));
+		$this->db->delete('game_event',array('game_id'=>$primary_key));
+		$this->db->delete('game_message',array('game_id'=>$primary_key));
+		$this->db->delete('game_me_det',array('game_id'=>$primary_key));
+		$this->db->delete('game_order',array('game_id'=>$primary_key));
+		$this->db->delete('game_turn',array('game_id'=>$primary_key));
+		$this->db->delete('game_unit_stats',array('game_id'=>$primary_key));
+		$this->db->delete('game_users',array('game_id'=>$primary_key));
+
+		$this->db->query("update user set current_game=0 where current_game=".$primary_key);
+		$this->db->query("delete from game where id=".$primary_key);
 	}
 
 	function create_new_game ($post_array,$primary_key) {
@@ -194,7 +213,7 @@ class Games extends MY_Controller {
 				'unit_id' => $unit->id,
 				'event_type' => 2,	// Order Activated
 				'descr' => "Unit joins scenario $descr",
-				'value' => 0);
+				'value' => 1);
 			$this->db->insert('game_event',$data);
 		}
 		return true;

@@ -1820,9 +1820,10 @@ $(function() {
 $("#declare_orders_form button").click(function() {
 	var action = $(this).attr('action');
 	var unit_id = $(this).attr('unit_id');
+	var reason = $(this).attr('reason');
 	if (confirm("Do you want to "+action+" for unit "+unit_id+" immediately ?")) {
 		$(this).fadeOut(2000);
-		$.post('umpire_console/'+action,{'unit_id': unit_id}, function() {
+		$.post('umpire_console/'+action,{'unit': unit_id, 'reason': reason}, function() {
 			$("#declare_orders_form").load("umpire_console/declare_orders_form",function(){
 				$("#activate_orders").fadeIn(4000);
 			});
@@ -1897,6 +1898,26 @@ $("#declare_orders_form button").click(function() {
 				echo "</td><td valign=top>\n";
 				if ($me_unit->current_order) {
 					echo $me_unit->current_order_type->name.' '.$me_unit->current_order->objective;
+
+					if ($god_mode) {
+					switch ($me_unit->current_order->order_type) {
+					case 2: // Attack
+						echo '<button action=convert_to_defend unit_id='.$me_unit->id.' reason="Objective Taken">Objective Taken ?</button>';
+						break;
+					case 3: // march
+						echo '<button action=convert_to_defend unit_id='.$me_unit->id.' reason="March objective reached">Objective Reached ?</button>';
+						break;
+					case 4: // withdraw 
+					case 8: // break off
+						echo '<button action=convert_to_defend unit_id='.$me_unit->id.' reason="Withdraw objective reached">Objective Reached ?</button>';
+						echo '<button action=convert_to_defend_posn unit_id='.$me_unit->id.' reason="Engaged during withdrawal">Engaged during withdrawal ?</button>';
+						break;
+					case 5: // redeploy
+					case 6: // rest and rally
+						echo '<button action=convert_to_defend_posn unit_id='.$me_unit->id.' reason="Engaged during redeployment">Engaged during re-reployment ?</button>';
+						break;
+					}
+					}
 				}
 				echo "</td><td valign=top>";
 				// Now get the latest unactivated order
@@ -1910,8 +1931,8 @@ $("#declare_orders_form button").click(function() {
 					// This can be due to the order being invalid, or some other event on the tabletop
 					// which is not modelled in the computer.
 					if ($god_mode && !$calculate) {
-						echo '<hr><button action=cancel_order unit_id='.$me_unit->id.'>Delete Order</button>';
-						echo '<button action=accept_order unit_id='.$me_unit->id.'>Accept Order</button>';
+						echo '<hr><button action=cancel_order unit_id='.$me_unit->id.' reason="Manual override">Delete Order</button>';
+						echo '<button action=accept_order unit_id='.$me_unit->id.' reason="Manual override">Accept Order</button>';
 					}
 					echo "</td><td>";
 					// Base activation chance
@@ -1998,6 +2019,7 @@ $("#declare_orders_form button").click(function() {
 		$order_type = $this->get_order_type($order->order_type);
 
 
+		$this->db->query("delete from game_order where activate_turn=".$this->turn_number." and game_id=".$this->id." and unit_id=".$unit_id);
 		$this->db->query("update game_order set activate_turn=".$this->turn_number." where game_id=".$this->id." and unit_id=".$unit_id." and activate_turn=0");
 		//echo "Orders for unit ".$unit_id." have been accepted for this turn";
 
@@ -2304,7 +2326,7 @@ $("#breakoff_form select").change(function() {
 		}
 
 
-		echo "<div id=gt_players style=\"width:90%;\">";
+		echo "<div id=gt_players style=\"width:100%;\">";
 		$god_mode = false;
 		if ($this->session->userdata('role') == 'P') {
 			$this->grand_tactical_form_set($this->me, $player_id,$god_mode);
@@ -2331,7 +2353,7 @@ $(function() {
 
 	function grand_tactical_form_set($me_list, $player_id,$god_mode) {
 
-		echo "<div id=gt_player_".$player_id." style=\"width:95%; background:rgba(255,255,255,0.1);\">";
+		echo "<div id=gt_player_".$player_id." style=\"width:100%; background:rgba(255,255,255,0.1);\">";
 
 		foreach ($me_list as $unit) {
 
@@ -2352,10 +2374,16 @@ $(function() {
 			switch ($unit->current_order_type->name) {
 			case 'Attack':
 			case 'Withdraw':
+				echo "This unit is to <font color=red>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
+				$this->movement_model->multiplier = 1.0;
+				$can_move = true;
+				break;
 			case 'Support':
 				echo "This unit is to <font color=red>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
 				$this->movement_model->multiplier = 1.0;
 				$can_move = true;
+				$distance = $this->yards_to_inches(800);
+				echo '<button unit_id='.$unit->id.'>Attempt intercept of enemy within 800yds ('.$distance.' inches) to this units front</button>';
 				break;
 			case 'March':
 				echo "This unit is to <font color=blue>".$unit->current_order_type->name."</font> ".$unit->current_order->objective;
@@ -2385,7 +2413,7 @@ $(function() {
 			if ($can_move) {
 			// Now draw up a table of units in this ME and how far they can move
 			$move = $this->movement_model->grand_tactical_move($unit);
-			echo "<table border=1>";
+			echo "<table border=1 width=90%>";
 			echo "<tr bgcolor=#C09E6E>";
 			echo "<th>Unit</th><th>Formation</th><th>Open</th><th>LtWoods</th><th>HvWoods</th><th>Town</th><th>Swamp</th>";
 			echo "</tr>\n";
@@ -2518,6 +2546,12 @@ $("#grand_tactical_form select").change(function() {
 			//$("#grand_tactical_form").load("<?=$console?>/grand_tactical_form",function(){ $("#gt_done").fadeIn(4000); });
 		})
 });
+
+$("#grand_tactical_form button").click(function() {
+	var unit_id = $(this).attr('unit_id');
+	alert('Do you want to attempt intercept with unit '+unit_id+' ?');
+	
+});
 </script>
 <?
 
@@ -2527,7 +2561,42 @@ $("#grand_tactical_form select").change(function() {
 		return $this->yards_to_inches(320);
 	}
 
+	function convert_to_defend ($unit,$reason,$objective='') {
+		// Zap current order for this turn, and create a new order for defend.
+		$this->db->query("delete from game_order where game_id=".$this->id." and activate_turn=".$this->turn_number." and unit_id=".$unit->id);
 
+		$data = new stdClass;
+			$data->game_id = $this->id;
+			$data->turn_number = $this->turn_number;
+			$data->activate_turn = $this->turn_number;
+			$data->unit_id = $unit->id;
+			$data->player_name = 'umpire';
+			$data->order_type = 1; // defend
+			$data->objective = $objective;
+			$data->comments = $reason;
+			$data->activation_chance = 100;
+		$this->db->insert('game_order',$data);
+
+		// Create an event for change of orders, and create message to commander to the effect that the orders have changed
+		$data = new stdClass;
+			$data->game_id = $this->id;
+			$data->turn_number = $this->turn_number;
+			$data->unit_id = $unit->id;
+			$data->event_type = 2;
+			$data->descr = $reason;
+			$data->value = 1;
+		$this->db->insert('game_event',$data);
+
+		$data = new stdClass;
+			$data->game_id = $this->id;
+			$data->turn_number = $this->turn_number + 1;
+			$data->player_id = $unit->player_id;
+			$data->unit_id = $unit->id;
+			$data->sent_turn = $this->turn_number;
+			$data->message = 'Unit has converted to defend order due to '.$reason;
+			$data->letter_icon = rand(1,6);
+		$this->db->insert('game_message',$data);
+	}
 }
 
 ?>

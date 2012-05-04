@@ -1,5 +1,8 @@
 <div id="console" style"top:40px">
-<button id="hq">Return to HQ</button></td>
+<button id="hq">Return to HQ</button>
+<button id="photo">Add Photo</button>
+
+</td>
 </div> <!-- console -->
 <script>
 // On load - setup all the buttons
@@ -64,5 +67,11 @@ $("#hq").click(function () {
 	$("#hq").hide(800); 
 	$("#main").hide(800);
 	$("#menu").fadeIn(1000); 
+});
+
+// Add photo
+$("#photo").click(function() {
+	$('<div id=photo_upload></div>').load('photo_upload').dialog({modal:true, width:800, height:400});
+
 });
 </script>

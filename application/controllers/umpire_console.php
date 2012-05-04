@@ -138,4 +138,20 @@ class Umpire_Console extends MY_Controller
 		}
 	}
 
+	function convert_to_defend() {
+		$unit_id = $this->input->post('unit');
+		$reason = $this->input->post('reason');
+		if ($unit = $this->game->get_unit($unit_id)) {
+			$this->game->convert_to_defend($unit,$reason,'');
+		}
+	}
+
+	function convert_to_defend_posn() {
+		$unit_id = $this->input->post('unit');
+		$reason = $this->input->post('reason');
+		if ($unit = $this->game->get_unit($unit_id)) {
+			$this->game->convert_to_defend($unit,$reason,'current position');
+		}
+	}
+
 }
