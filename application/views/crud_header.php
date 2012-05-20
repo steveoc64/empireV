@@ -22,6 +22,7 @@ if (!$gotjq) {
 if (!$js_files) {
 ?>
 	<script src="<?=site_url()?>assets/jqui/js/jquery-1.7.1.min.js"></script>
+	<script src="<?=site_url()?>assets/grocery_crud/js/jquery_plugins/jquery.form.js"></script>
 	<script src="<?=site_url()?>assets/jqui/js/jquery-ui-1.8.18.custom.min.js"></script>
 <?php } else { ?>
 

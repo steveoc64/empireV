@@ -104,7 +104,7 @@ if (isset($game)) {
 		echo "</td><td align=right>";
 		echo "<button id=determine_bombardment_done>Tactical Movement &gt;</button>";
 		echo "</td></tr></table>";
-		echo "<div id=results></div>";
+		echo "<div id=determine_bombardment_form></div>";
 		break;
 	case PHASE_ENGAGE:
 		echo "<h2>Run Engagements (Tactical Movement) Phase ~ ".$game->hrs."</h2>\n";
@@ -230,6 +230,11 @@ $(function() {
 	// Phase 8 - kick off GrandTactical movement
 	$("#grand_tactical_form").load("umpire_console/grand_tactical_form",function(){
 		$("#gt_done").fadeIn(4000);
+	});
+
+	// Phase 9 - kick off Determine Bombardment
+	$("#determine_bombardment_form").load("umpire_console/determine_bombardment_form",function(){
+		$("#determine_bombardment_done").fadeIn(4000);
 	});
 
 

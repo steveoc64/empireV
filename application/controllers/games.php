@@ -13,7 +13,7 @@ class Games extends MY_Controller {
 	
 			// Fields and Columns
     			$form->columns('playing','id','name','scenario_id','start_hour','turn_number','orbat_attacker','orbat_defender','ground_scale','figure_scale');
-    			$form->edit_fields('scenario_id','name','situation','players','start_hour','turn_number','orbat_attacker','attacker_briefing','orbat_defender','defender_briefing','ground_scale','figure_scale','code_engine_id');
+    			$form->edit_fields('scenario_id','name','situation','players','start_hour','turn_number','orbat_attacker','attacker_commander','attacker_briefing','orbat_defender','defender_commander','defender_briefing','ground_scale','figure_scale','code_engine_id');
 			$form->add_fields('scenario_id','ground_scale','figure_scale');
 			//$form->display_as ('ground_scale','Ground Scale<br>1" = paces');
 			//$form->display_as ('figure_scale','Figure Scale<br>1 figure = actual troops');
@@ -22,6 +22,9 @@ class Games extends MY_Controller {
 			$form->set_relation('scenario_id','scenario','{id} {descr}'); 
 			$form->set_relation('orbat_attacker','orbat','{id} {filename}'); 
 			$form->set_relation('orbat_defender','orbat','{id} {filename}'); 
+			$form->set_relation('code_engine_id','code_engine','{name} - {descr}'); 
+			$form->set_relation('attacker_commander','user','username'); 
+			$form->set_relation('defender_commander','user','username'); 
 			$form->set_relation('code_engine_id','code_engine','{name} - {descr}'); 
 			$form->set_relation_n_n('players','game_users','user','game_id','user_id','username','side');
 			$form->unset_texteditor('latitude','longitude','descr','video_intro');

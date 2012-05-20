@@ -424,6 +424,7 @@ class Xml_loader_model extends CI_Model {
 		echo "        Battalion: $xml->Name\n";
 		echo "          Part of $this->brigade_name\n";
 		echo "          Name = $xml->Name\n";
+		echo "          UID = $xml->Uid\n";
 		echo "          Strength = $xml->Strength\n";
 		echo "          NumBases = $xml->NumBases\n";
 		echo "          Ranks = $xml->Ranks\n";
@@ -452,6 +453,7 @@ class Xml_loader_model extends CI_Model {
 		$shock = ($xml->ShockTroops == 'true') ? 'T' : 'F';
 		$bnguns = ($xml->BattalionGuns == 'true') ? 'T' : 'F';
 		$name = mysql_escape_string($xml->Name);
+		$uid = mysql_escape_string($xml->Uid);
 	
 		// Create a Battalion record
 		$query = "insert into unit_battalion (num_bases,ranks,skirmishers,open_order,rifles,closed_column,shock_troops,battalion_guns) values ('$xml->NumBases','$xml->Ranks',$sk,'$openorder','$rifles','$closedcol','$shock','$bnguns')";
@@ -460,7 +462,7 @@ class Xml_loader_model extends CI_Model {
 		$_ = $this->db->insert_id();
 	
 		// Create a unit
-		$this->db->query("insert into unit (id,parent_id,name,unit_type,type_id,orbat_id,strength,officers,ace,morale_grade,small_arms,is_command) values ('$this->uid',$parentid,'$name','10','$_',$this->orbat_id,$xml->Strength,$xml->Officers,$xml->ACE,$mgid,$said,'F')");
+		$this->db->query("insert into unit (id,parent_id,name,uid,unit_type,type_id,orbat_id,strength,officers,ace,morale_grade,small_arms,is_command) values ('$this->uid',$parentid,'$name','$uid','10','$_',$this->orbat_id,$xml->Strength,$xml->Officers,$xml->ACE,$mgid,$said,'F')");
 		$__ = $this->uid;
 		echo "        New Unit (Battalion), SQL id = $__\n";
 		$this->uid++;
@@ -479,6 +481,7 @@ class Xml_loader_model extends CI_Model {
 		echo "        Squadron: $xml->Name\n";
 		echo "          Part of $this->brigade_name\n";
 		echo "          Name = $xml->Name\n";
+		echo "          UID = $xml->Uid\n";
 		echo "          Type = $xml->Type\n";
 		echo "          Strength = $xml->Strength\n";
 		echo "          NumBases = $xml->NumBases\n";
@@ -504,6 +507,7 @@ class Xml_loader_model extends CI_Model {
 		$bc = ($xml->BattleCavalry == 'true') ? 'T' : 'F';
 		$dub = ($xml->Undistinguished == 'true') ? 'T' : 'F';
 		$name = mysql_escape_string($xml->Name);
+		$uid = mysql_escape_string($xml->Uid);
 
 		// Create a Squadon record
 		$query = "insert into unit_squadron (cavalry_type,num_bases,battle_cavalry,undistinguished,skirmisher,move_rate) values ($ct,'$xml->NumBases','$bc','$dub',$sk,'$xml->MoveRate')";
@@ -512,7 +516,7 @@ class Xml_loader_model extends CI_Model {
 		$_ = $this->db->insert_id();
 	
 		// Create a unit - squadrons are always attached to an ME cav brigade
-		$this->db->query("insert into unit (id,parent_id,parent_me,name,unit_type,type_id,orbat_id,strength,officers,ace,morale_grade,small_arms,is_command) values ('$this->uid',$parentid,$this->brigade_id,'$name','11','$_',$this->orbat_id,$xml->Strength,$xml->Officers,$xml->ACE,$mgid,$said,'F')");
+		$this->db->query("insert into unit (id,parent_id,parent_me,name,uid,unit_type,type_id,orbat_id,strength,officers,ace,morale_grade,small_arms,is_command) values ('$this->uid',$parentid,$this->brigade_id,'$name','$uid','11','$_',$this->orbat_id,$xml->Strength,$xml->Officers,$xml->ACE,$mgid,$said,'F')");
 		$__ = $this->uid;
 		echo "        New Unit (Squadron), SQL id = $__\n";
 		$this->uid++;

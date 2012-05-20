@@ -102,6 +102,15 @@ class Umpire_Console extends MY_Controller
 		$this->game->gt_done();
 	}
 
+	function determine_bombardment_form() {
+		$this->game->determine_bombardment_form();
+	}
+
+	function determine_bombardment_calculate() {
+		$this->game->determine_bombardment_calculate();
+	}
+
+
 	function determine_bombardment_done() {
 		$this->game->determine_bombardment_done();
 	}

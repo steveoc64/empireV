@@ -44,6 +44,7 @@ line0="{*Name*}"
 line1="{*Name*}"
 icon="bullet_3">
 <Name type="Text" ref="y">Weimar Fusilier</Name>
+<UID type="Text">FS Weimar</UID>
 <FacingColours type="Text"></FacingColours>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
 <Strength type="Number" format="####" init="720">780</Strength>
@@ -64,6 +65,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>Grieffenberg Fusilier #4</Name>
+<UID>FS 4</UID>
 <MoraleState>Good</MoraleState>
 <Strength>780</Strength>
 <NumBases>4</NumBases>
@@ -82,6 +84,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>Oswald Fuslier #14</Name>
+<UID>FS 14</UID>
 <MoraleState>Good</MoraleState>
 <Strength>780</Strength>
 <NumBases>4</NumBases>
@@ -100,6 +103,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>Kloch Fusilier #18</Name>
+<UID>FS 18</UID>
 <MoraleState>Good</MoraleState>
 <Strength>780</Strength>
 <NumBases>4</NumBases>
@@ -132,6 +136,7 @@ line0="{*Name*}"
 line1="{*Name*}"
 icon="bullet_2">
 <Name type="Text" ref="y">Hussar Regt #4  von Wurttemburg. 10 sqns</Name>
+<UID type="Text">Hussar 4</UID>
 <FacingColours type="Text"></FacingColours>
 <Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon">Hussar</Type>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
@@ -150,6 +155,7 @@ icon="bullet_2">
 </Squadron>
 <Squadron item="y">
 <Name>Hussar Regt #8  von Blucher 10 sqns</Name>
+<UID>Hussar 8</UID>
 <Type>Hussar</Type>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
@@ -166,6 +172,7 @@ icon="bullet_2">
 </Squadron>
 <Squadron item="y">
 <Name>Dragoon Regt #3  von Irwing 5 sqns</Name>
+<UID>Dragoon 3</UID>
 <Type>Dragoon</Type>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
@@ -209,8 +216,9 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Rheinbaben Grenadier Battalion</Name>
+<UID>Rheinbaben Gren</UID>
 <MoraleState>Good</MoraleState>
-<Strength>720</Strength>
+<Strength>600</Strength>
 <NumBases>4</NumBases>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
@@ -227,8 +235,9 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Prince Ferdinand Infantry Regiment # 25, two battalions</Name>
+<UID>IR 25</UID>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
 <Ranks>3</Ranks>
 <Officers>20</Officers>
@@ -245,8 +254,9 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Puttkammer Infantry Regiment # 36, two battalions</Name>
+<UID>IR 36</UID>
 <MoraleState>Good</MoraleState>
-<Strength>1600</Strength>
+<Strength>1200</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
 <Ranks>3</Ranks>
 <Officers>20</Officers>
@@ -279,6 +289,7 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Knebel Grenadier Battalion</Name>
+<UID>Knebel Gren</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -296,7 +307,8 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>Möllendorf Infantry Regiment # 34, two battalions</Name>
+<Name>Möllendorf Infantry Regiment # 25, two battalions</Name>
+<UID>IR 25</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1600</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -314,7 +326,8 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>Wartensleben Infantry Regiment # 36, two battalions</Name>
+<Name>Wartensleben Infantry Regiment # 59, two battalions</Name>
+<UID>IR 59</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1600</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -350,6 +363,7 @@ icon="bullet_1">
 <Doctrine>Packed</Doctrine>
 <Squadron item="y">
 <Name>Leib Carabinier Regiment # 12, five squadrons</Name>
+<UID>Carabinier 12</UID>
 <Type>Carabinier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>500</Strength>
@@ -366,6 +380,7 @@ icon="bullet_1">
 </Squadron>
 <Squadron item="y">
 <Name>Garde du Corps Cuirassier Regiment # 14, five squadrons</Name>
+<UID>Cuirassier 14</UID>
 <Type>Cuirassier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>500</Strength>
@@ -403,6 +418,7 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Hanstein Grenadier Battalion</Name>
+<UID>Hanstein Gren</UID>
 <MoraleState>Good</MoraleState>
 <Strength>640</Strength>
 <NumBases>4</NumBases>
@@ -421,6 +437,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Renouard Infantry Regiment # 3, two battalions</Name>
+<UID>IR 3</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -439,6 +456,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Kleist Infantry Regiment # 5, two battalions</Name>
+<UID>IR 5</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -473,6 +491,7 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Alt-Braun Grenadier Battalion</Name>
+<UID>Alt-Braun Gren</UID>
 <MoraleState>Good</MoraleState>
 <Strength>640</Strength>
 <NumBases>4</NumBases>
@@ -491,6 +510,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Prince Louis Infantry Regiment # 20, two battalions</Name>
+<UID>IR 20</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -509,6 +529,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Brunswick Infantry Regiment # 21, two battalions</Name>
+<UID>IR 21</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -544,6 +565,7 @@ icon="bullet_1">
 <Doctrine>Packed</Doctrine>
 <Squadron item="y">
 <Name>Quitzow Cuirassier Regiment # 6, five squadrons</Name>
+<UID>Cuirassier 6</UID>
 <Type>Cuirassier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
@@ -560,6 +582,7 @@ icon="bullet_1">
 </Squadron>
 <Squadron item="y">
 <Name>Reitzenstein Cuirassier Regiment # 7, five squadrons</Name>
+<UID>Cuirassier 7</UID>
 <Type>Cuirassier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
@@ -599,6 +622,7 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Schack Grenadier Battalion</Name>
+<UID>Schack Gren</UID>
 <MoraleState>Good</MoraleState>
 <Strength>830</Strength>
 <NumBases>4</NumBases>
@@ -617,6 +641,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Alvensleben Infantry Regiment # 33, two battalions</Name>
+<UID>IR 33</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1660</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -635,6 +660,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Prince Heinrich Infantry Regiment # 35, two battalions</Name>
+<UID>IR 35</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1660</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -669,6 +695,7 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Krafft Grenadier Battalion</Name>
+<UID>Krafft Gren</UID>
 <MoraleState>Good</MoraleState>
 <Strength>830</Strength>
 <Ranks>3</Ranks>
@@ -686,6 +713,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Malschitsky Infantry Regiment # 28, two battalions</Name>
+<UID>IR 28</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1600</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -704,6 +732,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Schimonsky Infantry Regiment # 40, two battalions</Name>
+<UID>IR 40</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1600</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -739,6 +768,7 @@ icon="bullet_1">
 <Doctrine>Packed</Doctrine>
 <Squadron item="y">
 <Name>Königin Dragoon Regiment # 5, ten squadrons</Name>
+<UID>Dragoon 5</UID>
 <Type>Dragoon</Type>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
@@ -773,6 +803,7 @@ icon="bullet_1">
 <Doctrine>Packed</Doctrine>
 <Squadron item="y">
 <Name>Heising Cuirassier Regiment # 8, five squadrons</Name>
+<UID>Cuirassier 8</UID>
 <Type>Cuirassier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
@@ -790,6 +821,7 @@ icon="bullet_1">
 </Squadron>
 <Squadron item="y">
 <Name>Bünting Cuirassier Regiment # 12, five squadrons</Name>
+<UID>Cuirassier 12</UID>
 <Type>Cuirassier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>

@@ -34,6 +34,7 @@ line0="{*Name*}"
 line1="{*Name*}"
 icon="bullet_3">
 <Name type="Text" ref="y">16eme Legere, 1e Bn</Name>
+<UID type="Text">1/16L</UID>
 <FacingColours type="Text"></FacingColours>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
 <Strength type="Number" format="####" init="720">720</Strength>
@@ -54,6 +55,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>16eme Legere, 2e Bn</Name>
+<UID>2/16L</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -73,6 +75,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>16eme Legere, 3e Bn</Name>
+<UID>3/16L</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -92,6 +95,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>16eme Legere, 4e Bn</Name>
+<UID>4/16L</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -117,6 +121,7 @@ icon="bullet_3">
 <Drill>French</Drill>
 <Battalion item="y">
 <Name>14eme Legere, 2e Bn</Name>
+<UID>2/14L</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -136,6 +141,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>44eme Ligne, 1e Bn</Name>
+<UID>1/44</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -155,6 +161,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>44eme Ligne, 2e Bn</Name>
+<UID>2/44</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -174,6 +181,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>44eme Ligne, 3e Bn</Name>
+<UID>3/44</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -193,6 +201,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>105eme Ligne, 1e Bn</Name>
+<UID>1/105</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -212,6 +221,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>105eme Ligne, 2e Bn</Name>
+<UID>2/105</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -231,6 +241,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>105eme Ligne, 3e Bn</Name>
+<UID>3/105</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -287,6 +298,7 @@ icon="bullet_1">
 <Drill>French</Drill>
 <Battalion item="y">
 <Name>7eme Legere, 1e Bn</Name>
+<UID>1/7L</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -306,6 +318,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>7eme Legere, 2e Bn</Name>
+<UID>2/7L</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -325,6 +338,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>7eme Legere, 3e Bn</Name>
+<UID>3/7L</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -350,6 +364,7 @@ icon="bullet_1">
 <Drill>French</Drill>
 <Battalion item="y">
 <Name>24eme Ligne, 1e Bn</Name>
+<UID>1/24</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -369,6 +384,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>24eme Ligne, 2e Bn</Name>
+<UID>2/24</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -388,6 +404,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>24eme Ligne, 3e Bn</Name>
+<UID>3/24</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -407,6 +424,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>63eme Ligne, 1e Bn</Name>
+<UID>1/63</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -426,6 +444,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>63eme Ligne, 2e Bn</Name>
+<UID>2/63</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -451,6 +470,7 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Hesse Darmstadt Fuslier, 1st Bn</Name>
+<UID>1/HD</UID>
 <MoraleState>Good</MoraleState>
 <Strength>640</Strength>
 <NumBases>4</NumBases>
@@ -468,7 +488,8 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>Hesse Darmstadt Fuslier, 1st Bn</Name>
+<Name>Hesse Darmstadt Fuslier, 2nd Bn</Name>
+<UID>2/HD</UID>
 <MoraleState>Good</MoraleState>
 <Strength>640</Strength>
 <NumBases>4</NumBases>
@@ -486,7 +507,8 @@ icon="bullet_1">
 <Fatigue>0</Fatigue>
 </Battalion>
 <Battalion item="y">
-<Name>Nassau Infantrie Regiment, 3rd Bn</Name>
+<Name>Nassau Infantrie Regiment, 1st Bn</Name>
+<UID>1/Nassau</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <NumBases>4</NumBases>
@@ -541,7 +563,7 @@ line0="{*Name*}"
 line1="{*Name*}"
 icon="bullet_2">
 <Name type="Text" ref="y">7e Chasseurs</Name>
-<FacingColours type="Text"></FacingColours>
+<FacingColours type="Text">Chas 7</FacingColours>
 <Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon">Chass</Type>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
 <Strength type="Number" format="###" init="120">480</Strength>
@@ -559,6 +581,7 @@ icon="bullet_2">
 </Squadron>
 <Squadron item="y">
 <Name>20e Chasseurs</Name>
+<FacingColours>Chas 20</FacingColours>
 <Type>Chass</Type>
 <MoraleState>Good</MoraleState>
 <Strength>360</Strength>

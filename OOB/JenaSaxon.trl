@@ -44,6 +44,7 @@ line0="{*Name*}"
 line1="{*Name*}"
 icon="bullet_3">
 <Name type="Text" ref="y">Müffling Infantry Regiment # 49, two battalions</Name>
+<UID type="Text">IR49</UID>
 <FacingColours type="Text"></FacingColours>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
 <Strength type="Number" format="####" init="720">1280</Strength>
@@ -64,6 +65,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>Prince Clemens Saxon Infantry Regiment, two battalions</Name>
+<UID>Prinz Clemens</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <Ranks>3</Ranks>
@@ -81,6 +83,7 @@ icon="bullet_3">
 </Battalion>
 <Battalion item="y">
 <Name>Kürfurst Saxon Infantry Regiment, two battalions</Name>
+<UID>Kurfurst</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <Ranks>3</Ranks>
@@ -118,6 +121,7 @@ icon="bullet_1">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Rabenau Fusilier Battalion # 13</Name>
+<UID>F13</UID>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
 <Ranks>3</Ranks>
@@ -136,6 +140,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Pelet Fusilier Battalion # 14</Name>
+<UID>F14</UID>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
 <Ranks>3</Ranks>
@@ -154,6 +159,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Rühle Fusilier Battalion # 15</Name>
+<UID>F15</UID>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
 <Ranks>3</Ranks>
@@ -172,6 +178,7 @@ icon="bullet_1">
 </Battalion>
 <Battalion item="y">
 <Name>Masars and Valentin Foot Jäger companies</Name>
+<UID>Masars</UID>
 <MoraleState>Good</MoraleState>
 <Strength>200</Strength>
 <Ranks>3</Ranks>
@@ -215,6 +222,7 @@ line0="{*Name*}"
 line1="{*Name*}"
 icon="bullet_2">
 <Name type="Text" ref="y">Schimmelpfennig Hussar Regiment # 6, ten squadrons</Name>
+<UID type="Text">Hussar 6</UID>
 <FacingColours type="Text"></FacingColours>
 <Type type="Choice" format="Hussar/Chass/ChevLeg/Dragoon/Lancer/Cossack/Cuirassier/Carabinier" init="Dragoon">Hussar</Type>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
@@ -251,6 +259,7 @@ icon="bullet_2">
 <Doctrine>Packed</Doctrine>
 <Squadron item="y">
 <Name>Saxon Hussar Regiment, eight squadrons</Name>
+<UID>Saxon Hussar</UID>
 <Type>Hussar</Type>
 <MoraleState>Good</MoraleState>
 <Strength>800</Strength>
@@ -280,6 +289,7 @@ icon="bullet_2">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Hahn Grenadier battalion (29/32)</Name>
+<UID>Hahn Grenadier</UID>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
 <Ranks>3</Ranks>
@@ -297,6 +307,7 @@ icon="bullet_2">
 </Battalion>
 <Battalion item="y">
 <Name>Hohenlohe Infantry Regiment # 32, two battalions</Name>
+<UID>IR32</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
 <Ranks>3</Ranks>
@@ -314,6 +325,7 @@ icon="bullet_2">
 </Battalion>
 <Battalion item="y">
 <Name>Sanitz Infantry Regiment # 50, two battalions</Name>
+<UID>IR50</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
 <Ranks>3</Ranks>
@@ -348,6 +360,7 @@ icon="bullet_2">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Sack Grenadier battalion (33/42)</Name>
+<UID>Sack Grenadier</UID>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
 <Ranks>3</Ranks>
@@ -365,6 +378,7 @@ icon="bullet_2">
 </Battalion>
 <Battalion item="y">
 <Name>Grawert Infantry Regiment # 37, two battalions</Name>
+<UID>IR37</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
 <Ranks>3</Ranks>
@@ -382,6 +396,7 @@ icon="bullet_2">
 </Battalion>
 <Battalion item="y">
 <Name>Zastrow Infantry Regiment # 39, two battalions</Name>
+<UID>IR39</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
 <Ranks>3</Ranks>
@@ -417,6 +432,7 @@ icon="bullet_2">
 <Doctrine>Packed</Doctrine>
 <Squadron item="y">
 <Name>Krafft Dragoon Regiment # 11, five squadrons</Name>
+<UID>Dragoon 11</UID>
 <Type>Dragoon</Type>
 <MoraleState>Good</MoraleState>
 <Strength>500</Strength>
@@ -433,6 +449,7 @@ icon="bullet_2">
 </Squadron>
 <Squadron item="y">
 <Name>Henkel Cuirassier Regiment # 1, five squadrons</Name>
+<UID>Cuirassier 1</UID>
 <Type>Cuirassier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
@@ -449,6 +466,7 @@ icon="bullet_2">
 </Squadron>
 <Squadron item="y">
 <Name>Holtzendorff Cuirassier Regiment # 9, five squadrons</Name>
+<UID>Currassier 9</UID>
 <Type>Cuirassier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
@@ -482,6 +500,7 @@ icon="bullet_2">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Erichsen Fusilier battalion # 10</Name>
+<UID>FS 10</UID>
 <MoraleState>Good</MoraleState>
 <Strength>600</Strength>
 <Ranks>3</Ranks>
@@ -500,6 +519,7 @@ icon="bullet_2">
 </Battalion>
 <Squadron item="y">
 <Name>Gettkandt Hussar Regiment # 1, ten squadrons</Name>
+<UID>Hussar 1</UID>
 <Type>Dragoon</Type>
 <MoraleState>Good</MoraleState>
 <Strength>1000</Strength>
@@ -540,6 +560,7 @@ icon="bullet_2">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Thümmel Saxon Infantry Regiment, two battalions</Name>
+<UID>Thummel</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <Ranks>3</Ranks>
@@ -557,6 +578,7 @@ icon="bullet_2">
 </Battalion>
 <Battalion item="y">
 <Name>Prince Xavier Saxon Infantry Regiment, two battalions</Name>
+<UID>Prinz Xavier</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <Ranks>3</Ranks>
@@ -602,6 +624,7 @@ icon="bullet_2">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Low Saxon Infantry Regiment, two battalions</Name>
+<UID>Low</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <Ranks>3</Ranks>
@@ -619,6 +642,7 @@ icon="bullet_2">
 </Battalion>
 <Battalion item="y">
 <Name>Niesemeuschel Saxon Infantry Regiment, two battalions</Name>
+<UID>Niesemeuschel</UID>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <Ranks>3</Ranks>
@@ -636,6 +660,7 @@ icon="bullet_2">
 </Battalion>
 <Battalion item="y">
 <Name>Bevilaqua Saxon Infantry Regiment, 2nd battalion</Name>
+<UID>Belvilaqua</UID>
 <MoraleState>Good</MoraleState>
 <Strength>640</Strength>
 <Ranks>3</Ranks>
@@ -671,6 +696,7 @@ icon="bullet_2">
 <Doctrine>Linear</Doctrine>
 <Squadron item="y">
 <Name>Mounted Carabinier Saxon Regiment, four squadron</Name>
+<UID>Saxon Carabinier</UID>
 <Type>Carabinier</Type>
 <MoraleState>Good</MoraleState>
 <Strength>480</Strength>
@@ -687,6 +713,7 @@ icon="bullet_2">
 </Squadron>
 <Squadron item="y">
 <Name>Kochtitsky Saxon Cuirassier Regiment, four squadrons</Name>
+<UID>Kochtitsky Cuirassier</UID>
 <Type>Dragoon</Type>
 <MoraleState>Good</MoraleState>
 <Strength>480</Strength>
@@ -703,6 +730,7 @@ icon="bullet_2">
 </Squadron>
 <Squadron item="y">
 <Name>Prince Albert Saxon Chevau-léger Regiment, four squadrons</Name>
+<UID>Prince Albert Chevau-léger</UID>
 <Type>ChevLeg</Type>
 <MoraleState>Good</MoraleState>
 <Strength>480</Strength>
@@ -736,6 +764,7 @@ icon="bullet_2">
 <Drill>Prussian</Drill>
 <Battalion item="y">
 <Name>Boguslawsky Prussian Fusilier battalion # 22</Name>
+<UID>FS 22</UID>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>
 <Ranks>3</Ranks>
@@ -753,6 +782,7 @@ icon="bullet_2">
 </Battalion>
 <Squadron item="y">
 <Name>Polenz Saxon Chevau-léger Regiment, four squadrons</Name>
+<UID>Polenz Chevau-léger</UID>
 <Type>ChevLeg</Type>
 <MoraleState>Good</MoraleState>
 <Strength>720</Strength>

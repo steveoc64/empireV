@@ -26,6 +26,10 @@ function d100 () {
 	return rand(1,100);
 }
 
+function d10 () {
+	return rand(1,10);
+}
+
 function roll_dice ($fractional) {
 
 	$dice = rand(1,100);
@@ -524,6 +528,8 @@ class Game_model extends CI_Model {
 			$this->phase = $game->phase;
 			$this->orbat_attacker = $game->orbat_attacker;
 			$this->orbat_defender = $game->orbat_defender;
+			$this->attacker_commander = $game->attacker_commander;
+			$this->defender_commander = $game->defender_commander;
 			$this->situation = $game->situation;
 			$this->attacker_briefing = $game->attacker_briefing;
 			$this->defender_briefing = $game->defender_briefing;
@@ -2801,6 +2807,195 @@ $(function() {
 			$data->message = 'Unit has converted to defend order due to '.$reason;
 			$data->letter_icon = rand(1,6);
 		$this->db->insert('game_message',$data);
+	}
+
+	function determine_bombardment_form() {
+
+		echo form_open('umpire_console/determine_bombardment_calculate',array('id'=>'bombardment_form'));
+		// For each player
+		// 	open a fieldset
+		// 	For each battery
+		// 		add a line, with checkboxes for movement
+		// 	close fieldset
+
+		$query = $this->db->query("select id,username,commander_id from user where current_game=".$this->id." and commander_id != 0");
+		foreach ($query->result() as $row) {
+			echo "<br><b><u>Commander ".$row->username."</u></b><br>";
+			$unit_range = $this->get_unit_id_range($row->commander_id);
+			$me_list = $this->get_me_list($unit_range->start_id,$unit_range->end_id);
+			// we now have a list of the MEs for this user
+			foreach ($me_list as $unit) {
+				if ($unit->player_id == $row->id) {
+					echo form_fieldset('[#'.$unit->id.'] - '.$unit->name);
+					// Find out if parent ME engaged
+					$parent_engaged = $this->db->get_where('game_engagement_unit',array('game_id'=>$this->id,'unit_id'=>$unit->id))->row();
+					if ($parent_engaged) {
+						$engagement = $this->db->get_where('game_engagement',array('game_id'=>$this->id,'id'=>$parent_engaged->engagement_id))->row();
+						echo "<br><font color=red>Engaged at - ".$engagement->descr."</font>";
+					} else {
+						echo "<br><font color=green>Not Engaged</font>";
+					}
+
+					foreach ($unit->me_subunit as $subunit) {
+						if ($subunit->unit_type == TYPE_BATTERY) {
+							echo "<br>[#".$subunit->id."] - ".$subunit->name;
+
+
+							// get the current setting for this unit
+							$bombard = $this->db->get_where('game_bombardment_unit',array('game_id'=>$this->id,'turn_number'=>$this->turn_number,'unit_id'=>$subunit->id))->row();
+							if ($bombard) {
+								//echo '<br>Modifiers = '.$bombard->modifiers;
+								//echo '<br>Bombard Turns = '.$bombard->rounds;
+								echo '<br><font color=blue>Fires in '.$bombard->descr.'</font>';
+								$moved = $bombard->moved;
+							} else {
+								echo '<br><font color=red>No calculation yet</font>';
+								$moved = '800+';
+							}
+
+							// add radio buttons for last movement
+							$range1 = $this->yards_to_inches(200);
+							$range2 = $this->yards_to_inches(400);
+							$range3 = $this->yards_to_inches(800);
+
+							echo "<br>Move last Grand Tactical Round : ";
+							echo '<table border=0 width=600 cellpadding=5><tr><td>None</td><td>up to '.$range1.'"</td><td>up to '.$range2.'"</td><td>up to '.$range3.'"</td><td>over '.$range3.'"</td></r>';
+							echo '<tr><td>'.form_radio($subunit->id,'0',$moved == '0').'</td>';
+							echo '<td>'.form_radio($subunit->id,'200',$moved == '200').'</td>';
+							echo '<td>'.form_radio($subunit->id,'400',$moved == '400').'</td>';
+							echo '<td>'.form_radio($subunit->id,'800',$moved == '800').'</td>';
+							echo '<td>'.form_radio($subunit->id,'800+',$moved == '800+').'</td>';
+							echo "</tr></table>";
+						}
+					}
+					echo form_fieldset_close();
+				}
+			}
+		}
+
+		echo form_submit('submit','Calculate Bombardment Rounds');
+		echo form_close();
+?>
+<script> 
+// wait for the DOM to be loaded 
+$(function() { 
+	$('#bombardment_form').ajaxForm(function() { 
+		alert("Bombardment stuff posted");
+	}); 
+}); 
+</script> 
+<?
+	
+	}
+
+	function determine_bombardment_calculate() {
+
+		$query = $this->db->query("select id,username,commander_id from user where current_game=".$this->id." and commander_id != 0");
+		foreach ($query->result() as $row) {
+			echo "<br><b><u>Commander ".$row->username."</u></b><br>";
+
+			$activity = d10() + d10();
+			echo "<font color=blue>Base Activity Number = $activity</font><br>";
+
+			$unit_range = $this->get_unit_id_range($row->commander_id);
+			$me_list = $this->get_me_list($unit_range->start_id,$unit_range->end_id);
+			// we now have a list of the MEs for this user
+			foreach ($me_list as $unit) {
+				if ($unit->player_id == $row->id) {
+					echo form_fieldset('[#'.$unit->id.'] - '.$unit->name);
+					// Find out if parent ME engaged
+					$parent_engaged = $this->db->get_where('game_engagement_unit',array('game_id'=>$this->id,'unit_id'=>$unit->id))->row();
+					if ($parent_engaged) {
+						$engagement = $this->db->get_where('game_engagement',array('game_id'=>$this->id,'id'=>$parent_engaged->engagement_id))->row();
+						echo "<br><font color=red>Engaged at - ".$engagement->descr."</font>";
+					} else {
+						echo "<br><font color=green>Not Engaged</font>";
+					}
+
+					foreach ($unit->me_subunit as $subunit) {
+						if ($subunit->unit_type == TYPE_BATTERY) {
+							echo "<br>[#".$subunit->id."] - ".$subunit->name;
+
+							$moved = $this->input->post($subunit->id);
+							switch ($moved) {
+							case '0':
+								$modifier = +6;
+								if ($parent_engagement->start_turn < $this->turn_number) {
+									echo "<br><font color=red>Did not move, but parent ME was engaged last turn !</font>";
+									$modifier = 0;
+								}
+								break;
+							case '200':
+								$modifier = 0;
+								break;
+							case '400':
+								$modifier = -4;
+								break;
+							case '800':
+								$modifier = -8;
+								break;
+							case '800+':
+								$modifier = -12;
+								break;
+							}
+							$total = $activity + $modifier;
+							echo "<br><font color=blue>Modifier = $modifier, Total = $total</font>";
+
+							// work out the turns
+							if ($total < 1) {
+								$turns = 0;
+								$tdesc = '1/2 Effect in Phase 3 only';
+							} elseif ($total < 6) {
+								$turns = 1;
+								$tdesc = 'Phase 3 only';
+							} elseif ($total < 17) {
+								$turns = 2;
+								$tdesc = 'Phase 2 and 3';
+							} else {
+								$turns = 3;
+								$tdesc = 'all Phases';
+							}
+
+							// Create the bombardment record
+							$data = new stdClass;
+								$data->game_id = $this->id;
+								$data->turn_number  = $this->turn_number;
+								$data->unit_id = $subunit->id;
+								$data->moved = $moved;
+								$data->modifiers = $modifier;
+								$data->rounds = $turns;
+								$data->descr = $tdesc;
+							$this->db->delete('game_bombardment_unit',array('game_id'=>$this->id,'turn_number'=>$this->turn_number,'unit_id'=>$subunit->id));
+							$this->db->insert('game_bombardment_unit',$data);
+
+							// get the current setting for this unit
+							echo '<br>Modifiers = '.$modifier;
+							echo '<br>Bombard Turns = '.$turns;
+							echo '<br><font color=blue>Fires in '.$tdesc.'</font>';
+
+							// add radio buttons for last movement
+							$range1 = $this->yards_to_inches(200);
+							$range2 = $this->yards_to_inches(400);
+							$range3 = $this->yards_to_inches(800);
+
+							// add radio buttons for last movement
+							echo "<br>Move last Grand Tactical Round : ";
+							echo '<table border=0 width=600 cellpadding=10><tr><td>None</td><td>up to '.$range1.'"</td><td>up to '.$range2.'"</td><td>up to '.$range3.'"</td><td>over '.$range3.'"</td></r>';
+							echo '<tr><td>'.form_radio($subunit->id,'0',$moved == '0').'</td>';
+							echo '<td>'.form_radio($subunit->id,'200',$moved == '200').'</td>';
+							echo '<td>'.form_radio($subunit->id,'400',$moved == '400').'</td>';
+							echo '<td>'.form_radio($subunit->id,'800',$moved == '800').'</td>';
+							echo '<td>'.form_radio($subunit->id,'800+',$moved == '800+').'</td>';
+							echo "</tr></table>";
+						}
+					}
+					echo form_fieldset_close();
+				}
+			}
+		}
+
+		echo form_submit('submit','Calculate Bombardment Rounds');
+		echo form_close();
 	}
 }
 

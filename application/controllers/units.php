@@ -10,7 +10,7 @@ class Units extends MY_Controller
 		$form->unset_add();
 		$form->unset_delete();
 	
-		$form->columns('parent_id','id','name','unit_type','is_me','strength','formation','ace');
+		$form->columns('parent_id','id','name','uid','unit_type','is_me','strength','formation','ace');
 		$form->display_as('is_me','ME');
 		$form->callback_column('is_me',array($this,'convert_me'));
 		$form->callback_column('formation',array($this,'get_formation'));
@@ -39,14 +39,14 @@ class Units extends MY_Controller
 				$form->where($this->game_model->get_unit_where_range($id));
 				$title .= "showing unit $id, and subordinate units only";
 				//$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','orbat_id','player_id');
-				$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','player_id');
+				$form->columns('parent_id','id','name','uid','unit_type','is_me','strength','ace','player_id');
 				//$form->display_as('orbat_id','ORBAT');
 				$form->callback_column('unit.name',array($this,'indent_name2'));
 				$form->callback_column('player_id',array($this,'get_player'));
 				$form->callback_after_update(array($this,'cascade_me'));
 				if ($this->game) {
 					$form->set_theme('datatables');
-					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','formation','casualties','last_hour','morale_grade','ace');
+					$form->columns('parent_id','parent_me','id','name','uid','unit_type','is_me','strength','formation','casualties','last_hour','morale_grade','ace');
 					$form->callback_column('casualties',array($this,'get_casualties'));
 					$form->callback_column('last_hour',array($this,'last_hour'));
 					$form->add_action('Status', '', '','ui-icon-clipboard',array($this,'status_report'));
@@ -60,7 +60,7 @@ class Units extends MY_Controller
 					$title .= "Only showing attacker and defender forces for current game (#".$this->game->id." - ".$this->game->name.")";
 					// Add some buttons - dont show them if there is no game selected for admin
 					//$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','casualties','last_hour','morale_grade','ace','orbat_id','player_id');
-					$form->columns('parent_id','parent_me','id','name','unit_type','is_me','strength','formation','casualties','last_hour','morale_grade','ace'); //,'player_id');
+					$form->columns('parent_id','parent_me','id','name','uid','unit_type','is_me','strength','formation','casualties','last_hour','morale_grade','ace'); //,'player_id');
 					$form->callback_column('casualties',array($this,'get_casualties'));
 					$form->callback_column('last_hour',array($this,'last_hour'));
 					$form->callback_column('player_id',array($this,'get_player'));
@@ -69,7 +69,7 @@ class Units extends MY_Controller
 				} else {
 					// Admin gets to see the ORBAT file that the unit was loaded from
 					$title .= "Showing all units for all games";
-					$form->columns('parent_id','id','name','unit_type','is_me','strength','ace','orbat_id');
+					$form->columns('parent_id','id','name','uid','unit_type','is_me','strength','ace','orbat_id');
 					$form->display_as('orbat_id','ORBAT');
 					$form->callback_after_update(array($this,'cascade_me'));
 				}
@@ -288,7 +288,7 @@ class Units extends MY_Controller
 			$query = $this->db->query("update unit set parent_me=0 where $range");
 		}
 		// Last but not least, make sure our parent ME is clear !
-		$query = $this->db->query("update unit set parent_me=0 where id=$primary_key");
+		//$query = $this->db->query("update unit set parent_me=0 where id=$primary_key");
 	}
 
 	function get_casualties($primary_key,$row) {

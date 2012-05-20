@@ -85,3 +85,8 @@ For more info on writing your own rewrite rules to suit your site, you can refer
 here :
 http://httpd.apache.org/docs/current/rewrite/
 ---------------------------------------------------------------------------------------------------------
+
+4) Email addresses
+
+There are some hard coded email addresses in the new account signup stage - probably want to fix 
+these so that they are config items
