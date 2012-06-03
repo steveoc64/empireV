@@ -530,6 +530,8 @@ class Game_model extends CI_Model {
 			$this->orbat_defender = $game->orbat_defender;
 			$this->attacker_commander = $game->attacker_commander;
 			$this->defender_commander = $game->defender_commander;
+			$this->attacker_characteristics = $game->attacker_characteristics;
+			$this->defender_characteristics = $game->defender_characteristics;
 			$this->situation = $game->situation;
 			$this->attacker_briefing = $game->attacker_briefing;
 			$this->defender_briefing = $game->defender_briefing;
@@ -2832,6 +2834,49 @@ $(function() {
 					if ($parent_engaged) {
 						$engagement = $this->db->get_where('game_engagement',array('game_id'=>$this->id,'id'=>$parent_engaged->engagement_id))->row();
 						echo "<br><font color=red>Engaged at - ".$engagement->descr."</font>";
+
+						// are there any leaders attached to any unit in this ME ?
+						$leaders = $this->get_leaders_attached($unit);
+						foreach ($leaders as $leader) {
+							$leader_unit = $this->get_unit($leader);
+							switch ($leader_unit->unit_type) {
+							case TYPE_ARMY:
+							case TYPE_WING:
+								echo "<br><font color=green>Army Commander ".$leader_unit->name." attached</font>";
+								break;
+							case TYPE_CORPS:
+								echo "<br><font color=green>Corps Commander ".$leader_unit->name." attached</font>";
+								break;
+							case TYPE_DIVISION:
+								// TODO - if Div commander is superiod, add +2
+								break;
+							}
+						}
+
+						// Show impulses active
+						$initiative = $this->db->get_where('game_engagement_initiative',array('game_id'=>$this->id,'engagement_id'=>$engagement->id,'unit_id'=>$unit->id))->row();
+						if ($initiative) {
+							echo "<br><font color=blue>Active impulses = ".$initiative->impulses." (die roll = ".$initiative->die_roll." + ".$initiative->modifiers.")</font>";
+						} else {
+?><script>
+$(function() { $("#determine_bombardment_done").fadeOut(4000); });
+</script><?
+						}
+
+
+						// add radio buttons for last movement for the whole ME
+						$moved = $initiative->moved;
+						$range1 = $this->yards_to_inches(600);
+						$range2 = $this->yards_to_inches(1200);
+
+						echo "<br>ME moved last Grand Tactical Round : ";
+						echo '<table border=0 width=600 cellpadding=5><tr><td>None</td><td>up to '.$range1.'"</td><td>up to '.$range2.'"</td><td>over '.$range2.'"</td></r>';
+							echo '<tr><td>'.form_radio($unit->id,'0',$moved == '0').'</td>';
+							echo '<td>'.form_radio($unit->id,'600',$moved == '600').'</td>';
+							echo '<td>'.form_radio($unit->id,'1200',$moved == '1200').'</td>';
+							echo '<td>'.form_radio($unit->id,'1200+',$moved == '2400').'</td>';
+							echo "</tr></table><hr>";
+
 					} else {
 						echo "<br><font color=green>Not Engaged</font>";
 					}
@@ -2858,14 +2903,35 @@ $(function() {
 							$range2 = $this->yards_to_inches(400);
 							$range3 = $this->yards_to_inches(800);
 
-							echo "<br>Move last Grand Tactical Round : ";
-							echo '<table border=0 width=600 cellpadding=5><tr><td>None</td><td>up to '.$range1.'"</td><td>up to '.$range2.'"</td><td>up to '.$range3.'"</td><td>over '.$range3.'"</td></r>';
-							echo '<tr><td>'.form_radio($subunit->id,'0',$moved == '0').'</td>';
-							echo '<td>'.form_radio($subunit->id,'200',$moved == '200').'</td>';
-							echo '<td>'.form_radio($subunit->id,'400',$moved == '400').'</td>';
-							echo '<td>'.form_radio($subunit->id,'800',$moved == '800').'</td>';
-							echo '<td>'.form_radio($subunit->id,'800+',$moved == '800+').'</td>';
-							echo "</tr></table>";
+							$_ = $subunit->id;
+							echo "<br>Battery moved last Grand Tactical Round : ";
+							echo "<div id=\"battery-$_\" style=\"width:500px;\">";
+							echo '<input type="radio" id="'.$_.'-0" name="'.$subunit->id.'"';
+							if ($moved == '0') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-0">No Move</label>';
+							echo '<input type="radio" id="'.$_.'-200" name="'.$subunit->id.'"';
+							if ($moved == '200') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-200">Up to '.$range1.'"</label>';
+							echo '<input type="radio" id="'.$_.'-400" name="'.$subunit->id.'"';
+							if ($moved == '400') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-400">Up to '.$range2.'"</label>';
+							echo '<input type="radio" id="'.$_.'-800" name="'.$subunit->id.'"';
+							if ($moved == '800') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-800">Up to '.$range3.'"</label>';
+							echo '<input type="radio" id="'.$_.'-800+" name="'.$subunit->id.'"';
+							if ($moved == '800+') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-800+">Over '.$range3.'"</label>';
+
+							//echo '<tr><td>'.form_radio($subunit->id,'0',$moved == '0').'</td>';
+							//echo '<td>'.form_radio($subunit->id,'200',$moved == '200').'</td>';
+							//echo '<td>'.form_radio($subunit->id,'400',$moved == '400').'</td>';
+							//echo '<td>'.form_radio($subunit->id,'800',$moved == '800').'</td>';
+							//echo '<td>'.form_radio($subunit->id,'800+',$moved == '1600').'</td>';
+							echo "</div>";
+?>
+<script> $(function() { $("#<?echo "battery-$_";?>").buttonset();}); </script>
+<?
+							
 						}
 					}
 					echo form_fieldset_close();
@@ -2877,15 +2943,41 @@ $(function() {
 		echo form_close();
 ?>
 <script> 
-// wait for the DOM to be loaded 
 $(function() { 
 	$('#bombardment_form').ajaxForm(function() { 
-		alert("Bombardment stuff posted");
+		$("#determine_bombardment_form").load("umpire_console/determine_bombardment_form",function(){
+			$("#determine_bombardment_done").fadeIn(4000);
+		});
 	}); 
 }); 
 </script> 
 <?
 	
+	}
+
+	function get_leaders_attached ($me_unit) {
+		$retval = array();
+
+		// The ME itself has a leader anyway, so add that
+		$retval[] = $me_unit->id;
+
+		// Are there higher level leaders attached to this ME ?
+		$query = $this->db->query('select commander_id from game_attach where game_id='.$this->id.' and unit_id='.$me_unit->id);
+		foreach ($query->result() as $row) {
+			if (!in_array($row->commander_id,$retval)) { $retval[] = $row->commander_id; }
+		}
+
+		// Do the same for any subunits
+		foreach ($me_unit->me_subunit as $subunit) {
+			$query = $this->db->query('select commander_id from game_attach where game_id='.$this->id.' and unit_id='.$subunit->id);
+			foreach ($query->result() as $row) {
+				if (!in_array($row->commander_id,$retval)) { $retval[] = $row->commander_id; }
+			}
+		}
+
+		//echo "<br><hr>Leaders attached to ".$me_unit->id.':<br>';
+		//var_dump($retval);
+		return $retval;
 	}
 
 	function determine_bombardment_calculate() {
@@ -2905,9 +2997,105 @@ $(function() {
 					echo form_fieldset('[#'.$unit->id.'] - '.$unit->name);
 					// Find out if parent ME engaged
 					$parent_engaged = $this->db->get_where('game_engagement_unit',array('game_id'=>$this->id,'unit_id'=>$unit->id))->row();
+					$me_activity = 0;
+					$engagement = null;
 					if ($parent_engaged) {
 						$engagement = $this->db->get_where('game_engagement',array('game_id'=>$this->id,'id'=>$parent_engaged->engagement_id))->row();
 						echo "<br><font color=red>Engaged at - ".$engagement->descr."</font>";
+						$me_activity = d10() + d10();
+						// Now calculate the tactical phase impulses for this ME
+
+						// are there any leaders attached to any unit in this ME ?
+						$leaders = $this->get_leaders_attached($unit);
+						$me_activity_modifier = 0;
+						foreach ($leaders as $leader) {
+							$leader_unit = $this->get_unit($leader);
+							switch ($leader_unit->unit_type) {
+							case TYPE_ARMY:
+							case TYPE_WING:
+								$me_activity_modifier = $leader_unit->inspiration->me_activity_bonus * 2;
+								break;
+							case TYPE_CORPS:
+								$me_activity_modifier = $leader_unit->inspiration->me_activity_bonus;
+								break;
+							case TYPE_DIVISION:
+								// TODO - if Div commander is superior, add +2
+								break;
+							}
+						}
+
+						// Now apply national characteristics
+						if ($this->orbat_defender == $unit->orbat_id) {
+							$army_ch = $this->db->get_where('army_characteristics',array('id'=>$this->defender_characteristics))->row();
+						} elseif ($this->orbat_attacker == $unit->orbat_id) {
+							$army_ch = $this->db->get_where('army_characteristics',array('id'=>$this->attacker_characteristics))->row();
+						} else {
+							echo "ERROR: Unit ".$unit->id." is from orbat ".$unit->orbat_id." - dont know whether this attacker or defender";
+						}
+						$me_activity_modifier += $army_ch->me_activity_bonus;
+
+						// Modifiy for whatever orders the ME has activated
+						switch ($unit->current_order->order_type) {
+						case '2': // attack
+							$me_activity_modifier += 3;
+							$me_activity_modifier += $army_ch->me_attack_bonus;
+							break;
+						case '1': // defend
+							// TODO - some of these bonuses are only for infantry MEs !!
+							$me_activity_modifier += $army_ch->me_defend_bonus;
+							break;
+						case '6': // rest and rally
+							$me_activity_modifier -= 9;
+							break;
+						case '5': // redeploy
+							$me_activity_modifier -= 6;
+							break;
+						}
+
+						// Modify for amount of GT movement this hour
+						$moved = $this->input->post($unit->id);
+						switch ($moved) {
+						case '0':
+							break;
+						case '600':
+							$me_activity_modifier -= 1;
+							break;
+						case '1200':
+							$me_activity_modifier -= 2;
+							break;
+						case '1200+':
+							$me_activity_modifier -= 3;
+							break;
+						}
+
+						// calculate the impulses for this ME
+						$total = $me_activity + $me_activity_modifier;
+						if ($total <= 9) {
+							$impulses = 1;
+						} elseif ($total <= 19) {
+							$impulses = 2;
+						} else {
+							$impulses = 3;
+						}
+
+						// Create an acitivy record for this ME
+						$data = new stdClass;
+							$data->game_id = $this->id;
+							$data->engagement_id = $engagement->id;
+							$data->turn_number = $this->turn_number;
+							$data->unit_id = $unit->id;
+							$data->modifiers = $me_activity_modifier;
+							$data->die_roll = $me_activity;
+							$data->impulses = $impulses;
+							if ($moved == '1200+') {
+								$data->moved = 2400;
+							} else {
+								$data->moved = $moved;
+							}
+						$this->db->delete('game_engagement_initiative',array('game_id'=>$data->game_id,'engagement_id'=>$data->engagement_id,'unit_id'=>$data->unit_id));
+						$this->db->insert('game_engagement_initiative',$data);
+
+
 					} else {
 						echo "<br><font color=green>Not Engaged</font>";
 					}
@@ -2961,8 +3149,13 @@ $(function() {
 								$data->game_id = $this->id;
 								$data->turn_number  = $this->turn_number;
 								$data->unit_id = $subunit->id;
-								$data->moved = $moved;
+								if ($moved == '800+') {
+									$data->moved = 1600;
+								} else {
+									$data->moved = $moved;
+								}
 								$data->modifiers = $modifier;
+								$data->die_roll = $activity;
 								$data->rounds = $turns;
 								$data->descr = $tdesc;
 							$this->db->delete('game_bombardment_unit',array('game_id'=>$this->id,'turn_number'=>$this->turn_number,'unit_id'=>$subunit->id));

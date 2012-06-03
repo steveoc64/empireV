@@ -47,7 +47,7 @@ icon="bullet_3">
 <UID type="Text">FS Weimar</UID>
 <FacingColours type="Text"></FacingColours>
 <MoraleState type="Choice" format="Good/Shaken/Retreat/Broken" init="Good">Good</MoraleState>
-<Strength type="Number" format="####" init="720">780</Strength>
+<Strength type="Number" format="####" init="720">600</Strength>
 <NumBases type="Text">4</NumBases>
 <Ranks type="Choice" format="3/2/OpenOrder" init="3">3</Ranks>
 <Officers type="Number" format="##" init="10">10</Officers>
@@ -67,7 +67,7 @@ icon="bullet_3">
 <Name>Grieffenberg Fusilier #4</Name>
 <UID>FS 4</UID>
 <MoraleState>Good</MoraleState>
-<Strength>780</Strength>
+<Strength>600</Strength>
 <NumBases>4</NumBases>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
@@ -86,7 +86,7 @@ icon="bullet_3">
 <Name>Oswald Fuslier #14</Name>
 <UID>FS 14</UID>
 <MoraleState>Good</MoraleState>
-<Strength>780</Strength>
+<Strength>600</Strength>
 <NumBases>4</NumBases>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
@@ -105,7 +105,7 @@ icon="bullet_3">
 <Name>Kloch Fusilier #18</Name>
 <UID>FS 18</UID>
 <MoraleState>Good</MoraleState>
-<Strength>780</Strength>
+<Strength>600</Strength>
 <NumBases>4</NumBases>
 <Ranks>3</Ranks>
 <Officers>10</Officers>
@@ -236,6 +236,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Prince Ferdinand Infantry Regiment # 25, two battalions</Name>
 <UID>IR 25</UID>
+<FacingColours>scarlett facings, white-yellow-red pom pom</FacingColours>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -255,6 +256,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Puttkammer Infantry Regiment # 36, two battalions</Name>
 <UID>IR 36</UID>
+<FacingColours>white facings,  blue with white center</FacingColours>
 <MoraleState>Good</MoraleState>
 <Strength>1200</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -438,6 +440,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Renouard Infantry Regiment # 3, two battalions</Name>
 <UID>IR 3</UID>
+<FacingColours>red collar and cuff, black and white pom pom</FacingColours>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>
@@ -457,6 +460,7 @@ icon="bullet_1">
 <Battalion item="y">
 <Name>Kleist Infantry Regiment # 5, two battalions</Name>
 <UID>IR 5</UID>
+<FacingColours>pale straw, yellow-white-red</FacingColours>
 <MoraleState>Good</MoraleState>
 <Strength>1280</Strength>
 <NumBases>8 + Mounted Officer</NumBases>

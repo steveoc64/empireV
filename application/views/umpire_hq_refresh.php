@@ -97,7 +97,7 @@ if (isset($game)) {
 		echo "<div id=grand_tactical_form></div>";
 		break;
 	case PHASE_DETERMINE_BOMBARDMENT:
-		echo "<h2>Determine Bombardment Phase ~ ".$game->hrs."</h2>\n";
+		echo "<h2>Determine Bombardment & Initiative Phase ~ ".$game->hrs."</h2>\n";
 		echo "<center><div id=clock>$t</div></center>";
 		echo "<table border=0 width=90%><tr><td align=left>";
 		echo "<button id=rewind>&lt; Grand Tactical</button>";
@@ -114,7 +114,7 @@ if (isset($game)) {
 		echo "</td><td align=right>";
 		echo "<button id=engage_done>Commander Casualty &gt;</button>";
 		echo "</td></tr></table>";
-		echo "<div id=results></div>";
+		echo "<div id=engagements></div>";
 		break;
 	case PHASE_COMMANDER_CAS:
 		echo "<h2>Commander Casualties Phase ~ ".$game->hrs."</h2>\n";
@@ -234,7 +234,7 @@ $(function() {
 
 	// Phase 9 - kick off Determine Bombardment
 	$("#determine_bombardment_form").load("umpire_console/determine_bombardment_form",function(){
-		$("#determine_bombardment_done").fadeIn(4000);
+		//$("#determine_bombardment_done").fadeOut(4000);
 	});
 
 
