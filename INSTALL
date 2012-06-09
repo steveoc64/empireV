@@ -84,9 +84,27 @@ http://codeigniter.com/wiki/mod_rewrite
 For more info on writing your own rewrite rules to suit your site, you can refer to the apache docs 
 here :
 http://httpd.apache.org/docs/current/rewrite/
+
+IMPORTANT:   If you are having problems getting the system running on localhost - with page not found,
+this is most likely to do with configuring mod_rewrite. We use mod_rewrite here to cleanup the URLs, 
+so it automatically inserts 'index.php' into the actual URL before it hits the webserver proper.
+
+Make sure in your apache configuration that the following directive is set for your directories
+that contain the application :
+
+AllowOverride All
+
+If AllowOverride is not set, then mod_rewrite will not be actioned for that directory ... leading
+to a very long wild goose chase to debug your mod_rewrite rules   :)  Ouch !
 ---------------------------------------------------------------------------------------------------------
 
 4) Email addresses
 
 There are some hard coded email addresses in the new account signup stage - probably want to fix 
-these so that they are config items
+these so that they are config items.
+
+In the meantime, you may need to grep the source code for hard coded email addresses 
+(ie - grep -ilr gmail *)  and manually hack the hard coded addresses to something more appropriate.
+
+This is a temporary problem, and only manifests itselfs during the new account signup pages. Will
+fix this.

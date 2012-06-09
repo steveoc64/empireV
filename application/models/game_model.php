@@ -2823,6 +2823,9 @@ $(function() {
 		$query = $this->db->query("select id,username,commander_id from user where current_game=".$this->id." and commander_id != 0");
 		foreach ($query->result() as $row) {
 			echo "<br><b><u>Commander ".$row->username."</u></b><br>";
+
+			// TODO - display initiative score
+			
 			$unit_range = $this->get_unit_id_range($row->commander_id);
 			$me_list = $this->get_me_list($unit_range->start_id,$unit_range->end_id);
 			// we now have a list of the MEs for this user
@@ -2848,7 +2851,7 @@ $(function() {
 								echo "<br><font color=green>Corps Commander ".$leader_unit->name." attached</font>";
 								break;
 							case TYPE_DIVISION:
-								// TODO - if Div commander is superiod, add +2
+								// TODO - if Div commander is superior, add +2
 								break;
 							}
 						}
@@ -2856,8 +2859,10 @@ $(function() {
 						// Show impulses active
 						$initiative = $this->db->get_where('game_engagement_initiative',array('game_id'=>$this->id,'engagement_id'=>$engagement->id,'unit_id'=>$unit->id))->row();
 						if ($initiative) {
+							$moved = $initiative->moved;
 							echo "<br><font color=blue>Active impulses = ".$initiative->impulses." (die roll = ".$initiative->die_roll." + ".$initiative->modifiers.")</font>";
 						} else {
+							$moved = '0';
 ?><script>
 $(function() { $("#determine_bombardment_done").fadeOut(4000); });
 </script><?
@@ -2865,7 +2870,6 @@ $(function() { $("#determine_bombardment_done").fadeOut(4000); });
 
 
 						// add radio buttons for last movement for the whole ME
-						$moved = $initiative->moved;
 						$range1 = $this->yards_to_inches(600);
 						$range2 = $this->yards_to_inches(1200);
 
@@ -2985,6 +2989,8 @@ $(function() {
 		$query = $this->db->query("select id,username,commander_id from user where current_game=".$this->id." and commander_id != 0");
 		foreach ($query->result() as $row) {
 			echo "<br><b><u>Commander ".$row->username."</u></b><br>";
+
+			// TODO - calculate initiative for the commander at this point
 
 			$activity = d10() + d10();
 			echo "<font color=blue>Base Activity Number = $activity</font><br>";
