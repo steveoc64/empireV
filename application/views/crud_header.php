@@ -15,7 +15,7 @@ if (!$gotjq) {
 ?>
 <? /*<link type="text/css" rel="stylesheet" href="<?=site_url()?>assets/jqui/css/ui-lightness/jquery-ui-1.8.18.custom.css">
 <link type="text/css" rel="stylesheet" href="<?=site_url()?false>assets/jqui/css/custom-theme/jquery-ui-1.8.18.custom.css">*/?>
-<link type="text/css" rel="stylesheet" href="<?site_url()?>assets/grocery_crud/themes/datatables/css/ui/simple/jquery-ui-1.8.10.custom.css" />
+<link type="text/css" rel="stylesheet" href="<?=site_url()?>assets/jqui/css/start/jquery-ui-1.8.21.custom.css"/>
 <?php  } ?>
 
 <?php  
