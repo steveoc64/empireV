@@ -2835,6 +2835,13 @@ $(function() {
 					// Find out if parent ME engaged
 					$parent_engaged = $this->db->get_where('game_engagement_unit',array('game_id'=>$this->id,'unit_id'=>$unit->id))->row();
 					if ($parent_engaged) {
+
+						if ($unit->unit_type == TYPE_CAV_BRIGADE) {
+							echo "<img src=images/cav-brigade.jpg>";
+						} else {
+							echo "<img src=images/inf-brigade.jpg>";
+						}
+
 						$engagement = $this->db->get_where('game_engagement',array('game_id'=>$this->id,'id'=>$parent_engaged->engagement_id))->row();
 						echo "<br><font color=red>Engaged at - ".$engagement->descr."</font>";
 
@@ -2874,19 +2881,51 @@ $(function() { $("#determine_bombardment_done").fadeOut(4000); });
 						$range2 = $this->yards_to_inches(1200);
 
 						echo "<br>ME moved last Grand Tactical Round : ";
-						echo '<table border=0 width=600 cellpadding=5><tr><td>None</td><td>up to '.$range1.'"</td><td>up to '.$range2.'"</td><td>over '.$range2.'"</td></r>';
-							echo '<tr><td>'.form_radio($unit->id,'0',$moved == '0').'</td>';
-							echo '<td>'.form_radio($unit->id,'600',$moved == '600').'</td>';
-							echo '<td>'.form_radio($unit->id,'1200',$moved == '1200').'</td>';
-							echo '<td>'.form_radio($unit->id,'1200+',$moved == '2400').'</td>';
-							echo "</tr></table><hr>";
+						//echo '<table border=0 width=800 cellpadding=5><tr><td>None</td><td>up to '.$range1.'"</td><td>up to '.$range2.'"</td><td>over '.$range2.'"</td></r>';
+
+							$_ = $unit->id;
+							echo "<div id=\"$_\" style=\"width:800px;\">";
+							echo '<input type="radio" id="'.$_.'-0" name="'.$_.'"';
+							if ($moved == '0') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-0">No Move</label>';
+							echo '<input type="radio" id="'.$_.'-600" name="'.$_.'"';
+							if ($moved == '600') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-600">Up to '.$range1.'"</label>';
+							echo '<input type="radio" id="'.$_.'-1200" name="'.$_.'"';
+							if ($moved == '1200') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-1200">Up to '.$range2.'"</label>';
+							echo '<input type="radio" id="'.$_.'-2400" name="'.$_.'"';
+							if ($moved == '2400') { echo " checked=\"checked\""; }
+							echo '><label for="'.$_.'-2400">Over '.$range3.'"</label>';
+							echo "</div>";
+
+?>
+<script> $(function() { $("#<?echo "$_";?>").buttonset();}); </script>
+<?
+
+							//echo '<tr><td>'.form_radio($unit->id,'0',$moved == '0').'</td>';
+							//echo '<td>'.form_radio($unit->id,'600',$moved == '600').'</td>';
+							//echo '<td>'.form_radio($unit->id,'1200',$moved == '1200').'</td>';
+							//echo '<td>'.form_radio($unit->id,'1200+',$moved == '2400').'</td>';
+							//echo "</tr></table><hr>";
 
 					} else {
 						echo "<br><font color=green>Not Engaged</font>";
 					}
 
+					$done_gun = false;
 					foreach ($unit->me_subunit as $subunit) {
 						if ($subunit->unit_type == TYPE_BATTERY) {
+
+							if (!$done_gun) {
+								if ($parent_engaged) {
+									echo "<hr>";
+								}
+
+								echo "<img src=images/gunnery.gif>";
+								$done_gun = true;
+							}
+
 							echo "<br>[#".$subunit->id."] - ".$subunit->name;
 
 
@@ -2909,7 +2948,7 @@ $(function() { $("#determine_bombardment_done").fadeOut(4000); });
 
 							$_ = $subunit->id;
 							echo "<br>Battery moved last Grand Tactical Round : ";
-							echo "<div id=\"battery-$_\" style=\"width:500px;\">";
+							echo "<div id=\"battery-$_\" style=\"width:800px;\">";
 							echo '<input type="radio" id="'.$_.'-0" name="'.$subunit->id.'"';
 							if ($moved == '0') { echo " checked=\"checked\""; }
 							echo '><label for="'.$_.'-0">No Move</label>';
@@ -3110,6 +3149,7 @@ $(function() {
 						if ($subunit->unit_type == TYPE_BATTERY) {
 							echo "<br>[#".$subunit->id."] - ".$subunit->name;
 
+							$modifier = 0;
 							$moved = $this->input->post($subunit->id);
 							switch ($moved) {
 							case '0':
